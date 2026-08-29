@@ -1,6 +1,28 @@
-const SKIN_TYPES = ["乾燥肌", "脂性肌", "混合肌", "普通肌", "敏感肌"] as const;
+"use client";
+
+import { useEffect, useState } from "react";
+import { getProfile, saveProfile } from "@/lib/db";
+import { SKIN_TYPE_LABELS, SKIN_TYPE_ORDER, type SkinType } from "@/lib/types";
 
 export default function SettingsPage() {
+  const [skinType, setSkinType] = useState<SkinType | undefined>(undefined);
+  const [favoriteBrands, setFavoriteBrands] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    getProfile().then((p) => {
+      setSkinType(p.skinType);
+      setFavoriteBrands(p.favoriteBrands ?? "");
+      setLoading(false);
+    });
+  }, []);
+
+  async function handleSave() {
+    await saveProfile({ id: "default", skinType, favoriteBrands: favoriteBrands.trim() });
+    setSaved(true);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <header>
@@ -10,29 +32,59 @@ export default function SettingsPage() {
         </p>
       </header>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
-        <h2 className="text-sm font-bold">肌質</h2>
-        <div className="mt-2 grid grid-cols-3 gap-1.5">
-          {SKIN_TYPES.map((type) => (
-            <span
-              key={type}
-              className="rounded-lg bg-neutral-100 py-2 text-center text-xs font-medium text-neutral-400 dark:bg-neutral-900"
-            >
-              {type}
-            </span>
-          ))}
-        </div>
-      </section>
+      {loading ? (
+        <p className="text-sm text-neutral-400">読み込み中…</p>
+      ) : (
+        <>
+          <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <h2 className="text-sm font-bold">肌質</h2>
+            <p className="mt-1 text-xs text-neutral-400">
+              診断画面での初期値として使われます（診断のたびに変更もできます）
+            </p>
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              {SKIN_TYPE_ORDER.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setSkinType(type)}
+                  aria-pressed={skinType === type}
+                  className={`rounded-lg py-2 text-center text-xs font-medium ${
+                    skinType === type
+                      ? "bg-teal-600 text-white"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400"
+                  }`}
+                >
+                  {SKIN_TYPE_LABELS[type]}
+                </button>
+              ))}
+            </div>
+          </section>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
-        <h2 className="text-sm font-bold">お気に入りブランド（任意）</h2>
-        <input
-          type="text"
-          placeholder="例：無印良品、キュレル"
-          disabled
-          className="mt-2 w-full rounded-lg border border-neutral-300 bg-neutral-100 px-3 py-2 text-sm text-neutral-400 dark:border-neutral-700 dark:bg-neutral-900"
-        />
-      </section>
+          <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <h2 className="text-sm font-bold">お気に入りブランド（任意）</h2>
+            <input
+              type="text"
+              value={favoriteBrands}
+              onChange={(e) => setFavoriteBrands(e.target.value)}
+              placeholder="例：無印良品、キュレル"
+              className="mt-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            />
+          </section>
+
+          <button
+            onClick={handleSave}
+            className="w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white dark:bg-white dark:text-neutral-900"
+          >
+            保存する
+          </button>
+
+          {saved && (
+            <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+              保存しました。
+            </div>
+          )}
+        </>
+      )}
 
       <p className="text-center text-[11px] text-neutral-400">
         設定内容はすべて端末内に保存され、外部には送信されません。

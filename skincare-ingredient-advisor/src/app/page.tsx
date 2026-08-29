@@ -1,4 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getDiagnose } from "@/lib/db";
+
+function todayStr(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
 const LINKS = [
   {
@@ -24,6 +36,14 @@ const LINKS = [
 ] as const;
 
 export default function Home() {
+  const [hasToday, setHasToday] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    getDiagnose(todayStr()).then((rec) => {
+      setHasToday(!!(rec && (rec.concerns.length > 0 || rec.skinType || rec.temperatureC != null || rec.photo)));
+    });
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
       <header className="pt-2">
@@ -33,9 +53,16 @@ export default function Home() {
         </p>
       </header>
 
-      <div className="rounded-xl bg-teal-50 p-3 text-sm text-teal-700 dark:bg-teal-950/30 dark:text-teal-300">
-        まだ画面の骨格のみです。診断ロジック・商品データは今後追加していきます。
-      </div>
+      {hasToday === false && (
+        <div className="rounded-xl bg-teal-50 p-3 text-sm text-teal-700 dark:bg-teal-950/30 dark:text-teal-300">
+          今日はまだ診断していません。診断画面から入力しましょう。
+        </div>
+      )}
+      {hasToday === true && (
+        <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/30 dark:text-green-300">
+          今日の診断は完了しています。結果画面でおすすめを確認できます。
+        </div>
+      )}
 
       <nav className="flex flex-col gap-2">
         {LINKS.map((link) => (
@@ -49,6 +76,10 @@ export default function Home() {
           </Link>
         ))}
       </nav>
+
+      <p className="pt-2 text-center text-[11px] text-neutral-400">
+        データは端末内のIndexedDBにのみ保存され、外部には送信されません。
+      </p>
     </div>
   );
 }
