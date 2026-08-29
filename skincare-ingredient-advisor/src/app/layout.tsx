@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Zen_Maru_Gothic } from "next/font/google";
+import { Geist, Geist_Mono, Mochiy_Pop_One } from "next/font/google";
 import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const zenMaruGothic = Zen_Maru_Gothic({
+const mochiyPopOne = Mochiy_Pop_One({
   variable: "--font-display",
-  weight: ["500", "700"],
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -28,17 +28,17 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0d9488",
+  themeColor: "#ec4899",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} ${zenMaruGothic.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${mochiyPopOne.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <main className="mx-auto w-full max-w-md flex-1 px-4 pb-24 pt-4">
+        <main className="mx-auto w-full max-w-md flex-1 px-4 pb-28 pt-4">
           {children}
         </main>
         <BottomNav />

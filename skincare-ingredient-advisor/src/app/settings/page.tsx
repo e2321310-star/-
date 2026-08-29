@@ -36,7 +36,7 @@ export default function SettingsPage() {
         <p className="text-sm text-neutral-400">読み込み中…</p>
       ) : (
         <>
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="text-sm font-bold">肌質</h2>
             <p className="mt-1 text-xs text-neutral-400">
               診断画面での初期値として使われます（診断のたびに変更もできます）
@@ -50,7 +50,7 @@ export default function SettingsPage() {
                   aria-pressed={skinType === type}
                   className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                     skinType === type
-                      ? "bg-teal-600 text-white shadow-sm shadow-teal-900/20"
+                      ? "bg-gradient-to-br from-pink-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
                       : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
                   }`}
                 >
@@ -60,7 +60,7 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="text-sm font-bold">お気に入りブランド（任意）</h2>
             <input
               type="text"
@@ -73,7 +73,7 @@ export default function SettingsPage() {
 
           <button
             onClick={handleSave}
-            className="w-full rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-900/15"
+            className="w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20"
           >
             保存する
           </button>

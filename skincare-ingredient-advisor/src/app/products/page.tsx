@@ -129,7 +129,7 @@ export default function ProductsPage() {
 
       <button
         onClick={startAdd}
-        className="w-full rounded-full border border-dashed border-teal-300 py-2.5 text-sm font-semibold text-teal-700 dark:border-teal-800 dark:text-teal-300"
+        className="w-full rounded-full border border-dashed border-pink-300 py-2.5 text-sm font-semibold text-pink-700 dark:border-pink-800 dark:text-pink-300"
       >
         ＋ 商品を追加
       </button>
@@ -137,7 +137,7 @@ export default function ProductsPage() {
       {editingId !== null && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-2 rounded-2xl border border-teal-300 bg-teal-50/60 p-3 shadow-sm dark:border-teal-900 dark:bg-teal-950/20"
+          className="flex flex-col gap-2 rounded-2xl border border-pink-300 bg-pink-50/60 p-3 shadow-sm dark:border-pink-800 dark:bg-pink-500/10"
         >
           <label className="text-xs font-medium text-neutral-500">
             悩みカテゴリ
@@ -199,7 +199,7 @@ export default function ProductsPage() {
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
-              className="flex-1 rounded-full bg-teal-600 py-2 text-sm font-semibold text-white"
+              className="flex-1 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2 text-sm font-semibold text-white"
             >
               {editingId === "new" ? "追加する" : "更新する"}
             </button>
@@ -229,7 +229,7 @@ export default function ProductsPage() {
                 {list.map((p) => (
                   <li
                     key={p.id}
-                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-3 shadow-sm"
+                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3 shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>

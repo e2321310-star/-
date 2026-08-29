@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4faf9;
-  --background-2: #fdf6f8;
-  --foreground: #1c2624;
-  --card: #ffffff;
-  --card-border: rgba(15, 90, 80, 0.1);
-  --accent: #0d9488;
-  --accent-soft: #ccfbf1;
+  --background: #fdf2f8;
+  --bg-a: #ffe4f1;
+  --bg-b: #e0f2ff;
+  --bg-c: #f1e6ff;
+  --foreground: #2a1f33;
+  --card: rgba(255, 255, 255, 0.82);
+  --card-border: rgba(168, 85, 247, 0.14);
+  --accent: #ec4899;
+  --accent-soft: rgba(236, 72, 153, 0.14);
 }
 
 @theme inline {
@@ -20,13 +22,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b1615;
-    --background-2: #14100f;
-    --foreground: #eaf3f1;
-    --card: #121c1a;
-    --card-border: rgba(94, 234, 212, 0.14);
-    --accent: #2dd4bf;
-    --accent-soft: rgba(45, 212, 191, 0.16);
+    --background: #180f1c;
+    --bg-a: #241226;
+    --bg-b: #0f1b2b;
+    --bg-c: #1a1128;
+    --foreground: #f5eaf6;
+    --card: rgba(35, 24, 40, 0.75);
+    --card-border: rgba(244, 114, 182, 0.22);
+    --accent: #f472b6;
+    --accent-soft: rgba(244, 114, 182, 0.18);
   }
 }
 
@@ -34,8 +38,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   background:
-    radial-gradient(circle at 12% 0%, var(--accent-soft), transparent 45%),
-    radial-gradient(circle at 100% 20%, var(--background-2), transparent 55%),
+    radial-gradient(circle at 8% -5%, var(--bg-a), transparent 42%),
+    radial-gradient(circle at 100% 10%, var(--bg-b), transparent 48%),
+    radial-gradient(circle at 30% 100%, var(--bg-c), transparent 45%),
     var(--background);
   background-attachment: fixed;
 }
@@ -44,5 +49,5 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display), var(--font-sans), sans-serif;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }

@@ -137,7 +137,7 @@ export default function DiagnosePage() {
         </p>
       </header>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
         <h2 className="text-sm font-bold">写真</h2>
         <div className="relative mt-2 aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
           {!photoUrl && (
@@ -163,7 +163,7 @@ export default function DiagnosePage() {
         {!capture && !cameraError && (
           <button
             onClick={handleCapture}
-            className="mt-2 w-full rounded-full bg-teal-600 py-2.5 text-sm font-semibold text-white active:bg-teal-700"
+            className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
           >
             {existingPhotoUrl ? "撮り直す" : "撮影する"}
           </button>
@@ -178,7 +178,7 @@ export default function DiagnosePage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
         <h2 className="text-sm font-bold">気になる部位（セルフチェック）</h2>
         <div className="mt-2 flex flex-wrap gap-2">
           {CONCERN_ORDER.map((key) => (
@@ -200,7 +200,7 @@ export default function DiagnosePage() {
         <p className="mt-2 text-xs text-neutral-400">気になるものをタップして選択してください（複数選択可）</p>
       </section>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
         <h2 className="text-sm font-bold">今日の気温</h2>
         <input
           type="number"
@@ -212,7 +212,7 @@ export default function DiagnosePage() {
         />
       </section>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
         <h2 className="text-sm font-bold">肌質</h2>
         <div className="mt-2 grid grid-cols-3 gap-1.5">
           {SKIN_TYPE_ORDER.map((type) => (
@@ -223,7 +223,7 @@ export default function DiagnosePage() {
               aria-pressed={skinType === type}
               className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                 skinType === type
-                  ? "bg-teal-600 text-white shadow-sm shadow-teal-900/20"
+                  ? "bg-gradient-to-br from-pink-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
                   : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
               }`}
             >
@@ -236,7 +236,7 @@ export default function DiagnosePage() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-900/15 transition-opacity disabled:opacity-40"
+        className="w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 transition-opacity disabled:opacity-40"
       >
         {saving ? "保存中…" : "診断する"}
       </button>

@@ -34,20 +34,20 @@ export default function ResultPage() {
       {loading && <p className="text-sm text-neutral-400">読み込み中…</p>}
 
       {!loading && !hasData && (
-        <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 text-sm text-neutral-500 dark:text-neutral-400">
           まだ診断データがありません。診断画面から入力してください。
         </div>
       )}
 
       {!loading && hasData && result && result.rankedConcerns.length === 0 && (
-        <div className="rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 p-4 text-sm font-medium text-white shadow-lg shadow-teal-900/10">
+        <div className="rounded-2xl bg-gradient-to-br from-pink-500 to-violet-600 p-4 text-sm font-medium text-white shadow-lg shadow-pink-900/15">
           現在、特に気になる部位はありません。今のケアを維持しましょう。
         </div>
       )}
 
       {!loading && hasData && result && result.rankedConcerns.length > 0 && (
         <>
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="mb-2 text-sm font-bold">不足傾向の成分</h2>
             <div className="flex flex-wrap gap-1.5">
               {result.rankedConcerns.map((r) => (
@@ -81,10 +81,10 @@ function CareBlock({ title, emoji, steps }: { title: string; emoji: string; step
         {steps.map((step, i) => (
           <li
             key={`${step.category}-${i}`}
-            className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-3.5 shadow-sm"
+            className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3.5 shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-50 text-base dark:bg-teal-950/50">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pink-50 text-base dark:bg-pink-500/15">
                 {CATEGORY_ICON[step.category]}
               </span>
               <span className="text-sm font-semibold">{CATEGORY_LABELS[step.category]}</span>
