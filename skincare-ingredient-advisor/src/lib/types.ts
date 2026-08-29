@@ -47,7 +47,8 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   pack: "パック",
 };
 
-export const CATEGORY_ORDER: ProductCategory[] = ["lotion", "serum", "cream", "emulsion", "pack"];
+// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、パックは仕上げの集中ケア）
+export const CATEGORY_ORDER: ProductCategory[] = ["lotion", "serum", "emulsion", "cream", "pack"];
 
 // 診断記録：撮影・セルフチェック・気温・肌質を1日1件で保存
 export interface DiagnoseRecord {
@@ -70,21 +71,36 @@ export interface BrandProduct {
   note?: string;
 }
 
+// 今使っているスキンケア（カテゴリごとに1つ）
+export interface CurrentRoutineItem {
+  brand: string;
+  name: string;
+}
+
 // プロフィール（設定画面）
 export interface Profile {
   id: "default";
   skinType?: SkinType;
   favoriteBrands?: string;
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>;
 }
+
+export type CareVerdict = "keep" | "change" | "no-data";
 
 export interface DiagnosisResult {
   rankedConcerns: { concern: ConcernKey; weight: number }[];
   am: CareStep[];
   pm: CareStep[];
+  skinScore: number; // 0-100（高いほど良好）
+  skinAge: number; // 参考値としての肌年齢
 }
 
 export interface CareStep {
   category: ProductCategory;
+  order: number; // 使う順番（1〜）
   reason: string;
   products: BrandProduct[];
+  currentProduct?: CurrentRoutineItem;
+  verdict: CareVerdict;
+  verdictReason: string;
 }

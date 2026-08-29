@@ -24,6 +24,7 @@ export default function DiagnosePage() {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [capture, setCapture] = useState<{ blob: Blob; url: string } | null>(null);
   const [existingPhoto, setExistingPhoto] = useState<{ blob: Blob; url: string } | null>(null);
+  const [retaking, setRetaking] = useState(false);
   const [photoAnalysis, setPhotoAnalysis] = useState<PhotoAnalysis | null>(null);
   const [analyzedBlob, setAnalyzedBlob] = useState<Blob | null>(null);
 
@@ -75,7 +76,16 @@ export default function DiagnosePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const activePhoto = capture ?? existingPhoto;
+  const photoUrl = capture ? capture.url : retaking ? null : existingPhoto?.url ?? null;
+  const activePhoto = capture ?? (retaking ? null : existingPhoto);
+
+  // 写真プレビューが消えてライブカメラ映像に切り替わるたびに、取得済みのストリームを再アタッチする
+  // （写真表示中は<video>がDOMから外れるため、srcObjectの設定が失われるのを防ぐ）
+  useEffect(() => {
+    if (!photoUrl && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [photoUrl]);
 
   useEffect(() => {
     if (!activePhoto) return;
@@ -114,10 +124,16 @@ export default function DiagnosePage() {
       (blob) => {
         if (!blob) return;
         setCapture({ blob, url: URL.createObjectURL(blob) });
+        setRetaking(false);
       },
       "image/jpeg",
       0.92
     );
+  }
+
+  function handleRetake() {
+    setCapture(null);
+    setRetaking(true);
   }
 
   async function handleSave() {
@@ -142,8 +158,6 @@ export default function DiagnosePage() {
       setSaving(false);
     }
   }
-
-  const photoUrl = activePhoto?.url ?? null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -177,17 +191,17 @@ export default function DiagnosePage() {
             </div>
           )}
         </div>
-        {!capture && !cameraError && (
+        {!photoUrl && !cameraError && (
           <button
             onClick={handleCapture}
             className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
           >
-            {existingPhoto ? "撮り直す" : "撮影する"}
+            撮影する
           </button>
         )}
-        {capture && (
+        {photoUrl && (
           <button
-            onClick={() => setCapture(null)}
+            onClick={handleRetake}
             className="mt-2 w-full rounded-full border border-neutral-300 py-2.5 text-sm font-semibold dark:border-neutral-700"
           >
             撮り直す
