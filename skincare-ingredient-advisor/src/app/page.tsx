@@ -35,6 +35,13 @@ const LINKS = [
     desc: "成分×ブランド商品の対応表を確認・編集",
   },
   {
+    href: "/ask",
+    icon: "💬",
+    ring: "bg-lime-100 dark:bg-lime-500/20",
+    title: "スキンケア相談室",
+    desc: "成分・使い方などのよくある疑問をQ&Aで調べる",
+  },
+  {
     href: "/settings",
     icon: "⚙️",
     ring: "bg-violet-100 dark:bg-violet-500/20",
