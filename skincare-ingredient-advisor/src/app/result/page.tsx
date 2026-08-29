@@ -13,6 +13,7 @@ import {
   type ConcernContribution,
   type ConcernKey,
   type DiagnosisResult,
+  type Roadmap,
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
 import { FOOD_ADVICE } from "@/data/seedFoods";
@@ -72,7 +73,15 @@ function ResultPageInner() {
             setPhotoUrl(null);
             setPhotoAnalysis(null);
           }
-          setResult(buildDiagnosis(target, products, analysis?.concernSignals, profile.currentRoutine));
+          setResult(
+            buildDiagnosis(
+              target,
+              products,
+              analysis?.concernSignals,
+              profile.currentRoutine,
+              profile.goalConcern ? { concern: profile.goalConcern, note: profile.goalNote } : undefined
+            )
+          );
         } else {
           setHasData(false);
         }
@@ -111,6 +120,8 @@ function ResultPageInner() {
             : "まだ診断データがありません。診断画面から入力してください。"}
         </div>
       )}
+
+      {!loading && hasData && result?.roadmap && <RoadmapBlock roadmap={result.roadmap} />}
 
       {!loading && hasData && result && (
         <ScoreBlock
@@ -163,6 +174,39 @@ function ResultPageInner() {
         </>
       )}
     </div>
+  );
+}
+
+const STAGE_STYLE: Record<Roadmap["stage"], string> = {
+  1: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300",
+  2: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
+  3: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300",
+};
+
+function RoadmapBlock({ roadmap }: { roadmap: Roadmap }) {
+  return (
+    <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm font-bold">🎯 なりたい肌へのロードマップ</h2>
+        <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${STAGE_STYLE[roadmap.stage]}`}>
+          Step {roadmap.stage}/3 ・ {roadmap.stageLabel}
+        </span>
+      </div>
+      <p className="mt-1.5 text-sm font-semibold">{CONCERN_LABELS[roadmap.goalConcern]}レスな肌が目標</p>
+      {roadmap.goalNote && <p className="mt-0.5 text-xs text-neutral-400">「{roadmap.goalNote}」</p>}
+      <p className="mt-2 text-xs leading-relaxed text-neutral-600 dark:text-neutral-300">{roadmap.message}</p>
+      <div className="mt-3 flex gap-1">
+        {[1, 2, 3].map((s) => (
+          <div
+            key={s}
+            className={`h-1.5 flex-1 rounded-full ${
+              s <= roadmap.stage ? "bg-gradient-to-r from-pink-500 to-violet-500" : "bg-neutral-200 dark:bg-white/10"
+            }`}
+          />
+        ))}
+      </div>
+      <p className="mt-2 text-[11px] text-neutral-400">設定画面でいつでも目標を変更できます。</p>
+    </section>
   );
 }
 

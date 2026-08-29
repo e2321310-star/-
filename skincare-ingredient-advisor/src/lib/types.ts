@@ -47,7 +47,7 @@ export const GENDER_LABELS: Record<Gender, string> = {
 
 export const GENDER_ORDER: Gender[] = ["female", "male", "no_answer"];
 
-export type ProductCategory = "lotion" | "serum" | "cream" | "emulsion" | "pack";
+export type ProductCategory = "lotion" | "serum" | "cream" | "emulsion" | "pack" | "sunscreen";
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   lotion: "化粧水",
@@ -55,10 +55,18 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   cream: "クリーム",
   emulsion: "乳液",
   pack: "パック",
+  sunscreen: "日焼け止め",
 };
 
-// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、パックは仕上げの集中ケア）
-export const CATEGORY_ORDER: ProductCategory[] = ["lotion", "serum", "emulsion", "cream", "pack"];
+// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、パックは夜の集中ケア、日焼け止めは朝の仕上げ）
+export const CATEGORY_ORDER: ProductCategory[] = [
+  "lotion",
+  "serum",
+  "emulsion",
+  "cream",
+  "pack",
+  "sunscreen",
+];
 
 // 診断記録：撮影・セルフチェック・気温・肌質を1日1件で保存
 export interface DiagnoseRecord {
@@ -70,6 +78,15 @@ export interface DiagnoseRecord {
   updatedAt: string; // ISO
 }
 
+// 朝夜どちらの使用に向くか（未指定は"both"扱い＝朝晩どちらでもOK）
+export type CarePeriod = "am" | "pm" | "both";
+
+export const PERIOD_LABELS: Record<CarePeriod, string> = {
+  am: "☀️ 朝向け",
+  pm: "🌙 夜向け",
+  both: "朝晩どちらでも",
+};
+
 // 成分×ブランド商品データ
 export interface BrandProduct {
   id?: number; // autoIncrement
@@ -79,6 +96,7 @@ export interface BrandProduct {
   brand: string;
   name: string; // 商品名
   note?: string;
+  period?: CarePeriod;
 }
 
 // 今使っているスキンケア（カテゴリごとに1つ）
@@ -95,9 +113,21 @@ export interface Profile {
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>;
   age?: number;
   gender?: Gender;
+  goalConcern?: ConcernKey; // 将来なりたい肌の目標
+  goalNote?: string; // 目標の自由入力メモ
 }
 
 export type CareVerdict = "keep" | "change" | "no-data";
+
+export type RoadmapStage = 1 | 2 | 3;
+
+export interface Roadmap {
+  goalConcern: ConcernKey;
+  goalNote?: string;
+  stage: RoadmapStage;
+  stageLabel: string;
+  message: string;
+}
 
 export interface ConcernContribution {
   concern: ConcernKey;
@@ -113,6 +143,7 @@ export interface DiagnosisResult {
   skinScore: number; // 0-100（高いほど良好）
   skinAge: number; // 参考値としての肌年齢
   scoreExplanation: string; // 肌点数・肌年齢の算出方法の説明
+  roadmap?: Roadmap;
 }
 
 export interface CareStep {

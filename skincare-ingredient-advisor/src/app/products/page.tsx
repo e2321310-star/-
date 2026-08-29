@@ -12,11 +12,15 @@ import {
   CATEGORY_ORDER,
   CONCERN_LABELS,
   CONCERN_ORDER,
+  PERIOD_LABELS,
   type BrandProduct,
+  type CarePeriod,
   type ConcernKey,
   type ProductCategory,
 } from "@/lib/types";
 import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
+
+const PERIOD_ORDER: CarePeriod[] = ["both", "am", "pm"];
 
 const emptyForm = {
   concern: CONCERN_ORDER[0],
@@ -24,6 +28,7 @@ const emptyForm = {
   ingredient: "",
   brand: "",
   name: "",
+  period: "both" as CarePeriod,
 };
 
 export default function ProductsPage() {
@@ -38,6 +43,7 @@ export default function ProductsPage() {
     ingredient: string;
     brand: string;
     name: string;
+    period: CarePeriod;
   }>(emptyForm);
 
   function load() {
@@ -71,6 +77,7 @@ export default function ProductsPage() {
       ingredient: p.ingredient,
       brand: p.brand,
       name: p.name,
+      period: p.period ?? "both",
     });
     setEditingId(p.id ?? "new");
   }
@@ -89,6 +96,7 @@ export default function ProductsPage() {
       ingredient: form.ingredient.trim(),
       brand: form.brand.trim(),
       name: form.name.trim(),
+      period: form.period,
     };
     if (editingId === "new") {
       await addProduct(payload);
@@ -218,6 +226,20 @@ export default function ProductsPage() {
               className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
             />
           </label>
+          <label className="text-xs font-medium text-neutral-500">
+            朝晩どちらで使う成分か
+            <select
+              value={form.period}
+              onChange={(e) => setForm((f) => ({ ...f, period: e.target.value as CarePeriod }))}
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+            >
+              {PERIOD_ORDER.map((p) => (
+                <option key={p} value={p}>
+                  {PERIOD_LABELS[p]}
+                </option>
+              ))}
+            </select>
+          </label>
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
@@ -262,6 +284,11 @@ export default function ProductsPage() {
                           {CATEGORY_LABELS[p.category]}
                           {p.ingredient ? ` ・ ${p.ingredient}` : ""}
                         </p>
+                        {p.period && p.period !== "both" && (
+                          <span className="mt-1 inline-block rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
+                            {PERIOD_LABELS[p.period]}
+                          </span>
+                        )}
                       </div>
                       <div className="flex shrink-0 gap-2 text-xs">
                         <button onClick={() => startEdit(p)} className="text-neutral-500 underline">

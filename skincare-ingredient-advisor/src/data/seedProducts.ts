@@ -5,7 +5,24 @@ import type { BrandProduct } from "@/lib/types";
 export const SEED_PRODUCTS: BrandProduct[] = [
   // 毛穴
   { concern: "pores", category: "lotion", ingredient: "収れん成分", brand: "石澤研究所", name: "毛穴撫子 お米の化粧水" },
-  { concern: "pores", category: "serum", ingredient: "ナイアシンアミド", brand: "肌ラボ", name: "極潤ハトムギ美容液" },
+  {
+    concern: "pores",
+    category: "serum",
+    ingredient: "ナイアシンアミド",
+    brand: "肌ラボ",
+    name: "極潤ハトムギ美容液",
+    period: "am",
+    note: "刺激が少なく、日中の毛穴・皮脂対策に。",
+  },
+  {
+    concern: "pores",
+    category: "serum",
+    ingredient: "サリチル酸(BHA)",
+    brand: "ロゼット",
+    name: "ロゼット サリチル酸配合薬用美容液",
+    period: "pm",
+    note: "角質・毛穴詰まりへの働きが期待できる反面、日中は紫外線刺激を受けやすくなるため夜のケア向き。",
+  },
   { concern: "pores", category: "cream", ingredient: "スクワラン", brand: "ニベア", name: "ニベアクリーム" },
   { concern: "pores", category: "emulsion", ingredient: "セラミド機能成分", brand: "キュレル", name: "皮脂トラブルケア乳液" },
   { concern: "pores", category: "pack", ingredient: "クレイ(カオリン等)", brand: "クリアターン", name: "毛穴パック マスク" },
@@ -33,7 +50,24 @@ export const SEED_PRODUCTS: BrandProduct[] = [
 
   // ハリ・エイジング
   { concern: "firmness", category: "lotion", ingredient: "アルジルリン", brand: "花王", name: "ソフィーナ iP ベースケア化粧水 とてもしっとり" },
-  { concern: "firmness", category: "serum", ingredient: "レチノール", brand: "花王", name: "ソフィーナ iP エイジングケア美容液" },
+  {
+    concern: "firmness",
+    category: "serum",
+    ingredient: "レチノール",
+    brand: "花王",
+    name: "ソフィーナ iP エイジングケア美容液",
+    period: "pm",
+    note: "レチノールは光に不安定で紫外線刺激も受けやすいため、基本的に夜のケアで使う成分。",
+  },
+  {
+    concern: "firmness",
+    category: "serum",
+    ingredient: "ペプチド",
+    brand: "富士フイルム",
+    name: "アスタリフト ジェリー アクアリスタ",
+    period: "am",
+    note: "日中でも使いやすいエイジングケア美容液。",
+  },
   { concern: "firmness", category: "cream", ingredient: "ペプチド", brand: "POLA", name: "B.A クリーム" },
   { concern: "firmness", category: "emulsion", ingredient: "コラーゲン", brand: "資生堂", name: "エリクシール リフトモイスト乳液" },
   { concern: "firmness", category: "pack", ingredient: "ピテラ", brand: "SK-II", name: "フェイシャルトリートメントマスク" },
@@ -44,4 +78,12 @@ export const SEED_PRODUCTS: BrandProduct[] = [
   { concern: "soothing", category: "cream", ingredient: "アベンヌ温泉水", brand: "アベンヌ", name: "ウォーター配合クリーム" },
   { concern: "soothing", category: "emulsion", ingredient: "ユーカリエキス", brand: "キュレル", name: "皮脂トラブルケア乳液(敏感肌用)" },
   { concern: "soothing", category: "pack", ingredient: "パンテノール", brand: "ドクターメディオン", name: "パンテノール配合シートマスク" },
+
+  // 日焼け止め（朝の仕上げに。紫外線は色ムラ・乾燥・ハリ低下など多くの悩みを進行させるため悩みを問わず推奨）
+  { concern: "pores", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "ビオレUV アクアリッチ ウォータリーエッセンス", period: "am" },
+  { concern: "brightening", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "資生堂", name: "アネッサ パーフェクトUV スキンケアミルク", period: "am" },
+  { concern: "dryness", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "キュレル UVエッセンス", period: "am" },
+  { concern: "oiliness", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "ビオレUV あせラクさらさら游 UVジェル", period: "am" },
+  { concern: "firmness", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "資生堂", name: "エリクシール UVクリアミルク", period: "am" },
+  { concern: "soothing", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "ノブ", name: "UVシールドEX（敏感肌用）", period: "am" },
 ];

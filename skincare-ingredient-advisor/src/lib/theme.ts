@@ -25,4 +25,5 @@ export const CATEGORY_ICON: Record<ProductCategory, string> = {
   cream: "🫙",
   emulsion: "🥛",
   pack: "🎭",
+  sunscreen: "🕶️",
 };

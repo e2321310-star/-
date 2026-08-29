@@ -8,9 +8,11 @@ import type {
   DiagnoseRecord,
   DiagnosisResult,
   ProductCategory,
+  Roadmap,
+  RoadmapStage,
   SkinType,
 } from "./types";
-import { CATEGORY_ORDER, CONCERN_LABELS, CONCERN_ORDER, SKIN_TYPE_LABELS } from "./types";
+import { CONCERN_LABELS, CONCERN_ORDER, SKIN_TYPE_LABELS } from "./types";
 
 const TOP_N = 2;
 const COLD_THRESHOLD_C = 15; // これ未満は乾燥に傾きやすいとみなす
@@ -22,9 +24,9 @@ const SCORE_MAX = 100;
 const BASE_SKIN_AGE = 20; // 肌点数100のときの肌年齢（参考値）
 const SKIN_AGE_SLOPE = 0.5; // 肌点数が1点下がるごとに肌年齢が何歳上がるか
 
-// 朝はパック（週1〜2回の集中ケア）を除いた軽めのラインナップ、夜はパックを含むフルセット
-const AM_CATEGORIES: ProductCategory[] = CATEGORY_ORDER.filter((c) => c !== "pack");
-const PM_CATEGORIES: ProductCategory[] = CATEGORY_ORDER;
+// 朝は日焼け止めで仕上げる軽めのラインナップ、夜はパックを含む集中ケア
+const AM_CATEGORIES: ProductCategory[] = ["lotion", "serum", "emulsion", "cream", "sunscreen"];
+const PM_CATEGORIES: ProductCategory[] = ["lotion", "serum", "emulsion", "cream", "pack"];
 
 function skinTypeWeights(skinType?: SkinType): Partial<Record<ConcernKey, number>> {
   switch (skinType) {
@@ -52,11 +54,17 @@ function temperatureWeights(temperatureC?: number): Partial<Record<ConcernKey, n
 function pickProducts(
   products: BrandProduct[],
   category: ProductCategory,
-  concerns: ConcernKey[]
+  concerns: ConcernKey[],
+  period: "am" | "pm"
 ): BrandProduct[] {
   const picked: BrandProduct[] = [];
   for (const concern of concerns) {
-    const found = products.find((p) => p.category === category && p.concern === concern);
+    const candidates = products.filter((p) => p.category === category && p.concern === concern);
+    // その時間帯専用の商品があれば優先し、なければ朝晩兼用（未指定含む）の商品を使う
+    const found =
+      candidates.find((p) => p.period === period) ??
+      candidates.find((p) => !p.period || p.period === "both") ??
+      candidates[0];
     if (found && !picked.some((p) => p.id === found.id)) picked.push(found);
   }
   return picked;
@@ -100,6 +108,9 @@ function judgeCurrentProduct(
 
 function stepReason(category: ProductCategory, topConcerns: ConcernKey[], period: "am" | "pm"): string {
   const labels = topConcerns.map((c) => CONCERN_LABELS[c]).join("・");
+  if (category === "sunscreen") {
+    return `紫外線は色ムラ・乾燥・ハリ低下など多くの肌悩みを進行させる要因です。「${labels}」の対策の意味でも、日中のケアの仕上げに必ず取り入れましょう。`;
+  }
   if (category === "pack") {
     return `「${labels}」の対策に向けて、週1〜2回の夜の集中ケアとして取り入れましょう。`;
   }
@@ -117,13 +128,20 @@ function buildCareStep(
   products: BrandProduct[],
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>
 ): CareStep {
-  const matched = pickProducts(products, category, topConcerns);
+  const matched = pickProducts(products, category, topConcerns, period);
   const currentProduct = currentRoutine?.[category];
   const { verdict, reason: verdictReason } = judgeCurrentProduct(currentProduct, matched);
+  const hasTimeSpecific = matched.some((p) => p.period === "am" || p.period === "pm");
+  const sameEitherTime = matched.length > 0 && !hasTimeSpecific;
+  const reason =
+    stepReason(category, topConcerns, period) +
+    (sameEitherTime && category !== "pack" && category !== "sunscreen"
+      ? " この成分は低刺激で、朝でも夜でも使って問題ないため同じ内容にしています。"
+      : "");
   return {
     category,
     order,
-    reason: stepReason(category, topConcerns, period),
+    reason,
     products: matched,
     currentProduct,
     verdict,
@@ -140,11 +158,43 @@ function computeSkinScoreAndAge(totalWeight: number): { skinScore: number; skinA
   return { skinScore, skinAge };
 }
 
+function buildRoadmap(
+  goalConcern: ConcernKey,
+  goalNote: string | undefined,
+  goalWeight: number,
+  products: BrandProduct[]
+): Roadmap {
+  const label = CONCERN_LABELS[goalConcern];
+  const sampleIngredient = products.find((p) => p.concern === goalConcern && p.category === "serum")?.ingredient;
+  const ingredientHint = sampleIngredient ? `（例：${sampleIngredient}など）` : "";
+
+  let stage: RoadmapStage;
+  let stageLabel: string;
+  let message: string;
+
+  if (goalWeight <= 0) {
+    stage = 1;
+    stageLabel = "維持期";
+    message = `今のところ「${label}」に強い乱れのサインは出ていません。今の基礎ケアを継続しつつ、予防的に${ingredientHint}を取り入れておくと目標に近づきやすくなります。`;
+  } else if (goalWeight <= 3) {
+    stage = 2;
+    stageLabel = "対策開始期";
+    message = `「${label}」の対策サインが出始めています。診断結果のケアに加えて、${ingredientHint}を意識的に取り入れ始めましょう。`;
+  } else {
+    stage = 3;
+    stageLabel = "集中ケア期";
+    message = `「${label}」の対策が今まさに必要な状態です。今日のおすすめケアには、この悩み向けの成分を優先的に反映しています。しばらく集中的にケアを続けましょう。`;
+  }
+
+  return { goalConcern, goalNote, stage, stageLabel, message };
+}
+
 export function buildDiagnosis(
   record: Pick<DiagnoseRecord, "concerns" | "skinType" | "temperatureC">,
   products: BrandProduct[],
   photoSignals?: Partial<Record<ConcernKey, number>>,
-  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>,
+  goal?: { concern: ConcernKey; note?: string }
 ): DiagnosisResult {
   const weights = new Map<ConcernKey, number>(CONCERN_ORDER.map((c) => [c, 0]));
   const sources = new Map<ConcernKey, string[]>(CONCERN_ORDER.map((c) => [c, []]));
@@ -187,11 +237,19 @@ export function buildDiagnosis(
   const { skinScore, skinAge } = computeSkinScoreAndAge(totalWeight);
   const scoreExplanation = `満点100点から、気になる部位1つにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真解析からの追加シグナル1つにつき${SCORE_PENALTY_PER_WEIGHT}点を目安に減点しています（最低${SCORE_MIN}点）。肌年齢は、肌点数100点を${BASE_SKIN_AGE}歳とし、点数が1点下がるごとに${SKIN_AGE_SLOPE}歳ずつ上げて計算した参考値です。`;
 
+  const roadmap = goal
+    ? buildRoadmap(goal.concern, goal.note, weights.get(goal.concern) ?? 0, products)
+    : undefined;
+
   if (rankedConcerns.length === 0) {
-    return { rankedConcerns: [], am: [], pm: [], skinScore, skinAge, scoreExplanation };
+    return { rankedConcerns: [], am: [], pm: [], skinScore, skinAge, scoreExplanation, roadmap };
   }
 
-  const topConcerns = rankedConcerns.slice(0, TOP_N).map((c) => c.concern);
+  const baseTopConcerns = rankedConcerns.slice(0, TOP_N).map((c) => c.concern);
+  // 将来の目標にしている悩みは、今日のランキングに入っていなくても優先的にケアへ含める
+  const topConcerns =
+    goal && !baseTopConcerns.includes(goal.concern) ? [...baseTopConcerns, goal.concern] : baseTopConcerns;
+
   const am = AM_CATEGORIES.map((category, i) =>
     buildCareStep(category, i + 1, "am", topConcerns, products, currentRoutine)
   );
@@ -199,5 +257,5 @@ export function buildDiagnosis(
     buildCareStep(category, i + 1, "pm", topConcerns, products, currentRoutine)
   );
 
-  return { rankedConcerns, am, pm, skinScore, skinAge, scoreExplanation };
+  return { rankedConcerns, am, pm, skinScore, skinAge, scoreExplanation, roadmap };
 }

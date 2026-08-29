@@ -5,16 +5,19 @@ import { getProfile, saveProfile } from "@/lib/db";
 import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
+  CONCERN_LABELS,
+  CONCERN_ORDER,
   GENDER_LABELS,
   GENDER_ORDER,
   SKIN_TYPE_LABELS,
   SKIN_TYPE_ORDER,
+  type ConcernKey,
   type CurrentRoutineItem,
   type Gender,
   type ProductCategory,
   type SkinType,
 } from "@/lib/types";
-import { CATEGORY_ICON } from "@/lib/theme";
+import { CATEGORY_ICON, CONCERN_BADGE_CLASS } from "@/lib/theme";
 
 type RoutineState = Partial<Record<ProductCategory, CurrentRoutineItem>>;
 
@@ -24,6 +27,8 @@ export default function SettingsPage() {
   const [currentRoutine, setCurrentRoutine] = useState<RoutineState>({});
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<Gender | undefined>(undefined);
+  const [goalConcern, setGoalConcern] = useState<ConcernKey | undefined>(undefined);
+  const [goalNote, setGoalNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
 
@@ -34,6 +39,8 @@ export default function SettingsPage() {
       setCurrentRoutine(p.currentRoutine ?? {});
       setAge(p.age != null ? String(p.age) : "");
       setGender(p.gender);
+      setGoalConcern(p.goalConcern);
+      setGoalNote(p.goalNote ?? "");
       setLoading(false);
     });
   }, []);
@@ -53,6 +60,8 @@ export default function SettingsPage() {
       currentRoutine,
       age: age.trim() === "" ? undefined : Number(age),
       gender,
+      goalConcern,
+      goalNote: goalNote.trim(),
     });
     setSaved(true);
   }
@@ -121,6 +130,37 @@ export default function SettingsPage() {
                 </button>
               ))}
             </div>
+          </section>
+
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">🎯 将来なりたい肌</h2>
+            <p className="mt-1 text-xs text-neutral-400">
+              長期的な目標を1つ設定すると、その日の悩みに出ていなくても、目標に向けたケアを診断結果に含めます。
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {CONCERN_ORDER.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setGoalConcern(goalConcern === c ? undefined : c)}
+                  aria-pressed={goalConcern === c}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    goalConcern === c
+                      ? CONCERN_BADGE_CLASS[c]
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {CONCERN_LABELS[c]}レス
+                </button>
+              ))}
+            </div>
+            <input
+              type="text"
+              value={goalNote}
+              onChange={(e) => setGoalNote(e.target.value)}
+              placeholder="目標のメモ（任意）例：毛穴レスな陶器肌になりたい"
+              className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+            />
           </section>
 
           <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
