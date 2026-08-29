@@ -16,6 +16,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "スキンケア記録",
   description: "毎日の肌写真と自己評価を記録し、ケアを提案する自分専用アプリ",
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "スキンケア記録",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
