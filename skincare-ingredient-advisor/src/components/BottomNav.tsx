@@ -16,20 +16,20 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-neutral-900/95"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--card-border)] bg-[var(--card)]/90 backdrop-blur-lg"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="mx-auto flex max-w-md items-stretch justify-between">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between px-1 py-1.5">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href;
           return (
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-0.5 py-2 text-xs transition-colors ${
+                className={`mx-0.5 flex flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[11px] font-medium transition-colors ${
                   active
-                    ? "text-teal-600 dark:text-teal-400"
-                    : "text-neutral-500 dark:text-neutral-400"
+                    ? "bg-teal-600/10 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300"
+                    : "text-neutral-400 dark:text-neutral-500"
                 }`}
               >
                 <span className="text-lg leading-none">{item.icon}</span>

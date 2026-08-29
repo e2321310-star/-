@@ -11,6 +11,7 @@ import {
   type ConcernKey,
   type SkinType,
 } from "@/lib/types";
+import { CONCERN_BADGE_CLASS } from "@/lib/theme";
 
 function todayStr(): string {
   const d = new Date();
@@ -131,12 +132,12 @@ export default function DiagnosePage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">診断</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           写真を撮る + 今日の気温・気になる部位・肌質を入力して診断します。
         </p>
       </header>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
         <h2 className="text-sm font-bold">写真</h2>
         <div className="relative mt-2 aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
           {!photoUrl && (
@@ -177,7 +178,7 @@ export default function DiagnosePage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
         <h2 className="text-sm font-bold">気になる部位（セルフチェック）</h2>
         <div className="mt-2 flex flex-wrap gap-2">
           {CONCERN_ORDER.map((key) => (
@@ -186,10 +187,10 @@ export default function DiagnosePage() {
               type="button"
               onClick={() => toggleConcern(key)}
               aria-pressed={concerns.includes(key)}
-              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                 concerns.includes(key)
-                  ? "bg-teal-600 text-white"
-                  : "bg-neutral-100 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400"
+                  ? CONCERN_BADGE_CLASS[key]
+                  : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
               }`}
             >
               {CONCERN_LABELS[key]}
@@ -199,7 +200,7 @@ export default function DiagnosePage() {
         <p className="mt-2 text-xs text-neutral-400">気になるものをタップして選択してください（複数選択可）</p>
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
         <h2 className="text-sm font-bold">今日の気温</h2>
         <input
           type="number"
@@ -207,11 +208,11 @@ export default function DiagnosePage() {
           value={temperature}
           onChange={(e) => setTemperature(e.target.value)}
           placeholder="例：28（℃）"
-          className="mt-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
         />
       </section>
 
-      <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
         <h2 className="text-sm font-bold">肌質</h2>
         <div className="mt-2 grid grid-cols-3 gap-1.5">
           {SKIN_TYPE_ORDER.map((type) => (
@@ -220,10 +221,10 @@ export default function DiagnosePage() {
               type="button"
               onClick={() => setSkinType(type)}
               aria-pressed={skinType === type}
-              className={`rounded-lg py-2 text-center text-xs font-medium ${
+              className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                 skinType === type
-                  ? "bg-teal-600 text-white"
-                  : "bg-neutral-100 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400"
+                  ? "bg-teal-600 text-white shadow-sm shadow-teal-900/20"
+                  : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
               }`}
             >
               {SKIN_TYPE_LABELS[type]}
@@ -235,15 +236,15 @@ export default function DiagnosePage() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white disabled:opacity-40 dark:bg-white dark:text-neutral-900"
+        className="w-full rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-900/15 transition-opacity disabled:opacity-40"
       >
         {saving ? "保存中…" : "診断する"}
       </button>
 
       {saved && (
-        <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+        <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-300">
           保存しました。続けて
-          <Link href="/result" className="mx-1 underline">
+          <Link href="/result" className="mx-1 font-semibold underline">
             診断結果
           </Link>
           を確認しましょう。

@@ -15,22 +15,30 @@ function todayStr(): string {
 const LINKS = [
   {
     href: "/diagnose",
-    title: "🔍 診断する",
+    icon: "🔍",
+    ring: "bg-teal-100 dark:bg-teal-950/60",
+    title: "診断する",
     desc: "気になる部位・今日の気温・肌質を入力して診断",
   },
   {
     href: "/result",
-    title: "💡 診断結果",
+    icon: "💡",
+    ring: "bg-amber-100 dark:bg-amber-950/60",
+    title: "診断結果",
     desc: "不足成分と、朝晩のブランド別おすすめ商品を確認",
   },
   {
     href: "/products",
-    title: "🧴 商品データ",
+    icon: "🧴",
+    ring: "bg-rose-100 dark:bg-rose-950/60",
+    title: "商品データ",
     desc: "成分×ブランド商品の対応表を確認・編集",
   },
   {
     href: "/settings",
-    title: "⚙️ 設定",
+    icon: "⚙️",
+    ring: "bg-violet-100 dark:bg-violet-950/60",
+    title: "設定",
     desc: "肌質・お気に入りブランドなどのプロフィール",
   },
 ] as const;
@@ -45,39 +53,47 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
-      <header className="pt-2">
-        <h1 className="text-xl font-bold">成分アドバイザー</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+    <div className="flex flex-col gap-5">
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-700 px-5 py-6 text-white shadow-lg shadow-teal-900/10">
+        <div className="pointer-events-none absolute -right-8 -top-10 h-36 w-36 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-12 -left-6 h-28 w-28 rounded-full bg-white/10" />
+        <p className="text-xs font-medium tracking-wide text-teal-50/90">SKIN INGREDIENT ADVISOR</p>
+        <h1 className="mt-1 text-2xl font-bold">成分アドバイザー</h1>
+        <p className="mt-2 text-sm leading-relaxed text-teal-50/95">
           写真と気温・肌質から、今足りない成分とブランド商品を提案します
         </p>
+
+        <div
+          className={`mt-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
+            hasToday === true
+              ? "bg-white/90 text-teal-700"
+              : "bg-black/15 text-white"
+          }`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${hasToday === true ? "bg-teal-500" : "bg-white/70"}`} />
+          {hasToday === true ? "今日の診断は完了しています" : "今日はまだ診断していません"}
+        </div>
       </header>
 
-      {hasToday === false && (
-        <div className="rounded-xl bg-teal-50 p-3 text-sm text-teal-700 dark:bg-teal-950/30 dark:text-teal-300">
-          今日はまだ診断していません。診断画面から入力しましょう。
-        </div>
-      )}
-      {hasToday === true && (
-        <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/30 dark:text-green-300">
-          今日の診断は完了しています。結果画面でおすすめを確認できます。
-        </div>
-      )}
-
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-2.5">
         {LINKS.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="rounded-xl border border-neutral-200 p-4 transition-colors active:bg-neutral-100 dark:border-neutral-800 dark:active:bg-neutral-900"
+            className="flex items-center gap-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-3.5 shadow-sm transition-transform active:scale-[0.98]"
           >
-            <p className="font-semibold">{link.title}</p>
-            <p className="mt-0.5 text-xs text-neutral-500">{link.desc}</p>
+            <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl ${link.ring}`}>
+              {link.icon}
+            </span>
+            <span className="min-w-0">
+              <p className="font-semibold">{link.title}</p>
+              <p className="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">{link.desc}</p>
+            </span>
           </Link>
         ))}
       </nav>
 
-      <p className="pt-2 text-center text-[11px] text-neutral-400">
+      <p className="pt-1 text-center text-[11px] text-neutral-400">
         データは端末内のIndexedDBにのみ保存され、外部には送信されません。
       </p>
     </div>

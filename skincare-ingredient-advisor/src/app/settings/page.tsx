@@ -27,7 +27,7 @@ export default function SettingsPage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">設定</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           肌質やお気に入りブランドなど、診断に使うプロフィール情報です。
         </p>
       </header>
@@ -36,7 +36,7 @@ export default function SettingsPage() {
         <p className="text-sm text-neutral-400">読み込み中…</p>
       ) : (
         <>
-          <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
             <h2 className="text-sm font-bold">肌質</h2>
             <p className="mt-1 text-xs text-neutral-400">
               診断画面での初期値として使われます（診断のたびに変更もできます）
@@ -48,10 +48,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setSkinType(type)}
                   aria-pressed={skinType === type}
-                  className={`rounded-lg py-2 text-center text-xs font-medium ${
+                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                     skinType === type
-                      ? "bg-teal-600 text-white"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400"
+                      ? "bg-teal-600 text-white shadow-sm shadow-teal-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
                   }`}
                 >
                   {SKIN_TYPE_LABELS[type]}
@@ -60,26 +60,26 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 shadow-sm">
             <h2 className="text-sm font-bold">お気に入りブランド（任意）</h2>
             <input
               type="text"
               value={favoriteBrands}
               onChange={(e) => setFavoriteBrands(e.target.value)}
               placeholder="例：無印良品、キュレル"
-              className="mt-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
             />
           </section>
 
           <button
             onClick={handleSave}
-            className="w-full rounded-full bg-neutral-900 py-3 text-sm font-semibold text-white dark:bg-white dark:text-neutral-900"
+            className="w-full rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-900/15"
           >
             保存する
           </button>
 
           {saved && (
-            <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+            <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-300">
               保存しました。
             </div>
           )}

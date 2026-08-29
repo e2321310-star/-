@@ -16,6 +16,7 @@ import {
   type ConcernKey,
   type ProductCategory,
 } from "@/lib/types";
+import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
 
 const emptyForm = {
   concern: CONCERN_ORDER[0],
@@ -108,7 +109,7 @@ export default function ProductsPage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">商品データ</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           悩み別の成分と、対応するブランド商品の一覧です。自由に追加・編集・削除できます。
         </p>
       </header>
@@ -121,13 +122,14 @@ export default function ProductsPage() {
             active={filter === key}
             onClick={() => setFilter(key)}
             label={CONCERN_LABELS[key]}
+            colorClass={CONCERN_BADGE_CLASS[key]}
           />
         ))}
       </div>
 
       <button
         onClick={startAdd}
-        className="w-full rounded-full border border-dashed border-neutral-300 py-2.5 text-sm font-medium text-neutral-600 dark:border-neutral-700 dark:text-neutral-300"
+        className="w-full rounded-full border border-dashed border-teal-300 py-2.5 text-sm font-semibold text-teal-700 dark:border-teal-800 dark:text-teal-300"
       >
         ＋ 商品を追加
       </button>
@@ -135,14 +137,14 @@ export default function ProductsPage() {
       {editingId !== null && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-2 rounded-xl border border-teal-300 bg-teal-50/50 p-3 dark:border-teal-900 dark:bg-teal-950/20"
+          className="flex flex-col gap-2 rounded-2xl border border-teal-300 bg-teal-50/60 p-3 shadow-sm dark:border-teal-900 dark:bg-teal-950/20"
         >
           <label className="text-xs font-medium text-neutral-500">
             悩みカテゴリ
             <select
               value={form.concern}
               onChange={(e) => setForm((f) => ({ ...f, concern: e.target.value as ConcernKey }))}
-              className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
             >
               {CONCERN_ORDER.map((key) => (
                 <option key={key} value={key}>
@@ -156,7 +158,7 @@ export default function ProductsPage() {
             <select
               value={form.category}
               onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as ProductCategory }))}
-              className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
             >
               {CATEGORY_ORDER.map((key) => (
                 <option key={key} value={key}>
@@ -171,7 +173,7 @@ export default function ProductsPage() {
               value={form.brand}
               onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
               placeholder="例：肌ラボ"
-              className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
               required
             />
           </label>
@@ -181,7 +183,7 @@ export default function ProductsPage() {
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="例：極潤ヒアルロン液"
-              className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
               required
             />
           </label>
@@ -191,7 +193,7 @@ export default function ProductsPage() {
               value={form.ingredient}
               onChange={(e) => setForm((f) => ({ ...f, ingredient: e.target.value }))}
               placeholder="例：ヒアルロン酸"
-              className="mt-1 w-full rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
             />
           </label>
           <div className="flex gap-2 pt-1">
@@ -219,12 +221,15 @@ export default function ProductsPage() {
           .filter(([, list]) => list.length > 0)
           .map(([concern, list]) => (
             <section key={concern}>
-              <h2 className="mb-1.5 text-sm font-bold">{CONCERN_LABELS[concern]}</h2>
+              <h2 className="mb-1.5 flex items-center gap-1.5 text-sm font-bold">
+                <span className={`h-2 w-2 rounded-full ${CONCERN_DOT_CLASS[concern]}`} />
+                {CONCERN_LABELS[concern]}
+              </h2>
               <ul className="flex flex-col gap-2">
                 {list.map((p) => (
                   <li
                     key={p.id}
-                    className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
+                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-3 shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -258,18 +263,20 @@ function FilterChip({
   active,
   onClick,
   label,
+  colorClass,
 }: {
   active: boolean;
   onClick: () => void;
   label: string;
+  colorClass?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-xs font-medium ${
+      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
         active
-          ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-          : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
+          ? colorClass ?? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+          : "bg-neutral-100 text-neutral-600 dark:bg-white/5 dark:text-neutral-300"
       }`}
     >
       {label}
