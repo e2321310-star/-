@@ -99,12 +99,20 @@ export interface Profile {
 
 export type CareVerdict = "keep" | "change" | "no-data";
 
+export interface ConcernContribution {
+  concern: ConcernKey;
+  weight: number;
+  deduction: number; // 肌点数からのマイナス分
+  sources: string[]; // この悩みの重みに寄与した理由（セルフチェック/肌質/気温/写真解析）
+}
+
 export interface DiagnosisResult {
-  rankedConcerns: { concern: ConcernKey; weight: number }[];
+  rankedConcerns: ConcernContribution[];
   am: CareStep[];
   pm: CareStep[];
   skinScore: number; // 0-100（高いほど良好）
   skinAge: number; // 参考値としての肌年齢
+  scoreExplanation: string; // 肌点数・肌年齢の算出方法の説明
 }
 
 export interface CareStep {

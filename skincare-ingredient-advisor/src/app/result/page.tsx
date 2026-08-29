@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { getAllDiagnoses, getAllProducts, getProfile } from "@/lib/db";
 import { buildDiagnosis } from "@/lib/recommend";
+import { formatDateJa } from "@/lib/date";
 import {
   CATEGORY_LABELS,
   CONCERN_LABELS,
   type CareStep,
+  type ConcernContribution,
   type ConcernKey,
   type DiagnosisResult,
 } from "@/lib/types";
@@ -30,7 +34,20 @@ const VERDICT_LABEL: Record<CareStep["verdict"], string> = {
 };
 
 export default function ResultPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-neutral-400">読み込み中…</p>}>
+      <ResultPageInner />
+    </Suspense>
+  );
+}
+
+function ResultPageInner() {
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
+
   const [result, setResult] = useState<DiagnosisResult | null>(null);
+  const [recordDate, setRecordDate] = useState<string | null>(null);
+  const [latestDate, setLatestDate] = useState<string | null>(null);
   const [hasData, setHasData] = useState(false);
   const [loading, setLoading] = useState(true);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
@@ -40,42 +57,69 @@ export default function ResultPage() {
   useEffect(() => {
     Promise.all([getAllDiagnoses(), getAllProducts(), getProfile()]).then(
       async ([diagnoses, products, profile]) => {
-        const latest = diagnoses[0];
+        setLatestDate(diagnoses[0]?.date ?? null);
         setRealAge(profile.age);
-        if (latest) {
+        const target = dateParam ? diagnoses.find((d) => d.date === dateParam) : diagnoses[0];
+        if (target) {
           setHasData(true);
+          setRecordDate(target.date);
           let analysis: PhotoAnalysis | null = null;
-          if (latest.photo) {
-            setPhotoUrl(URL.createObjectURL(latest.photo));
-            analysis = await analyzePhotoBlob(latest.photo);
+          if (target.photo) {
+            setPhotoUrl(URL.createObjectURL(target.photo));
+            analysis = await analyzePhotoBlob(target.photo);
             setPhotoAnalysis(analysis);
+          } else {
+            setPhotoUrl(null);
+            setPhotoAnalysis(null);
           }
-          setResult(buildDiagnosis(latest, products, analysis?.concernSignals, profile.currentRoutine));
+          setResult(buildDiagnosis(target, products, analysis?.concernSignals, profile.currentRoutine));
+        } else {
+          setHasData(false);
         }
         setLoading(false);
       }
     );
-  }, []);
+  }, [dateParam]);
+
+  const viewingPast = !!dateParam && dateParam !== latestDate;
 
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-lg font-bold">診断結果</h1>
+        <h1 className="text-lg font-bold">
+          診断結果{recordDate ? `（${formatDateJa(recordDate)}）` : ""}
+        </h1>
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
           不足していそうな成分と、朝晩それぞれのブランド別おすすめ商品を表示します。
         </p>
+        {viewingPast && (
+          <Link
+            href="/result"
+            className="mt-1 inline-block text-xs font-semibold text-pink-600 underline dark:text-pink-400"
+          >
+            → 最新の診断結果を見る
+          </Link>
+        )}
       </header>
 
       {loading && <p className="text-sm text-neutral-400">読み込み中…</p>}
 
       {!loading && !hasData && (
         <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 text-sm text-neutral-500 dark:text-neutral-400">
-          まだ診断データがありません。診断画面から入力してください。
+          {dateParam
+            ? "この日の診断データが見つかりませんでした。"
+            : "まだ診断データがありません。診断画面から入力してください。"}
         </div>
       )}
 
       {!loading && hasData && result && (
-        <ScoreBlock skinScore={result.skinScore} skinAge={result.skinAge} realAge={realAge} />
+        <ScoreBlock
+          skinScore={result.skinScore}
+          skinAge={result.skinAge}
+          realAge={realAge}
+          rankedConcerns={result.rankedConcerns}
+          explanation={result.scoreExplanation}
+        />
       )}
 
       {!loading && hasData && result && result.rankedConcerns.length === 0 && (
@@ -109,6 +153,10 @@ export default function ResultPage() {
             </section>
           )}
 
+          <div className="rounded-2xl bg-neutral-100 p-3 text-[11px] text-neutral-500 dark:bg-white/5 dark:text-neutral-400">
+            💡 朝と夜でおすすめの内容は変えています。朝は日中のくずれ・乾燥を防ぐ軽めのケア、夜はパックを含めた集中的な補修ケアです。
+          </div>
+
           <CareBlock title="朝のケア" emoji="☀️" steps={result.am} />
           <CareBlock title="夜のケア" emoji="🌙" steps={result.pm} />
           <FoodBlock concerns={result.rankedConcerns.slice(0, TOP_N).map((r) => r.concern)} />
@@ -122,10 +170,14 @@ function ScoreBlock({
   skinScore,
   skinAge,
   realAge,
+  rankedConcerns,
+  explanation,
 }: {
   skinScore: number;
   skinAge: number;
   realAge?: number;
+  rankedConcerns: ConcernContribution[];
+  explanation: string;
 }) {
   const diff = realAge != null ? skinAge - realAge : null;
   const diffLabel =
@@ -138,25 +190,45 @@ function ScoreBlock({
           : "実年齢とほぼ同じ";
 
   return (
-    <section className="grid grid-cols-2 gap-3">
-      <div className="rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 p-4 text-white shadow-lg shadow-blue-900/15">
-        <p className="text-xs font-medium text-sky-50/90">肌点数</p>
-        <p className="mt-1 text-3xl font-bold">
-          {skinScore}
-          <span className="text-base font-medium">点</span>
-        </p>
+    <section className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 p-4 text-white shadow-lg shadow-blue-900/15">
+          <p className="text-xs font-medium text-sky-50/90">肌点数</p>
+          <p className="mt-1 text-3xl font-bold">
+            {skinScore}
+            <span className="text-base font-medium">点</span>
+          </p>
+        </div>
+        <div className="rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-600 p-4 text-white shadow-lg shadow-pink-900/15">
+          <p className="text-xs font-medium text-pink-50/90">肌年齢</p>
+          <p className="mt-1 text-3xl font-bold">
+            {skinAge}
+            <span className="text-base font-medium">歳</span>
+          </p>
+          {diffLabel && <p className="mt-0.5 text-[11px] text-pink-50/90">{diffLabel}</p>}
+        </div>
       </div>
-      <div className="rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-600 p-4 text-white shadow-lg shadow-pink-900/15">
-        <p className="text-xs font-medium text-pink-50/90">肌年齢</p>
-        <p className="mt-1 text-3xl font-bold">
-          {skinAge}
-          <span className="text-base font-medium">歳</span>
-        </p>
-        {diffLabel && <p className="mt-0.5 text-[11px] text-pink-50/90">{diffLabel}</p>}
-      </div>
-      <p className="col-span-2 text-[11px] text-neutral-400">
-        セルフチェック・写真解析などから算出した参考値です。医学的な測定値ではありません。
-      </p>
+
+      {rankedConcerns.length > 0 && (
+        <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3.5 shadow-sm">
+          <p className="text-xs font-bold">点数の内訳</p>
+          <ul className="mt-1.5 flex flex-col gap-1">
+            {rankedConcerns.map((r) => (
+              <li key={r.concern} className="flex items-center justify-between gap-2 text-[11px]">
+                <span className="text-neutral-600 dark:text-neutral-300">
+                  {CONCERN_LABELS[r.concern]}
+                  <span className="ml-1 text-neutral-400">（{r.sources.join("・")}）</span>
+                </span>
+                <span className="shrink-0 font-semibold text-orange-600 dark:text-orange-400">
+                  -{r.deduction}点
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <p className="text-[11px] text-neutral-400">{explanation}</p>
     </section>
   );
 }

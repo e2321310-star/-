@@ -30,6 +30,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<BrandProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<ConcernKey | "all">("all");
+  const [showHelp, setShowHelp] = useState(false);
   const [editingId, setEditingId] = useState<number | "new" | null>(null);
   const [form, setForm] = useState<{
     concern: ConcernKey;
@@ -113,6 +114,27 @@ export default function ProductsPage() {
           悩み別の成分と、対応するブランド商品の一覧です。自由に追加・編集・削除できます。
         </p>
       </header>
+
+      <button
+        onClick={() => setShowHelp((v) => !v)}
+        className="flex items-center justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl px-4 py-2.5 text-left text-xs font-semibold text-neutral-600 shadow-sm dark:text-neutral-300"
+      >
+        <span>ℹ️ この画面の使い方</span>
+        <span className="text-neutral-400">{showHelp ? "閉じる ▲" : "開く ▼"}</span>
+      </button>
+      {showHelp && (
+        <div className="-mt-2 rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 text-xs leading-relaxed text-neutral-600 shadow-sm dark:text-neutral-300">
+          <ul className="list-disc space-y-1 pl-4">
+            <li>ここは「どの悩みに、どの成分・ブランド商品が対応するか」の対応表です。</li>
+            <li>上のチップで悩み別に絞り込んで見られます（すべて/毛穴/色ムラ など）。</li>
+            <li>「＋商品を追加」から、自分が知っている商品や気になる商品を自由に追加できます。</li>
+            <li>各商品の「編集」「削除」から内容を修正・削除できます。</li>
+            <li>
+              ここに登録された商品の中から、あなたの診断結果（不足傾向の成分）に合うものが自動的に選ばれて「診断結果」画面に表示されます。商品を増やすほど、提案の幅が広がります。
+            </li>
+          </ul>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-1.5">
         <FilterChip active={filter === "all"} onClick={() => setFilter("all")} label="すべて" />

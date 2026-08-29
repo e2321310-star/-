@@ -2,6 +2,7 @@ import type {
   BrandProduct,
   CareStep,
   CareVerdict,
+  ConcernContribution,
   ConcernKey,
   CurrentRoutineItem,
   DiagnoseRecord,
@@ -9,16 +10,21 @@ import type {
   ProductCategory,
   SkinType,
 } from "./types";
-import { CATEGORY_ORDER, CONCERN_LABELS, CONCERN_ORDER } from "./types";
+import { CATEGORY_ORDER, CONCERN_LABELS, CONCERN_ORDER, SKIN_TYPE_LABELS } from "./types";
 
 const TOP_N = 2;
 const COLD_THRESHOLD_C = 15; // これ未満は乾燥に傾きやすいとみなす
 const HOT_THRESHOLD_C = 28; // これ超は皮脂・テカリに傾きやすいとみなす
+const SELF_CHECK_WEIGHT = 2;
 const SCORE_PENALTY_PER_WEIGHT = 5; // 悩みの重み1につき肌点数を何点下げるか
 const SCORE_MIN = 50;
 const SCORE_MAX = 100;
 const BASE_SKIN_AGE = 20; // 肌点数100のときの肌年齢（参考値）
 const SKIN_AGE_SLOPE = 0.5; // 肌点数が1点下がるごとに肌年齢が何歳上がるか
+
+// 朝はパック（週1〜2回の集中ケア）を除いた軽めのラインナップ、夜はパックを含むフルセット
+const AM_CATEGORIES: ProductCategory[] = CATEGORY_ORDER.filter((c) => c !== "pack");
+const PM_CATEGORIES: ProductCategory[] = CATEGORY_ORDER;
 
 function skinTypeWeights(skinType?: SkinType): Partial<Record<ConcernKey, number>> {
   switch (skinType) {
@@ -92,22 +98,32 @@ function judgeCurrentProduct(
   };
 }
 
+function stepReason(category: ProductCategory, topConcerns: ConcernKey[], period: "am" | "pm"): string {
+  const labels = topConcerns.map((c) => CONCERN_LABELS[c]).join("・");
+  if (category === "pack") {
+    return `「${labels}」の対策に向けて、週1〜2回の夜の集中ケアとして取り入れましょう。`;
+  }
+  if (period === "am") {
+    return `「${labels}」の対策に向けて、日中の乾燥・くずれを防ぐケアとして取り入れましょう。`;
+  }
+  return `「${labels}」の対策に向けて、夜のあいだにしっかり補修するケアとして取り入れましょう。`;
+}
+
 function buildCareStep(
   category: ProductCategory,
   order: number,
+  period: "am" | "pm",
   topConcerns: ConcernKey[],
   products: BrandProduct[],
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>
 ): CareStep {
   const matched = pickProducts(products, category, topConcerns);
-  const labels = topConcerns.map((c) => CONCERN_LABELS[c]).join("・");
-  const freqNote = category === "pack" ? "週1〜2回の集中ケアとして" : "毎日のケアとして";
   const currentProduct = currentRoutine?.[category];
   const { verdict, reason: verdictReason } = judgeCurrentProduct(currentProduct, matched);
   return {
     category,
     order,
-    reason: `「${labels}」の対策に向けて、${freqNote}取り入れましょう。`,
+    reason: stepReason(category, topConcerns, period),
     products: matched,
     currentProduct,
     verdict,
@@ -131,42 +147,57 @@ export function buildDiagnosis(
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>
 ): DiagnosisResult {
   const weights = new Map<ConcernKey, number>(CONCERN_ORDER.map((c) => [c, 0]));
+  const sources = new Map<ConcernKey, string[]>(CONCERN_ORDER.map((c) => [c, []]));
+
+  function addWeight(concern: ConcernKey, amount: number, source: string) {
+    weights.set(concern, (weights.get(concern) ?? 0) + amount);
+    sources.get(concern)?.push(source);
+  }
 
   for (const concern of record.concerns) {
-    weights.set(concern, (weights.get(concern) ?? 0) + 2);
+    addWeight(concern, SELF_CHECK_WEIGHT, "セルフチェックで選択");
   }
   for (const [concern, w] of Object.entries(skinTypeWeights(record.skinType)) as [
     ConcernKey,
     number
   ][]) {
-    weights.set(concern, (weights.get(concern) ?? 0) + w);
+    addWeight(concern, w, `肌質(${record.skinType ? SKIN_TYPE_LABELS[record.skinType] : ""})`);
   }
   for (const [concern, w] of Object.entries(temperatureWeights(record.temperatureC)) as [
     ConcernKey,
     number
   ][]) {
-    weights.set(concern, (weights.get(concern) ?? 0) + w);
+    addWeight(concern, w, `気温(${record.temperatureC}℃)`);
   }
   for (const [concern, w] of Object.entries(photoSignals ?? {}) as [ConcernKey, number][]) {
-    weights.set(concern, (weights.get(concern) ?? 0) + w);
+    addWeight(concern, w, "写真解析");
   }
 
-  const rankedConcerns = Array.from(weights.entries())
+  const rankedConcerns: ConcernContribution[] = Array.from(weights.entries())
     .filter(([, w]) => w > 0)
     .sort((a, b) => b[1] - a[1])
-    .map(([concern, weight]) => ({ concern, weight }));
+    .map(([concern, weight]) => ({
+      concern,
+      weight,
+      deduction: Math.round(weight * SCORE_PENALTY_PER_WEIGHT),
+      sources: sources.get(concern) ?? [],
+    }));
 
   const totalWeight = rankedConcerns.reduce((sum, r) => sum + r.weight, 0);
   const { skinScore, skinAge } = computeSkinScoreAndAge(totalWeight);
+  const scoreExplanation = `満点100点から、気になる部位1つにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真解析からの追加シグナル1つにつき${SCORE_PENALTY_PER_WEIGHT}点を目安に減点しています（最低${SCORE_MIN}点）。肌年齢は、肌点数100点を${BASE_SKIN_AGE}歳とし、点数が1点下がるごとに${SKIN_AGE_SLOPE}歳ずつ上げて計算した参考値です。`;
 
   if (rankedConcerns.length === 0) {
-    return { rankedConcerns: [], am: [], pm: [], skinScore, skinAge };
+    return { rankedConcerns: [], am: [], pm: [], skinScore, skinAge, scoreExplanation };
   }
 
   const topConcerns = rankedConcerns.slice(0, TOP_N).map((c) => c.concern);
-  const steps = CATEGORY_ORDER.map((category, i) =>
-    buildCareStep(category, i + 1, topConcerns, products, currentRoutine)
+  const am = AM_CATEGORIES.map((category, i) =>
+    buildCareStep(category, i + 1, "am", topConcerns, products, currentRoutine)
+  );
+  const pm = PM_CATEGORIES.map((category, i) =>
+    buildCareStep(category, i + 1, "pm", topConcerns, products, currentRoutine)
   );
 
-  return { rankedConcerns, am: steps, pm: steps, skinScore, skinAge };
+  return { rankedConcerns, am, pm, skinScore, skinAge, scoreExplanation };
 }
