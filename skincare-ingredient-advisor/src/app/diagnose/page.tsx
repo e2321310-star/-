@@ -12,14 +12,7 @@ import {
   type SkinType,
 } from "@/lib/types";
 import { CONCERN_BADGE_CLASS } from "@/lib/theme";
-
-function todayStr(): string {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+import { todayStr } from "@/lib/date";
 
 export default function DiagnosePage() {
   const videoRef = useRef<HTMLVideoElement>(null);

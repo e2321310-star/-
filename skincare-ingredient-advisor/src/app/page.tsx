@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getDiagnose } from "@/lib/db";
-
-function todayStr(): string {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+import { todayStr } from "@/lib/date";
 
 const LINKS = [
   {
@@ -26,6 +19,13 @@ const LINKS = [
     ring: "bg-orange-100 dark:bg-orange-500/20",
     title: "診断結果",
     desc: "不足成分と、朝晩のブランド別おすすめ商品を確認",
+  },
+  {
+    href: "/history",
+    icon: "🗂️",
+    ring: "bg-emerald-100 dark:bg-emerald-500/20",
+    title: "記録",
+    desc: "過去の診断をアーカイブとして振り返る",
   },
   {
     href: "/products",
