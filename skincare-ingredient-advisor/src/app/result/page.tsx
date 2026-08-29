@@ -35,11 +35,13 @@ export default function ResultPage() {
   const [loading, setLoading] = useState(true);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoAnalysis, setPhotoAnalysis] = useState<PhotoAnalysis | null>(null);
+  const [realAge, setRealAge] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     Promise.all([getAllDiagnoses(), getAllProducts(), getProfile()]).then(
       async ([diagnoses, products, profile]) => {
         const latest = diagnoses[0];
+        setRealAge(profile.age);
         if (latest) {
           setHasData(true);
           let analysis: PhotoAnalysis | null = null;
@@ -72,7 +74,9 @@ export default function ResultPage() {
         </div>
       )}
 
-      {!loading && hasData && result && <ScoreBlock skinScore={result.skinScore} skinAge={result.skinAge} />}
+      {!loading && hasData && result && (
+        <ScoreBlock skinScore={result.skinScore} skinAge={result.skinAge} realAge={realAge} />
+      )}
 
       {!loading && hasData && result && result.rankedConcerns.length === 0 && (
         <div className="rounded-2xl bg-gradient-to-br from-pink-500 to-violet-600 p-4 text-sm font-medium text-white shadow-lg shadow-pink-900/15">
@@ -114,7 +118,25 @@ export default function ResultPage() {
   );
 }
 
-function ScoreBlock({ skinScore, skinAge }: { skinScore: number; skinAge: number }) {
+function ScoreBlock({
+  skinScore,
+  skinAge,
+  realAge,
+}: {
+  skinScore: number;
+  skinAge: number;
+  realAge?: number;
+}) {
+  const diff = realAge != null ? skinAge - realAge : null;
+  const diffLabel =
+    diff == null
+      ? null
+      : diff <= -2
+        ? `実年齢より${Math.abs(diff)}歳若め ✨`
+        : diff >= 2
+          ? `実年齢より${diff}歳高め`
+          : "実年齢とほぼ同じ";
+
   return (
     <section className="grid grid-cols-2 gap-3">
       <div className="rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 p-4 text-white shadow-lg shadow-blue-900/15">
@@ -130,6 +152,7 @@ function ScoreBlock({ skinScore, skinAge }: { skinScore: number; skinAge: number
           {skinAge}
           <span className="text-base font-medium">歳</span>
         </p>
+        {diffLabel && <p className="mt-0.5 text-[11px] text-pink-50/90">{diffLabel}</p>}
       </div>
       <p className="col-span-2 text-[11px] text-neutral-400">
         セルフチェック・写真解析などから算出した参考値です。医学的な測定値ではありません。

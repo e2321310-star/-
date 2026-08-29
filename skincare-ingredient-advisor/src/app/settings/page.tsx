@@ -5,9 +5,12 @@ import { getProfile, saveProfile } from "@/lib/db";
 import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
+  GENDER_LABELS,
+  GENDER_ORDER,
   SKIN_TYPE_LABELS,
   SKIN_TYPE_ORDER,
   type CurrentRoutineItem,
+  type Gender,
   type ProductCategory,
   type SkinType,
 } from "@/lib/types";
@@ -19,6 +22,8 @@ export default function SettingsPage() {
   const [skinType, setSkinType] = useState<SkinType | undefined>(undefined);
   const [favoriteBrands, setFavoriteBrands] = useState("");
   const [currentRoutine, setCurrentRoutine] = useState<RoutineState>({});
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState<Gender | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
 
@@ -27,6 +32,8 @@ export default function SettingsPage() {
       setSkinType(p.skinType);
       setFavoriteBrands(p.favoriteBrands ?? "");
       setCurrentRoutine(p.currentRoutine ?? {});
+      setAge(p.age != null ? String(p.age) : "");
+      setGender(p.gender);
       setLoading(false);
     });
   }, []);
@@ -44,6 +51,8 @@ export default function SettingsPage() {
       skinType,
       favoriteBrands: favoriteBrands.trim(),
       currentRoutine,
+      age: age.trim() === "" ? undefined : Number(age),
+      gender,
     });
     setSaved(true);
   }
@@ -61,6 +70,35 @@ export default function SettingsPage() {
         <p className="text-sm text-neutral-400">読み込み中…</p>
       ) : (
         <>
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">年齢・性別</h2>
+            <p className="mt-1 text-xs text-neutral-400">診断結果の肌年齢との比較に使われます</p>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                inputMode="numeric"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder="例：28（歳）"
+                className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+              />
+              <div className="grid grid-cols-1 gap-1.5">
+                <select
+                  value={gender ?? ""}
+                  onChange={(e) => setGender((e.target.value || undefined) as Gender | undefined)}
+                  className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-2 text-sm dark:bg-white/5"
+                >
+                  <option value="">性別を選択</option>
+                  {GENDER_ORDER.map((g) => (
+                    <option key={g} value={g}>
+                      {GENDER_LABELS[g]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </section>
+
           <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="text-sm font-bold">肌質</h2>
             <p className="mt-1 text-xs text-neutral-400">

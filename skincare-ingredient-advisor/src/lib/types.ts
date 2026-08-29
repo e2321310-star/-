@@ -37,6 +37,16 @@ export const SKIN_TYPE_LABELS: Record<SkinType, string> = {
 
 export const SKIN_TYPE_ORDER: SkinType[] = ["dry", "oily", "combination", "normal", "sensitive"];
 
+export type Gender = "female" | "male" | "no_answer";
+
+export const GENDER_LABELS: Record<Gender, string> = {
+  female: "女性",
+  male: "男性",
+  no_answer: "回答しない",
+};
+
+export const GENDER_ORDER: Gender[] = ["female", "male", "no_answer"];
+
 export type ProductCategory = "lotion" | "serum" | "cream" | "emulsion" | "pack";
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
@@ -83,6 +93,8 @@ export interface Profile {
   skinType?: SkinType;
   favoriteBrands?: string;
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>;
+  age?: number;
+  gender?: Gender;
 }
 
 export type CareVerdict = "keep" | "change" | "no-data";
