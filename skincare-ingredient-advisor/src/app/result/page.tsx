@@ -3,8 +3,17 @@
 import { useEffect, useState } from "react";
 import { getAllDiagnoses, getAllProducts } from "@/lib/db";
 import { buildDiagnosis } from "@/lib/recommend";
-import { CATEGORY_LABELS, CONCERN_LABELS, type CareStep, type DiagnosisResult } from "@/lib/types";
+import {
+  CATEGORY_LABELS,
+  CONCERN_LABELS,
+  type CareStep,
+  type ConcernKey,
+  type DiagnosisResult,
+} from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
+import { FOOD_ADVICE } from "@/data/seedFoods";
+
+const TOP_N = 2;
 
 export default function ResultPage() {
   const [result, setResult] = useState<DiagnosisResult | null>(null);
@@ -64,9 +73,45 @@ export default function ResultPage() {
 
           <CareBlock title="朝のケア" emoji="☀️" steps={result.am} />
           <CareBlock title="夜のケア" emoji="🌙" steps={result.pm} />
+          <FoodBlock concerns={result.rankedConcerns.slice(0, TOP_N).map((r) => r.concern)} />
         </>
       )}
     </div>
+  );
+}
+
+function FoodBlock({ concerns }: { concerns: ConcernKey[] }) {
+  return (
+    <section>
+      <h2 className="mb-2 flex items-center gap-1.5 text-sm font-bold">
+        <span>🍽️</span>
+        今日食べたい食べ物
+      </h2>
+      <div className="flex flex-col gap-2.5">
+        {concerns.map((concern) => (
+          <div
+            key={concern}
+            className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3.5 shadow-sm"
+          >
+            <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${CONCERN_BADGE_CLASS[concern]}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${CONCERN_DOT_CLASS[concern]}`} />
+              {CONCERN_LABELS[concern]}対策
+            </span>
+            <ul className="mt-2 flex flex-col gap-1.5">
+              {FOOD_ADVICE[concern].map((tip) => (
+                <li key={tip.food} className="rounded-lg bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5">
+                  <span className="font-semibold text-neutral-800 dark:text-neutral-100">{tip.food}</span>
+                  <span className="ml-1 text-neutral-500 dark:text-neutral-400">－ {tip.benefit}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-[11px] text-neutral-400">
+        一般的な栄養情報の参考です。持病やアレルギーがある場合は医師・管理栄養士にご相談ください。
+      </p>
+    </section>
   );
 }
 
