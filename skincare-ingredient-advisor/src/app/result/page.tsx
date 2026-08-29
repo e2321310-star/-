@@ -12,6 +12,8 @@ import {
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
 import { FOOD_ADVICE } from "@/data/seedFoods";
+import { analyzePhotoBlob, type PhotoAnalysis } from "@/lib/photoAnalysis";
+import PhotoAnalysisPanel from "@/components/PhotoAnalysisPanel";
 
 const TOP_N = 2;
 
@@ -19,13 +21,21 @@ export default function ResultPage() {
   const [result, setResult] = useState<DiagnosisResult | null>(null);
   const [hasData, setHasData] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoAnalysis, setPhotoAnalysis] = useState<PhotoAnalysis | null>(null);
 
   useEffect(() => {
-    Promise.all([getAllDiagnoses(), getAllProducts()]).then(([diagnoses, products]) => {
+    Promise.all([getAllDiagnoses(), getAllProducts()]).then(async ([diagnoses, products]) => {
       const latest = diagnoses[0];
       if (latest) {
         setHasData(true);
-        setResult(buildDiagnosis(latest, products));
+        let analysis: PhotoAnalysis | null = null;
+        if (latest.photo) {
+          setPhotoUrl(URL.createObjectURL(latest.photo));
+          analysis = await analyzePhotoBlob(latest.photo);
+          setPhotoAnalysis(analysis);
+        }
+        setResult(buildDiagnosis(latest, products, analysis?.concernSignals));
       }
       setLoading(false);
     });
@@ -66,10 +76,18 @@ export default function ResultPage() {
                 >
                   <span className={`h-1.5 w-1.5 rounded-full ${CONCERN_DOT_CLASS[r.concern]}`} />
                   {CONCERN_LABELS[r.concern]}
+                  {photoAnalysis?.concernSignals[r.concern] != null && <span title="写真からも検出">📷</span>}
                 </span>
               ))}
             </div>
           </section>
+
+          {photoUrl && photoAnalysis && (
+            <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+              <h2 className="mb-2 text-sm font-bold">📷 写真のどこを見て判断しているか</h2>
+              <PhotoAnalysisPanel photoUrl={photoUrl} analysis={photoAnalysis} />
+            </section>
+          )}
 
           <CareBlock title="朝のケア" emoji="☀️" steps={result.am} />
           <CareBlock title="夜のケア" emoji="🌙" steps={result.pm} />

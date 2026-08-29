@@ -13,6 +13,8 @@ import {
 } from "@/lib/types";
 import { CONCERN_BADGE_CLASS } from "@/lib/theme";
 import { todayStr } from "@/lib/date";
+import { analyzePhotoBlob, type PhotoAnalysis } from "@/lib/photoAnalysis";
+import PhotoAnalysisPanel from "@/components/PhotoAnalysisPanel";
 
 export default function DiagnosePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -21,7 +23,9 @@ export default function DiagnosePage() {
 
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [capture, setCapture] = useState<{ blob: Blob; url: string } | null>(null);
-  const [existingPhotoUrl, setExistingPhotoUrl] = useState<string | null>(null);
+  const [existingPhoto, setExistingPhoto] = useState<{ blob: Blob; url: string } | null>(null);
+  const [photoAnalysis, setPhotoAnalysis] = useState<PhotoAnalysis | null>(null);
+  const [analyzedBlob, setAnalyzedBlob] = useState<Blob | null>(null);
 
   const [concerns, setConcerns] = useState<ConcernKey[]>([]);
   const [temperature, setTemperature] = useState("");
@@ -60,7 +64,7 @@ export default function DiagnosePage() {
     let cancelled = false;
     Promise.all([getDiagnose(date), getProfile()]).then(([rec, profile]) => {
       if (cancelled) return;
-      setExistingPhotoUrl(rec?.photo ? URL.createObjectURL(rec.photo) : null);
+      setExistingPhoto(rec?.photo ? { blob: rec.photo, url: URL.createObjectURL(rec.photo) } : null);
       setConcerns(rec?.concerns ?? []);
       setTemperature(rec?.temperatureC != null ? String(rec.temperatureC) : "");
       setSkinType(rec?.skinType ?? profile.skinType);
@@ -70,6 +74,26 @@ export default function DiagnosePage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const activePhoto = capture ?? existingPhoto;
+
+  useEffect(() => {
+    if (!activePhoto) return;
+    let cancelled = false;
+    const blob = activePhoto.blob;
+    analyzePhotoBlob(blob).then((result) => {
+      if (!cancelled) {
+        setPhotoAnalysis(result);
+        setAnalyzedBlob(blob);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePhoto?.blob]);
+
+  const analyzing = !!activePhoto && analyzedBlob !== activePhoto.blob;
 
   function toggleConcern(key: ConcernKey) {
     setConcerns((prev) => (prev.includes(key) ? prev.filter((c) => c !== key) : [...prev, key]));
@@ -119,7 +143,7 @@ export default function DiagnosePage() {
     }
   }
 
-  const photoUrl = capture?.url ?? existingPhotoUrl;
+  const photoUrl = activePhoto?.url ?? null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -158,7 +182,7 @@ export default function DiagnosePage() {
             onClick={handleCapture}
             className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
           >
-            {existingPhotoUrl ? "撮り直す" : "撮影する"}
+            {existingPhoto ? "撮り直す" : "撮影する"}
           </button>
         )}
         {capture && (
@@ -170,6 +194,18 @@ export default function DiagnosePage() {
           </button>
         )}
       </section>
+
+      {photoUrl && (
+        <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+          <h2 className="text-sm font-bold">📷 写真のどこを見て判断しているか</h2>
+          {analyzing && <p className="mt-2 text-xs text-neutral-400">写真を解析中…</p>}
+          {!analyzing && photoAnalysis && (
+            <div className="mt-2">
+              <PhotoAnalysisPanel photoUrl={photoUrl} analysis={photoAnalysis} />
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
         <h2 className="text-sm font-bold">気になる部位（セルフチェック）</h2>

@@ -66,7 +66,8 @@ function buildCareStep(
 
 export function buildDiagnosis(
   record: Pick<DiagnoseRecord, "concerns" | "skinType" | "temperatureC">,
-  products: BrandProduct[]
+  products: BrandProduct[],
+  photoSignals?: Partial<Record<ConcernKey, number>>
 ): DiagnosisResult {
   const weights = new Map<ConcernKey, number>(CONCERN_ORDER.map((c) => [c, 0]));
 
@@ -83,6 +84,9 @@ export function buildDiagnosis(
     ConcernKey,
     number
   ][]) {
+    weights.set(concern, (weights.get(concern) ?? 0) + w);
+  }
+  for (const [concern, w] of Object.entries(photoSignals ?? {}) as [ConcernKey, number][]) {
     weights.set(concern, (weights.get(concern) ?? 0) + w);
   }
 
