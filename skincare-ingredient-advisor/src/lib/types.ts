@@ -87,6 +87,15 @@ export const PERIOD_LABELS: Record<CarePeriod, string> = {
   both: "朝晩どちらでも",
 };
 
+// 価格帯の目安（実売価格は変動するため、大まかな区分のみ保持する）
+export type PriceRange = "budget" | "mid" | "premium";
+
+export const PRICE_RANGE_LABELS: Record<PriceRange, string> = {
+  budget: "💴 プチプラ",
+  mid: "💴💴 ミドル",
+  premium: "💴💴💴 デパコス",
+};
+
 // 成分×ブランド商品データ
 export interface BrandProduct {
   id?: number; // autoIncrement
@@ -97,6 +106,9 @@ export interface BrandProduct {
   name: string; // 商品名
   note?: string;
   period?: CarePeriod;
+  priceRange?: PriceRange;
+  price?: string; // 実売価格（自由入力、例："1,320円"）
+  link?: string; // 購入ページなどのURL（自由入力）
 }
 
 // 今使っているスキンケア（カテゴリごとに1つ）

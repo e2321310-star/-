@@ -9,6 +9,7 @@ import { formatDateJa } from "@/lib/date";
 import {
   CATEGORY_LABELS,
   CONCERN_LABELS,
+  PRICE_RANGE_LABELS,
   type CareStep,
   type ConcernContribution,
   type ConcernKey,
@@ -337,18 +338,41 @@ function CareBlock({ title, emoji, steps }: { title: string; emoji: string; step
             </div>
             <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">{step.reason}</p>
             {step.products.length > 0 ? (
-              <ul className="mt-2 flex flex-col gap-1.5">
+              <ul className="mt-2 flex flex-col gap-2">
                 {step.products.map((p) => (
-                  <li
-                    key={p.id}
-                    className="flex items-start gap-2 rounded-lg bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
-                  >
-                    <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${CONCERN_DOT_CLASS[p.concern]}`} />
-                    <span>
-                      <span className="font-semibold text-neutral-800 dark:text-neutral-100">{p.brand}</span>
-                      <span className="text-neutral-600 dark:text-neutral-300"> {p.name}</span>
-                      <span className="ml-1 text-neutral-400">（{p.ingredient}）</span>
-                    </span>
+                  <li key={p.id} className="rounded-xl bg-neutral-50 p-2.5 text-xs dark:bg-white/5">
+                    <div className="flex items-start gap-2">
+                      <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${CONCERN_DOT_CLASS[p.concern]}`} />
+                      <span className="min-w-0">
+                        <span className="font-semibold text-neutral-800 dark:text-neutral-100">{p.brand}</span>
+                        <span className="text-neutral-600 dark:text-neutral-300"> {p.name}</span>
+                        <span className="ml-1 text-neutral-400">（{p.ingredient}）</span>
+                      </span>
+                    </div>
+                    {(p.priceRange || p.price || p.link) && (
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 pl-3.5">
+                        {p.priceRange && (
+                          <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400">
+                            {PRICE_RANGE_LABELS[p.priceRange]}
+                          </span>
+                        )}
+                        {p.price && (
+                          <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400">
+                            {p.price}
+                          </span>
+                        )}
+                        {p.link && (
+                          <a
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-auto rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-2.5 py-1 text-[10px] font-semibold text-white"
+                          >
+                            🔗 商品を見る
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

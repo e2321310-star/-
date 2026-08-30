@@ -13,22 +13,40 @@ import {
   CONCERN_LABELS,
   CONCERN_ORDER,
   PERIOD_LABELS,
+  PRICE_RANGE_LABELS,
   type BrandProduct,
   type CarePeriod,
   type ConcernKey,
+  type PriceRange,
   type ProductCategory,
 } from "@/lib/types";
 import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
 
 const PERIOD_ORDER: CarePeriod[] = ["both", "am", "pm"];
+const PRICE_RANGE_ORDER: PriceRange[] = ["budget", "mid", "premium"];
 
-const emptyForm = {
+type FormState = {
+  concern: ConcernKey;
+  category: ProductCategory;
+  ingredient: string;
+  brand: string;
+  name: string;
+  period: CarePeriod;
+  priceRange: PriceRange | "";
+  price: string;
+  link: string;
+};
+
+const emptyForm: FormState = {
   concern: CONCERN_ORDER[0],
   category: CATEGORY_ORDER[0],
   ingredient: "",
   brand: "",
   name: "",
-  period: "both" as CarePeriod,
+  period: "both",
+  priceRange: "",
+  price: "",
+  link: "",
 };
 
 export default function ProductsPage() {
@@ -37,14 +55,7 @@ export default function ProductsPage() {
   const [filter, setFilter] = useState<ConcernKey | "all">("all");
   const [showHelp, setShowHelp] = useState(false);
   const [editingId, setEditingId] = useState<number | "new" | null>(null);
-  const [form, setForm] = useState<{
-    concern: ConcernKey;
-    category: ProductCategory;
-    ingredient: string;
-    brand: string;
-    name: string;
-    period: CarePeriod;
-  }>(emptyForm);
+  const [form, setForm] = useState<FormState>(emptyForm);
 
   function load() {
     getAllProducts().then((list) => {
@@ -78,6 +89,9 @@ export default function ProductsPage() {
       brand: p.brand,
       name: p.name,
       period: p.period ?? "both",
+      priceRange: p.priceRange ?? "",
+      price: p.price ?? "",
+      link: p.link ?? "",
     });
     setEditingId(p.id ?? "new");
   }
@@ -97,6 +111,9 @@ export default function ProductsPage() {
       brand: form.brand.trim(),
       name: form.name.trim(),
       period: form.period,
+      priceRange: form.priceRange || undefined,
+      price: form.price.trim() || undefined,
+      link: form.link.trim() || undefined,
     };
     if (editingId === "new") {
       await addProduct(payload);
@@ -136,7 +153,8 @@ export default function ProductsPage() {
             <li>ここは「どの悩みに、どの成分・ブランド商品が対応するか」の対応表です。</li>
             <li>上のチップで悩み別に絞り込んで見られます（すべて/毛穴/色ムラ など）。</li>
             <li>「＋商品を追加」から、自分が知っている商品や気になる商品を自由に追加できます。</li>
-            <li>各商品の「編集」「削除」から内容を修正・削除できます。</li>
+            <li>価格帯・実売価格・購入リンクも入力しておくと、診断結果画面から直接確認できます。</li>
+            <li>各商品カードの✏️「編集」🗑️「削除」から内容を修正・削除できます。</li>
             <li>
               ここに登録された商品の中から、あなたの診断結果（不足傾向の成分）に合うものが自動的に選ばれて「診断結果」画面に表示されます。商品を増やすほど、提案の幅が広がります。
             </li>
@@ -167,36 +185,41 @@ export default function ProductsPage() {
       {editingId !== null && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-2 rounded-2xl border border-pink-300 bg-pink-50/60 p-3 shadow-sm dark:border-pink-800 dark:bg-pink-500/10"
+          className="flex flex-col gap-3 rounded-2xl border border-pink-300 bg-pink-50/60 p-4 shadow-sm dark:border-pink-800 dark:bg-pink-500/10"
         >
-          <label className="text-xs font-medium text-neutral-500">
-            悩みカテゴリ
-            <select
-              value={form.concern}
-              onChange={(e) => setForm((f) => ({ ...f, concern: e.target.value as ConcernKey }))}
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
-            >
-              {CONCERN_ORDER.map((key) => (
-                <option key={key} value={key}>
-                  {CONCERN_LABELS[key]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="text-xs font-medium text-neutral-500">
-            商品カテゴリ
-            <select
-              value={form.category}
-              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as ProductCategory }))}
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
-            >
-              {CATEGORY_ORDER.map((key) => (
-                <option key={key} value={key}>
-                  {CATEGORY_LABELS[key]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <p className="text-xs font-bold text-pink-700 dark:text-pink-300">
+            {editingId === "new" ? "商品を追加" : "商品を編集"}
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <label className="text-xs font-medium text-neutral-500">
+              悩みカテゴリ
+              <select
+                value={form.concern}
+                onChange={(e) => setForm((f) => ({ ...f, concern: e.target.value as ConcernKey }))}
+                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              >
+                {CONCERN_ORDER.map((key) => (
+                  <option key={key} value={key}>
+                    {CONCERN_LABELS[key]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-medium text-neutral-500">
+              商品カテゴリ
+              <select
+                value={form.category}
+                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as ProductCategory }))}
+                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              >
+                {CATEGORY_ORDER.map((key) => (
+                  <option key={key} value={key}>
+                    {CATEGORY_LABELS[key]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <label className="text-xs font-medium text-neutral-500">
             ブランド名
             <input
@@ -240,6 +263,47 @@ export default function ProductsPage() {
               ))}
             </select>
           </label>
+
+          <div className="my-1 border-t border-pink-200 dark:border-pink-900" />
+          <p className="text-[11px] font-semibold text-neutral-500">価格・購入リンク（任意）</p>
+
+          <div className="grid grid-cols-2 gap-2">
+            <label className="text-xs font-medium text-neutral-500">
+              価格帯の目安
+              <select
+                value={form.priceRange}
+                onChange={(e) => setForm((f) => ({ ...f, priceRange: e.target.value as PriceRange | "" }))}
+                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              >
+                <option value="">未設定</option>
+                {PRICE_RANGE_ORDER.map((p) => (
+                  <option key={p} value={p}>
+                    {PRICE_RANGE_LABELS[p]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-medium text-neutral-500">
+              実売価格
+              <input
+                value={form.price}
+                onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                placeholder="例：1,320円"
+                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              />
+            </label>
+          </div>
+          <label className="text-xs font-medium text-neutral-500">
+            購入リンク
+            <input
+              type="url"
+              value={form.link}
+              onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
+              placeholder="https://..."
+              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+            />
+          </label>
+
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
@@ -273,10 +337,10 @@ export default function ProductsPage() {
                 {list.map((p) => (
                   <li
                     key={p.id}
-                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3 shadow-sm"
+                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3.5 shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm font-semibold">
                           {p.brand} <span className="font-normal">{p.name}</span>
                         </p>
@@ -284,27 +348,57 @@ export default function ProductsPage() {
                           {CATEGORY_LABELS[p.category]}
                           {p.ingredient ? ` ・ ${p.ingredient}` : ""}
                         </p>
-                        {p.period && p.period !== "both" && (
-                          <span className="mt-1 inline-block rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
-                            {PERIOD_LABELS[p.period]}
-                          </span>
-                        )}
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          {p.period && p.period !== "both" && (
+                            <Tag>{PERIOD_LABELS[p.period]}</Tag>
+                          )}
+                          {p.priceRange && <Tag>{PRICE_RANGE_LABELS[p.priceRange]}</Tag>}
+                          {p.price && (
+                            <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+                              {p.price}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex shrink-0 gap-2 text-xs">
-                        <button onClick={() => startEdit(p)} className="text-neutral-500 underline">
-                          編集
+                      <div className="flex shrink-0 flex-col items-end gap-1.5">
+                        <button
+                          onClick={() => startEdit(p)}
+                          className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold text-neutral-600 dark:bg-white/10 dark:text-neutral-300"
+                        >
+                          ✏️ 編集
                         </button>
-                        <button onClick={() => handleDelete(p.id)} className="text-red-500 underline">
-                          削除
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          className="rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600 dark:bg-red-500/10 dark:text-red-400"
+                        >
+                          🗑️ 削除
                         </button>
                       </div>
                     </div>
+                    {p.link && (
+                      <a
+                        href={p.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2 text-xs font-semibold text-white"
+                      >
+                        🔗 商品を見る
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
             </section>
           ))}
     </div>
+  );
+}
+
+function Tag({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-block rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
+      {children}
+    </span>
   );
 }
 
