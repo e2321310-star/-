@@ -124,19 +124,19 @@ function analyzeCanvas(ctx: CanvasRenderingContext2D, width: number, height: num
 
   if (average(textureRegions.map((r) => r.textureVariance)) - overallTexture > TEXTURE_DELTA) {
     concernSignals.pores = (concernSignals.pores ?? 0) + 1;
-    notes.push("鼻・あご・頬のキメの粗さ（明暗差）が顔全体の平均より大きく、毛穴・凹凸が目立ちやすい可能性があります。");
+    notes.push("鼻・あご・頬のキメが顔全体より粗め。毛穴や凹凸が目立ちやすいタイプです。");
   }
   if (average(tZone.map((r) => r.shineRatio)) - average(cheeks.map((r) => r.shineRatio)) > SHINE_DELTA) {
     concernSignals.oiliness = (concernSignals.oiliness ?? 0) + 1;
-    notes.push("額・鼻のTゾーンが頬より光沢（テカリ）が強く出ています。");
+    notes.push("額・鼻のTゾーンが頬よりテカってます。");
   }
   if (average(cheeks.map((r) => r.redness)) - overallRedness > REDNESS_DELTA) {
     concernSignals.soothing = (concernSignals.soothing ?? 0) + 1;
-    notes.push("頬の赤みが顔全体の平均より強く出ています。");
+    notes.push("頬の赤みが顔全体より強め。");
   }
   if (brightnessSpread > BRIGHTNESS_SPREAD_THRESHOLD) {
     concernSignals.brightening = (concernSignals.brightening ?? 0) + 1;
-    notes.push("部位ごとの明るさにばらつきがあり、色ムラが目立ちやすい可能性があります。");
+    notes.push("部位ごとの明るさがバラついていて、色ムラが出やすい状態。");
   }
 
   return { regions, concernSignals, notes };

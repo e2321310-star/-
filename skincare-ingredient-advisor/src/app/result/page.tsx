@@ -307,7 +307,7 @@ function FoodBlock({ concerns }: { concerns: ConcernKey[] }) {
         ))}
       </div>
       <p className="mt-2 text-[11px] text-neutral-400">
-        一般的な栄養情報の参考です。持病やアレルギーがある場合は医師・管理栄養士にご相談ください。
+        持病やアレルギーがある場合は、医師・管理栄養士に相談してから取り入れてください。
       </p>
     </section>
   );

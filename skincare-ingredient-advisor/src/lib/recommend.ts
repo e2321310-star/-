@@ -79,10 +79,10 @@ function judgeCurrentProduct(
   recommended: BrandProduct[]
 ): { verdict: CareVerdict; reason: string } {
   if (!current || (!current.brand.trim() && !current.name.trim())) {
-    return { verdict: "no-data", reason: "今使っている商品が未入力です。設定画面から入力すると判定できます。" };
+    return { verdict: "no-data", reason: "設定画面で今使っている商品を入力すると、ここで判定できます。" };
   }
   if (recommended.length === 0) {
-    return { verdict: "no-data", reason: "比較できる商品データがまだ登録されていません。" };
+    return { verdict: "no-data", reason: "比較できる商品データがまだありません。" };
   }
   const label = `${current.brand} ${current.name}`.trim();
   const brand = normalize(current.brand);
@@ -97,27 +97,27 @@ function judgeCurrentProduct(
   if (matched) {
     return {
       verdict: "keep",
-      reason: `今お使いの「${label}」はおすすめの内容と近いので、現状維持でOKです。`,
+      reason: `今お使いの「${label}」は方向性が合っているので、そのまま続けてOK。`,
     };
   }
   return {
     verdict: "change",
-    reason: `今お使いの「${label}」よりも、上記のおすすめ商品への見直しを検討してもよさそうです。`,
+    reason: `今お使いの「${label}」より、上のおすすめの方が今の悩みに合いそうです。`,
   };
 }
 
 function stepReason(category: ProductCategory, topConcerns: ConcernKey[], period: "am" | "pm"): string {
   const labels = topConcerns.map((c) => CONCERN_LABELS[c]).join("・");
   if (category === "sunscreen") {
-    return `紫外線は色ムラ・乾燥・ハリ低下など多くの肌悩みを進行させる要因です。「${labels}」の対策の意味でも、日中のケアの仕上げに必ず取り入れましょう。`;
+    return `紫外線は色ムラ・乾燥・ハリ低下を進行させる大きな原因。「${labels}」対策としても、日中ケアの最後は必ず日焼け止めで締めましょう。`;
   }
   if (category === "pack") {
-    return `「${labels}」の対策に向けて、週1〜2回の夜の集中ケアとして取り入れましょう。`;
+    return `「${labels}」向けの集中ケア。週1〜2回のスペシャルケアとしてどうぞ。`;
   }
   if (period === "am") {
-    return `「${labels}」の対策に向けて、日中の乾燥・くずれを防ぐケアとして取り入れましょう。`;
+    return `「${labels}」対策に。日中の乾燥・くずれを防いでくれます。`;
   }
-  return `「${labels}」の対策に向けて、夜のあいだにしっかり補修するケアとして取り入れましょう。`;
+  return `「${labels}」対策に。夜のあいだにしっかり補修してくれます。`;
 }
 
 function buildCareStep(
@@ -135,9 +135,7 @@ function buildCareStep(
   const sameEitherTime = matched.length > 0 && !hasTimeSpecific;
   const reason =
     stepReason(category, topConcerns, period) +
-    (sameEitherTime && category !== "pack" && category !== "sunscreen"
-      ? " この成分は低刺激で、朝でも夜でも使って問題ないため同じ内容にしています。"
-      : "");
+    (sameEitherTime && category !== "pack" && category !== "sunscreen" ? " 低刺激なので朝晩問わず使えます。" : "");
   return {
     category,
     order,
@@ -175,15 +173,15 @@ function buildRoadmap(
   if (goalWeight <= 0) {
     stage = 1;
     stageLabel = "維持期";
-    message = `今のところ「${label}」に強い乱れのサインは出ていません。今の基礎ケアを継続しつつ、予防的に${ingredientHint}を取り入れておくと目標に近づきやすくなります。`;
+    message = `今のところ「${label}」は落ち着いています。予防的に${ingredientHint}を取り入れておくと、この調子をキープしやすくなります。`;
   } else if (goalWeight <= 3) {
     stage = 2;
     stageLabel = "対策開始期";
-    message = `「${label}」の対策サインが出始めています。診断結果のケアに加えて、${ingredientHint}を意識的に取り入れ始めましょう。`;
+    message = `「${label}」のサインが出始めているので、${ingredientHint}を意識して取り入れてみましょう。`;
   } else {
     stage = 3;
     stageLabel = "集中ケア期";
-    message = `「${label}」の対策が今まさに必要な状態です。今日のおすすめケアには、この悩み向けの成分を優先的に反映しています。しばらく集中的にケアを続けましょう。`;
+    message = `「${label}」は今いちばん手をかけたいタイミングです。今日のケアにはこの悩み向けの成分を優先して入れているので、しばらく続けてみてください。`;
   }
 
   return { goalConcern, goalNote, stage, stageLabel, message };
@@ -235,7 +233,7 @@ export function buildDiagnosis(
 
   const totalWeight = rankedConcerns.reduce((sum, r) => sum + r.weight, 0);
   const { skinScore, skinAge } = computeSkinScoreAndAge(totalWeight);
-  const scoreExplanation = `満点100点から、気になる部位1つにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真解析からの追加シグナル1つにつき${SCORE_PENALTY_PER_WEIGHT}点を目安に減点しています（最低${SCORE_MIN}点）。肌年齢は、肌点数100点を${BASE_SKIN_AGE}歳とし、点数が1点下がるごとに${SKIN_AGE_SLOPE}歳ずつ上げて計算した参考値です。`;
+  const scoreExplanation = `気になる部位ひとつにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真の追加シグナルひとつにつき${SCORE_PENALTY_PER_WEIGHT}点を100点から引いた点数です（下限${SCORE_MIN}点）。肌年齢はそこから逆算した目安なので、上下しても一喜一憂しすぎず参考程度に。`;
 
   const roadmap = goal
     ? buildRoadmap(goal.concern, goal.note, weights.get(goal.concern) ?? 0, products)

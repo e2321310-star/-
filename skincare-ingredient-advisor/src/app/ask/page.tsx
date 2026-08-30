@@ -37,7 +37,7 @@ export default function AskPage() {
       </header>
 
       <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3 text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-        一般的に知られている化粧品成分・スキンケアの知見をもとにした参考情報です。特定の専門家個人の見解ではありません。症状が続く・強い場合は自己判断せず皮膚科を受診してください。
+        一般的に知られている成分知識をベースにした内容です。症状がひどい・長引くときは自己判断せず皮膚科へ。
       </div>
 
       <input
