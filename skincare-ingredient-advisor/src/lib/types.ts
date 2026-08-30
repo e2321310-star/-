@@ -47,25 +47,58 @@ export const GENDER_LABELS: Record<Gender, string> = {
 
 export const GENDER_ORDER: Gender[] = ["female", "male", "no_answer"];
 
-export type ProductCategory = "lotion" | "serum" | "cream" | "emulsion" | "pack" | "sunscreen";
+export type ProductCategory =
+  | "cleansing"
+  | "faceWash"
+  | "booster"
+  | "lotion"
+  | "mist"
+  | "serum"
+  | "eyeCream"
+  | "emulsion"
+  | "faceOil"
+  | "cream"
+  | "scrubPeeling"
+  | "pack"
+  | "rinseOffPack"
+  | "sunscreen"
+  | "lipCare";
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  cleansing: "クレンジング",
+  faceWash: "洗顔料",
+  booster: "ブースター・導入液",
   lotion: "化粧水",
+  mist: "ミスト",
   serum: "美容液",
-  cream: "クリーム",
+  eyeCream: "アイクリーム",
   emulsion: "乳液",
-  pack: "パック",
+  faceOil: "フェイスオイル",
+  cream: "クリーム",
+  scrubPeeling: "スクラブ・ピーリング",
+  pack: "シートマスク",
+  rinseOffPack: "洗い流すパック",
   sunscreen: "日焼け止め",
+  lipCare: "リップケア",
 };
 
-// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、パックは夜の集中ケア、日焼け止めは朝の仕上げ）
+// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、スクラブ/パック類は週1〜2回の集中ケア、日焼け止めは朝の仕上げ）
 export const CATEGORY_ORDER: ProductCategory[] = [
+  "cleansing",
+  "faceWash",
+  "booster",
   "lotion",
+  "mist",
   "serum",
+  "eyeCream",
   "emulsion",
+  "faceOil",
   "cream",
+  "scrubPeeling",
   "pack",
+  "rinseOffPack",
   "sunscreen",
+  "lipCare",
 ];
 
 // 診断記録：撮影・セルフチェック・気温・肌質を1日1件で保存

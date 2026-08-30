@@ -20,10 +20,19 @@ export const CONCERN_DOT_CLASS: Record<ConcernKey, string> = {
 };
 
 export const CATEGORY_ICON: Record<ProductCategory, string> = {
+  cleansing: "🧴",
+  faceWash: "🧼",
+  booster: "💫",
   lotion: "💧",
+  mist: "💨",
   serum: "✨",
-  cream: "🫙",
+  eyeCream: "👁️",
   emulsion: "🥛",
+  faceOil: "🫧",
+  cream: "🫙",
+  scrubPeeling: "🌾",
   pack: "🎭",
+  rinseOffPack: "🪣",
   sunscreen: "🕶️",
+  lipCare: "💋",
 };
