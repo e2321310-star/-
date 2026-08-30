@@ -117,7 +117,7 @@ export interface CurrentRoutineItem {
   name: string;
 }
 
-// プロフィール（設定画面）
+// プロフィール画面のデータ
 export interface Profile {
   id: "default";
   skinType?: SkinType;

@@ -45,8 +45,8 @@ const LINKS = [
     href: "/settings",
     icon: "⚙️",
     ring: "bg-violet-100 dark:bg-violet-500/20",
-    title: "設定",
-    desc: "肌質・お気に入りブランドなどのプロフィール",
+    title: "プロフィール",
+    desc: "肌質・年齢・お気に入りブランドなどの登録情報",
   },
 ] as const;
 

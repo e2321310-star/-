@@ -79,7 +79,7 @@ function judgeCurrentProduct(
   recommended: BrandProduct[]
 ): { verdict: CareVerdict; reason: string } {
   if (!current || (!current.brand.trim() && !current.name.trim())) {
-    return { verdict: "no-data", reason: "設定画面で今使っている商品を入力すると、ここで判定できます。" };
+    return { verdict: "no-data", reason: "プロフィール画面で今使っている商品を入力すると、ここで判定できます。" };
   }
   if (recommended.length === 0) {
     return { verdict: "no-data", reason: "比較できる商品データがまだありません。" };

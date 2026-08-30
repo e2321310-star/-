@@ -69,8 +69,16 @@ export async function saveDiagnose(record: DiagnoseRecord): Promise<void> {
 
 // ---------- products ----------
 
+// 悩み・カテゴリ・使用タイミングが一致するかで、同じ「枠」の商品かどうかを判定する
+// （アプリ更新でブランド名・商品名・価格などが変わっても、同じ枠として追従させるため）
+function sameSlot(a: BrandProduct, b: BrandProduct): boolean {
+  return a.concern === b.concern && a.category === b.category && (a.period ?? "both") === (b.period ?? "both");
+}
+
 // 「空か確認してから追加する」を同一トランザクション内で行い、
-// 複数回呼ばれても（React Strict Modeの二重effectなど）初期データが重複投入されないようにする
+// 複数回呼ばれても（React Strict Modeの二重effectなど）初期データが重複投入されないようにする。
+// また、まだ自分で価格・購入リンクを入力していない項目については、アプリ側の最新の
+// 初期データ（価格・リンクが確認できたもの）で自動的に補完する。自分で編集した項目は上書きしない。
 export async function getAllProducts(): Promise<BrandProduct[]> {
   const db = await getDB();
   const tx = db.transaction("products", "readwrite");
@@ -83,8 +91,25 @@ export async function getAllProducts(): Promise<BrandProduct[]> {
     await tx.done;
     return seeded;
   }
+
+  let changed = false;
+  for (const seed of SEED_PRODUCTS) {
+    const match = existing.find((p) => sameSlot(p, seed));
+    if (!match) {
+      await tx.store.add(seed);
+      changed = true;
+      continue;
+    }
+    const untouched = !match.price && !match.link;
+    const seedHasNewInfo = match.brand !== seed.brand || match.name !== seed.name || seed.price || seed.link;
+    if (untouched && seedHasNewInfo) {
+      await tx.store.put({ ...seed, id: match.id });
+      changed = true;
+    }
+  }
+  const result = changed ? await tx.store.getAll() : existing;
   await tx.done;
-  return existing;
+  return result;
 }
 
 export async function addProduct(entry: BrandProduct): Promise<number> {

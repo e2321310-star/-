@@ -69,9 +69,9 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-lg font-bold">設定</h1>
+        <h1 className="text-lg font-bold">プロフィール</h1>
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          肌質やお気に入りブランドなど、診断に使うプロフィール情報です。
+          肌質やお気に入りブランドなど、診断に使う登録情報です。
         </p>
       </header>
 
@@ -223,7 +223,7 @@ export default function SettingsPage() {
       )}
 
       <p className="text-center text-[11px] text-neutral-400">
-        設定内容はすべて端末内に保存され、外部には送信されません。
+        入力内容はすべて端末内に保存され、外部には送信されません。
       </p>
     </div>
   );

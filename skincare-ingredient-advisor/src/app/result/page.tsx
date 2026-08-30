@@ -206,7 +206,7 @@ function RoadmapBlock({ roadmap }: { roadmap: Roadmap }) {
           />
         ))}
       </div>
-      <p className="mt-2 text-[11px] text-neutral-400">設定画面でいつでも目標を変更できます。</p>
+      <p className="mt-2 text-[11px] text-neutral-400">プロフィール画面でいつでも目標を変更できます。</p>
     </section>
   );
 }
