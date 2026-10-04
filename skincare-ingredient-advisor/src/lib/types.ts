@@ -47,6 +47,17 @@ export const GENDER_LABELS: Record<Gender, string> = {
 
 export const GENDER_ORDER: Gender[] = ["female", "male", "no_answer"];
 
+// 忙しさ・メイクの有無など、朝晩のケア内容を調整するためのライフスタイル
+export type Lifestyle = "time_saving" | "makeup_heavy" | "balanced";
+
+export const LIFESTYLE_LABELS: Record<Lifestyle, string> = {
+  time_saving: "忙しい・時短派",
+  makeup_heavy: "毎日しっかりメイクする",
+  balanced: "特にこだわりなし",
+};
+
+export const LIFESTYLE_ORDER: Lifestyle[] = ["time_saving", "makeup_heavy", "balanced"];
+
 export type ProductCategory =
   | "cleansing"
   | "faceWash"
@@ -54,6 +65,7 @@ export type ProductCategory =
   | "lotion"
   | "mist"
   | "serum"
+  | "needleShot"
   | "eyeCream"
   | "emulsion"
   | "faceOil"
@@ -71,6 +83,7 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   lotion: "化粧水",
   mist: "ミスト",
   serum: "美容液",
+  needleShot: "ニードルショット",
   eyeCream: "アイクリーム",
   emulsion: "乳液",
   faceOil: "フェイスオイル",
@@ -82,7 +95,8 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   lipCare: "リップケア",
 };
 
-// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、スクラブ/パック類は週1〜2回の集中ケア、日焼け止めは朝の仕上げ）
+// スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、ニードルショットはピンポイントの集中補修、
+// スクラブ/パック類は週1〜2回の集中ケア、日焼け止めは朝の仕上げ）
 export const CATEGORY_ORDER: ProductCategory[] = [
   "cleansing",
   "faceWash",
@@ -90,6 +104,7 @@ export const CATEGORY_ORDER: ProductCategory[] = [
   "lotion",
   "mist",
   "serum",
+  "needleShot",
   "eyeCream",
   "emulsion",
   "faceOil",
@@ -100,6 +115,15 @@ export const CATEGORY_ORDER: ProductCategory[] = [
   "sunscreen",
   "lipCare",
 ];
+
+// 商品の産地（海外ブランドをひと目でわかるようにするための任意タグ）
+export type ProductRegion = "jp" | "kr" | "west";
+
+export const PRODUCT_REGION_LABELS: Record<ProductRegion, string> = {
+  jp: "🇯🇵 国産",
+  kr: "🇰🇷 韓国",
+  west: "🌍 欧米",
+};
 
 // 診断記録：撮影・セルフチェック・気温・肌質を1日1件で保存
 export interface DiagnoseRecord {
@@ -142,6 +166,7 @@ export interface BrandProduct {
   priceRange?: PriceRange;
   price?: string; // 実売価格（自由入力、例："1,320円"）
   link?: string; // 購入ページなどのURL（自由入力）
+  region?: ProductRegion; // 産地タグ（未指定は国産として扱う）
 }
 
 // 今使っているスキンケア（カテゴリごとに1つ）
@@ -158,6 +183,7 @@ export interface Profile {
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>;
   age?: number;
   gender?: Gender;
+  lifestyle?: Lifestyle; // 忙しさ・メイクの有無など
   goalConcern?: ConcernKey; // 将来なりたい肌の目標
   goalNote?: string; // 目標の自由入力メモ
 }

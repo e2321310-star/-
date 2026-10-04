@@ -14,13 +14,14 @@ import {
   CONCERN_ORDER,
   PERIOD_LABELS,
   PRICE_RANGE_LABELS,
+  PRODUCT_REGION_LABELS,
   type BrandProduct,
   type CarePeriod,
   type ConcernKey,
   type PriceRange,
   type ProductCategory,
 } from "@/lib/types";
-import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
+import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS, PRODUCT_REGION_BADGE_CLASS } from "@/lib/theme";
 
 const PERIOD_ORDER: CarePeriod[] = ["both", "am", "pm"];
 const PRICE_RANGE_ORDER: PriceRange[] = ["budget", "mid", "premium"];
@@ -307,7 +308,7 @@ export default function ProductsPage() {
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
-              className="flex-1 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2 text-sm font-semibold text-white"
+              className="flex-1 rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2 text-sm font-semibold text-white"
             >
               {editingId === "new" ? "追加する" : "更新する"}
             </button>
@@ -349,6 +350,9 @@ export default function ProductsPage() {
                           {p.ingredient ? ` ・ ${p.ingredient}` : ""}
                         </p>
                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          {p.region && p.region !== "jp" && (
+                            <Tag className={PRODUCT_REGION_BADGE_CLASS[p.region]}>{PRODUCT_REGION_LABELS[p.region]}</Tag>
+                          )}
                           {p.period && p.period !== "both" && (
                             <Tag>{PERIOD_LABELS[p.period]}</Tag>
                           )}
@@ -380,7 +384,7 @@ export default function ProductsPage() {
                         href={p.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2 text-xs font-semibold text-white"
+                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2 text-xs font-semibold text-white"
                       >
                         🔗 商品を見る
                       </a>
@@ -394,9 +398,13 @@ export default function ProductsPage() {
   );
 }
 
-function Tag({ children }: { children: React.ReactNode }) {
+function Tag({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className="inline-block rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+        className ?? "bg-neutral-100 text-neutral-500 dark:bg-white/10 dark:text-neutral-400"
+      }`}
+    >
       {children}
     </span>
   );

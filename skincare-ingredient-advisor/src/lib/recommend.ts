@@ -7,6 +7,8 @@ import type {
   CurrentRoutineItem,
   DiagnoseRecord,
   DiagnosisResult,
+  Gender,
+  Lifestyle,
   ProductCategory,
   Roadmap,
   RoadmapStage,
@@ -44,6 +46,7 @@ const PM_CATEGORIES: ProductCategory[] = [
   "lotion",
   "mist",
   "serum",
+  "needleShot",
   "eyeCream",
   "emulsion",
   "faceOil",
@@ -53,6 +56,10 @@ const PM_CATEGORIES: ProductCategory[] = [
   "rinseOffPack",
   "lipCare",
 ];
+
+// 時短派の場合に残す必要最低限のカテゴリ（朝晩それぞれの基本ステップのみ）
+const CORE_AM_CATEGORIES: ProductCategory[] = ["faceWash", "lotion", "serum", "emulsion", "cream", "sunscreen"];
+const CORE_PM_CATEGORIES: ProductCategory[] = ["cleansing", "faceWash", "lotion", "serum", "emulsion", "cream"];
 
 function skinTypeWeights(skinType?: SkinType): Partial<Record<ConcernKey, number>> {
   switch (skinType) {
@@ -74,6 +81,21 @@ function temperatureWeights(temperatureC?: number): Partial<Record<ConcernKey, n
   if (temperatureC == null) return {};
   if (temperatureC < COLD_THRESHOLD_C) return { dryness: 1 };
   if (temperatureC > HOT_THRESHOLD_C) return { oiliness: 1 };
+  return {};
+}
+
+// 10代は皮脂分泌が活発になりやすく、30代以降はハリ低下が気になりやすい、という一般的な傾向を軽く反映
+function ageWeights(age?: number): Partial<Record<ConcernKey, number>> {
+  if (age == null) return {};
+  if (age < 20) return { oiliness: 0.5 };
+  if (age >= 40) return { firmness: 1 };
+  if (age >= 30) return { firmness: 0.5 };
+  return {};
+}
+
+// 男性は皮脂量が多く皮膚が厚めな傾向があるという一般的な目安を軽く反映（あくまで参考程度の重み）
+function genderWeights(gender?: Gender): Partial<Record<ConcernKey, number>> {
+  if (gender === "male") return { oiliness: 0.5 };
   return {};
 }
 
@@ -152,6 +174,9 @@ function stepReason(category: ProductCategory, topConcerns: ConcernKey[], period
   if (category === "lipCare") {
     return `唇は皮膚が薄く乾燥しやすいパーツ。「${labels}」ケアのついでに唇の乾燥もケアしておきましょう。`;
   }
+  if (category === "needleShot") {
+    return `気になる部分にピンポイントで貼る集中ケアパッチ。「${labels}」の中でも特に気になる1〜2箇所に絞って使いましょう。`;
+  }
   if (period === "am") {
     return `「${labels}」対策に。日中の乾燥・くずれを防いでくれます。`;
   }
@@ -164,7 +189,8 @@ function buildCareStep(
   period: "am" | "pm",
   topConcerns: ConcernKey[],
   products: BrandProduct[],
-  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>,
+  lifestyle?: Lifestyle
 ): CareStep {
   const matched = pickProducts(products, category, topConcerns, period);
   const currentProduct = currentRoutine?.[category];
@@ -180,10 +206,16 @@ function buildCareStep(
     "pack",
     "rinseOffPack",
     "lipCare",
+    "needleShot",
   ];
+  const makeupNote =
+    category === "cleansing" && lifestyle === "makeup_heavy"
+      ? " 毎日メイクをしている方は、ここでしっかりオフしてから次のステップに進みましょう。"
+      : "";
   const reason =
     stepReason(category, topConcerns, period) +
-    (sameEitherTime && !CUSTOM_REASON_CATEGORIES.includes(category) ? " 低刺激なので朝晩問わず使えます。" : "");
+    (sameEitherTime && !CUSTOM_REASON_CATEGORIES.includes(category) ? " 低刺激なので朝晩問わず使えます。" : "") +
+    makeupNote;
   return {
     category,
     order,
@@ -240,7 +272,8 @@ export function buildDiagnosis(
   products: BrandProduct[],
   photoSignals?: Partial<Record<ConcernKey, number>>,
   currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>,
-  goal?: { concern: ConcernKey; note?: string }
+  goal?: { concern: ConcernKey; note?: string },
+  personal?: { age?: number; gender?: Gender; lifestyle?: Lifestyle }
 ): DiagnosisResult {
   const weights = new Map<ConcernKey, number>(CONCERN_ORDER.map((c) => [c, 0]));
   const sources = new Map<ConcernKey, string[]>(CONCERN_ORDER.map((c) => [c, []]));
@@ -268,6 +301,12 @@ export function buildDiagnosis(
   for (const [concern, w] of Object.entries(photoSignals ?? {}) as [ConcernKey, number][]) {
     addWeight(concern, w, "写真解析");
   }
+  for (const [concern, w] of Object.entries(ageWeights(personal?.age)) as [ConcernKey, number][]) {
+    addWeight(concern, w, `年代(${personal?.age}歳)`);
+  }
+  for (const [concern, w] of Object.entries(genderWeights(personal?.gender)) as [ConcernKey, number][]) {
+    addWeight(concern, w, "性別による傾向");
+  }
 
   const rankedConcerns: ConcernContribution[] = Array.from(weights.entries())
     .filter(([, w]) => w > 0)
@@ -281,7 +320,7 @@ export function buildDiagnosis(
 
   const totalWeight = rankedConcerns.reduce((sum, r) => sum + r.weight, 0);
   const { skinScore, skinAge } = computeSkinScoreAndAge(totalWeight);
-  const scoreExplanation = `気になる部位ひとつにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真の追加シグナルひとつにつき${SCORE_PENALTY_PER_WEIGHT}点を100点から引いた点数です（下限${SCORE_MIN}点）。肌年齢はそこから逆算した目安なので、上下しても一喜一憂しすぎず参考程度に。`;
+  const scoreExplanation = `気になる部位ひとつにつき${SELF_CHECK_WEIGHT * SCORE_PENALTY_PER_WEIGHT}点、肌質・気温・写真・年代・性別の追加シグナルひとつにつき${SCORE_PENALTY_PER_WEIGHT}点を100点から引いた点数です（下限${SCORE_MIN}点）。肌年齢はそこから逆算した目安なので、上下しても一喜一憂しすぎず参考程度に。`;
 
   const roadmap = goal
     ? buildRoadmap(goal.concern, goal.note, weights.get(goal.concern) ?? 0, products)
@@ -296,11 +335,15 @@ export function buildDiagnosis(
   const topConcerns =
     goal && !baseTopConcerns.includes(goal.concern) ? [...baseTopConcerns, goal.concern] : baseTopConcerns;
 
-  const am = AM_CATEGORIES.map((category, i) =>
-    buildCareStep(category, i + 1, "am", topConcerns, products, currentRoutine)
+  // 時短派は基本ステップのみに絞ったルーティンにする
+  const amCategories = personal?.lifestyle === "time_saving" ? CORE_AM_CATEGORIES : AM_CATEGORIES;
+  const pmCategories = personal?.lifestyle === "time_saving" ? CORE_PM_CATEGORIES : PM_CATEGORIES;
+
+  const am = amCategories.map((category, i) =>
+    buildCareStep(category, i + 1, "am", topConcerns, products, currentRoutine, personal?.lifestyle)
   );
-  const pm = PM_CATEGORIES.map((category, i) =>
-    buildCareStep(category, i + 1, "pm", topConcerns, products, currentRoutine)
+  const pm = pmCategories.map((category, i) =>
+    buildCareStep(category, i + 1, "pm", topConcerns, products, currentRoutine, personal?.lifestyle)
   );
 
   return { rankedConcerns, am, pm, skinScore, skinAge, scoreExplanation, roadmap };

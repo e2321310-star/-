@@ -27,10 +27,10 @@ export default function BottomNav() {
             <li key={item.href} className="flex-1">
               <Link
                 href={item.href}
-                className={`mx-0.5 flex flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[10px] font-semibold transition-all ${
+                className={`mx-0.5 flex flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[10px] font-semibold transition-all duration-200 ${
                   active
-                    ? "bg-gradient-to-br from-pink-500 to-violet-500 text-white shadow-md shadow-pink-900/20"
-                    : "text-neutral-400 dark:text-neutral-500"
+                    ? "scale-105 bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-md shadow-pink-900/25"
+                    : "text-neutral-400 active:scale-95 dark:text-neutral-500"
                 }`}
               >
                 <span className="text-base leading-none">{item.icon}</span>

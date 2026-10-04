@@ -10,13 +10,14 @@ import {
   CATEGORY_LABELS,
   CONCERN_LABELS,
   PRICE_RANGE_LABELS,
+  PRODUCT_REGION_LABELS,
   type CareStep,
   type ConcernContribution,
   type ConcernKey,
   type DiagnosisResult,
   type Roadmap,
 } from "@/lib/types";
-import { CATEGORY_ICON, CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS } from "@/lib/theme";
+import { CATEGORY_ICON, CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS, PRODUCT_REGION_BADGE_CLASS } from "@/lib/theme";
 import { FOOD_ADVICE } from "@/data/seedFoods";
 import { analyzePhotoBlob, type PhotoAnalysis } from "@/lib/photoAnalysis";
 import PhotoAnalysisPanel from "@/components/PhotoAnalysisPanel";
@@ -80,7 +81,8 @@ function ResultPageInner() {
               products,
               analysis?.concernSignals,
               profile.currentRoutine,
-              profile.goalConcern ? { concern: profile.goalConcern, note: profile.goalNote } : undefined
+              profile.goalConcern ? { concern: profile.goalConcern, note: profile.goalNote } : undefined,
+              { age: profile.age, gender: profile.gender, lifestyle: profile.lifestyle }
             )
           );
         } else {
@@ -135,7 +137,7 @@ function ResultPageInner() {
       )}
 
       {!loading && hasData && result && result.rankedConcerns.length === 0 && (
-        <div className="rounded-2xl bg-gradient-to-br from-pink-500 to-violet-600 p-4 text-sm font-medium text-white shadow-lg shadow-pink-900/15">
+        <div className="rounded-2xl bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-600 p-4 text-sm font-medium text-white shadow-lg shadow-pink-900/15">
           現在、特に気になる部位はありません。今のケアを維持しましょう。
         </div>
       )}
@@ -201,7 +203,7 @@ function RoadmapBlock({ roadmap }: { roadmap: Roadmap }) {
           <div
             key={s}
             className={`h-1.5 flex-1 rounded-full ${
-              s <= roadmap.stage ? "bg-gradient-to-r from-pink-500 to-violet-500" : "bg-neutral-200 dark:bg-white/10"
+              s <= roadmap.stage ? "bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500" : "bg-neutral-200 dark:bg-white/10"
             }`}
           />
         ))}
@@ -349,8 +351,13 @@ function CareBlock({ title, emoji, steps }: { title: string; emoji: string; step
                         <span className="ml-1 text-neutral-400">（{p.ingredient}）</span>
                       </span>
                     </div>
-                    {(p.priceRange || p.price || p.link) && (
+                    {(p.region || p.priceRange || p.price || p.link) && (
                       <div className="mt-1.5 flex flex-wrap items-center gap-2 pl-3.5">
+                        {p.region && p.region !== "jp" && (
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${PRODUCT_REGION_BADGE_CLASS[p.region]}`}>
+                            {PRODUCT_REGION_LABELS[p.region]}
+                          </span>
+                        )}
                         {p.priceRange && (
                           <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400">
                             {PRICE_RANGE_LABELS[p.priceRange]}
@@ -366,7 +373,7 @@ function CareBlock({ title, emoji, steps }: { title: string; emoji: string; step
                             href={p.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-auto rounded-full bg-gradient-to-r from-pink-500 to-violet-500 px-2.5 py-1 text-[10px] font-semibold text-white"
+                            className="ml-auto rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 px-2.5 py-1 text-[10px] font-semibold text-white"
                           >
                             🔗 商品を見る
                           </a>

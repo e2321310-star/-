@@ -194,7 +194,7 @@ export default function DiagnosePage() {
         {!photoUrl && !cameraError && (
           <button
             onClick={handleCapture}
-            className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
+            className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
           >
             撮影する
           </button>
@@ -266,7 +266,7 @@ export default function DiagnosePage() {
               aria-pressed={skinType === type}
               className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                 skinType === type
-                  ? "bg-gradient-to-br from-pink-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                  ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
                   : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
               }`}
             >
@@ -279,7 +279,7 @@ export default function DiagnosePage() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 transition-opacity disabled:opacity-40"
+        className="w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 transition-opacity disabled:opacity-40"
       >
         {saving ? "保存中…" : "診断する"}
       </button>

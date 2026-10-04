@@ -1,4 +1,4 @@
-import type { ConcernKey, ProductCategory } from "./types";
+import type { ConcernKey, ProductCategory, ProductRegion } from "./types";
 
 // 悩みごとに色分けし、画面全体で一貫した配色にする（若年層向けに彩度高めのポップな配色）
 export const CONCERN_BADGE_CLASS: Record<ConcernKey, string> = {
@@ -19,6 +19,13 @@ export const CONCERN_DOT_CLASS: Record<ConcernKey, string> = {
   soothing: "bg-emerald-500",
 };
 
+// 産地タグの配色（韓国＝シアン、欧米＝アンバーで、ぱっと見で海外ブランドが分かるように）
+export const PRODUCT_REGION_BADGE_CLASS: Record<ProductRegion, string> = {
+  jp: "bg-neutral-100 text-neutral-500 dark:bg-white/10 dark:text-neutral-400",
+  kr: "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300",
+  west: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
+};
+
 export const CATEGORY_ICON: Record<ProductCategory, string> = {
   cleansing: "🧴",
   faceWash: "🧼",
@@ -26,6 +33,7 @@ export const CATEGORY_ICON: Record<ProductCategory, string> = {
   lotion: "💧",
   mist: "💨",
   serum: "✨",
+  needleShot: "💉",
   eyeCream: "👁️",
   emulsion: "🥛",
   faceOil: "🫧",

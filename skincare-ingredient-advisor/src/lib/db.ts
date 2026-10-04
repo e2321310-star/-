@@ -69,10 +69,17 @@ export async function saveDiagnose(record: DiagnoseRecord): Promise<void> {
 
 // ---------- products ----------
 
-// 悩み・カテゴリ・使用タイミングが一致するかで、同じ「枠」の商品かどうかを判定する
-// （アプリ更新でブランド名・商品名・価格などが変わっても、同じ枠として追従させるため）
+// 悩み・カテゴリ・ブランド・使用タイミングが一致するかで、同じ「枠」の商品かどうかを判定する
+// （アプリ更新で商品名・価格などが変わっても、同じ枠として追従させるため）。
+// 1つの悩み×カテゴリに複数ブランドの商品が並ぶことがあるため、ブランドまで一致させて
+// 別ブランドの商品を誤って上書きしないようにする。
 function sameSlot(a: BrandProduct, b: BrandProduct): boolean {
-  return a.concern === b.concern && a.category === b.category && (a.period ?? "both") === (b.period ?? "both");
+  return (
+    a.concern === b.concern &&
+    a.category === b.category &&
+    a.brand === b.brand &&
+    (a.period ?? "both") === (b.period ?? "both")
+  );
 }
 
 // 「空か確認してから追加する」を同一トランザクション内で行い、

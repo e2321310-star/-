@@ -61,12 +61,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-600 px-5 py-6 text-white shadow-xl shadow-pink-900/20">
+      <header className="shine relative overflow-hidden rounded-[28px] bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-600 px-5 py-6 text-white shadow-xl shadow-pink-900/20">
         <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-white/15" />
         <div className="pointer-events-none absolute -bottom-14 -left-8 h-32 w-32 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute right-6 top-4 text-2xl opacity-80">✨</div>
         <p className="text-xs font-medium tracking-widest text-pink-50/90">SKIN INGREDIENT ADVISOR</p>
-        <h1 className="mt-1 text-2xl font-bold">成分アドバイザー</h1>
+        <h1 className="mt-1 text-2xl font-bold drop-shadow-sm">成分アドバイザー</h1>
         <p className="mt-2 text-sm leading-relaxed text-pink-50/95">
           写真と気温・肌質から、今足りない成分とブランド商品を提案します
         </p>

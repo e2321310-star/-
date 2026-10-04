@@ -9,11 +9,14 @@ import {
   CONCERN_ORDER,
   GENDER_LABELS,
   GENDER_ORDER,
+  LIFESTYLE_LABELS,
+  LIFESTYLE_ORDER,
   SKIN_TYPE_LABELS,
   SKIN_TYPE_ORDER,
   type ConcernKey,
   type CurrentRoutineItem,
   type Gender,
+  type Lifestyle,
   type ProductCategory,
   type SkinType,
 } from "@/lib/types";
@@ -27,6 +30,7 @@ export default function SettingsPage() {
   const [currentRoutine, setCurrentRoutine] = useState<RoutineState>({});
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<Gender | undefined>(undefined);
+  const [lifestyle, setLifestyle] = useState<Lifestyle | undefined>(undefined);
   const [goalConcern, setGoalConcern] = useState<ConcernKey | undefined>(undefined);
   const [goalNote, setGoalNote] = useState("");
   const [loading, setLoading] = useState(true);
@@ -39,6 +43,7 @@ export default function SettingsPage() {
       setCurrentRoutine(p.currentRoutine ?? {});
       setAge(p.age != null ? String(p.age) : "");
       setGender(p.gender);
+      setLifestyle(p.lifestyle);
       setGoalConcern(p.goalConcern);
       setGoalNote(p.goalNote ?? "");
       setLoading(false);
@@ -60,6 +65,7 @@ export default function SettingsPage() {
       currentRoutine,
       age: age.trim() === "" ? undefined : Number(age),
       gender,
+      lifestyle,
       goalConcern,
       goalNote: goalNote.trim(),
     });
@@ -122,11 +128,35 @@ export default function SettingsPage() {
                   aria-pressed={skinType === type}
                   className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
                     skinType === type
-                      ? "bg-gradient-to-br from-pink-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
                       : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
                   }`}
                 >
                   {SKIN_TYPE_LABELS[type]}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">⏱️ ライフスタイル</h2>
+            <p className="mt-1 text-xs text-neutral-400">
+              忙しさやメイクの有無に合わせて、朝晩のおすすめステップ数や文言を調整します。
+            </p>
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              {LIFESTYLE_ORDER.map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLifestyle(lifestyle === l ? undefined : l)}
+                  aria-pressed={lifestyle === l}
+                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                    lifestyle === l
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {LIFESTYLE_LABELS[l]}
                 </button>
               ))}
             </div>
@@ -209,7 +239,7 @@ export default function SettingsPage() {
 
           <button
             onClick={handleSave}
-            className="w-full rounded-full bg-gradient-to-r from-pink-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20"
+            className="w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20"
           >
             保存する
           </button>
