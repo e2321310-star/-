@@ -69,17 +69,13 @@ export async function saveDiagnose(record: DiagnoseRecord): Promise<void> {
 
 // ---------- products ----------
 
-// 悩み・カテゴリ・ブランド・使用タイミングが一致するかで、同じ「枠」の商品かどうかを判定する
-// （アプリ更新で商品名・価格などが変わっても、同じ枠として追従させるため）。
+// 悩み・カテゴリ・ブランドが一致するかで、同じ「枠」の商品かどうかを判定する
+// （アプリ更新で商品名・価格・朝晩の指定などが変わっても、同じ枠として追従させるため）。
 // 1つの悩み×カテゴリに複数ブランドの商品が並ぶことがあるため、ブランドまで一致させて
-// 別ブランドの商品を誤って上書きしないようにする。
+// 別ブランドの商品を誤って上書きしないようにする。period はあえて比較に含めない
+// （「未指定→朝用に変更」のような更新を別枠の新規商品として重複登録しないため）。
 function sameSlot(a: BrandProduct, b: BrandProduct): boolean {
-  return (
-    a.concern === b.concern &&
-    a.category === b.category &&
-    a.brand === b.brand &&
-    (a.period ?? "both") === (b.period ?? "both")
-  );
+  return a.concern === b.concern && a.category === b.category && a.brand === b.brand;
 }
 
 // 「空か確認してから追加する」を同一トランザクション内で行い、
@@ -108,7 +104,12 @@ export async function getAllProducts(): Promise<BrandProduct[]> {
       continue;
     }
     const untouched = !match.price && !match.link;
-    const seedHasNewInfo = match.brand !== seed.brand || match.name !== seed.name || seed.price || seed.link;
+    const seedHasNewInfo =
+      match.brand !== seed.brand ||
+      match.name !== seed.name ||
+      (match.period ?? "both") !== (seed.period ?? "both") ||
+      seed.price ||
+      seed.link;
     if (untouched && seedHasNewInfo) {
       await tx.store.put({ ...seed, id: match.id });
       changed = true;
