@@ -83,3 +83,100 @@ h3 {
   animation: shine-sweep 3.2s ease-in-out infinite;
   pointer-events: none;
 }
+
+/* ============================================================
+   肌ナビ 背景デザイントークン
+   既存の配色（--background 等）とは独立させ、<AppBackground> から
+   のみ参照する。data-accent="mint" | "blue" | "beige" で切り替え。
+   他社アプリ・既存コスメブランドのUIは参照・模倣していない。
+   ============================================================ */
+[data-accent="mint"] {
+  --navi-bg-top: #ffffff;
+  --navi-bg-bottom: #eff6f2;
+  --navi-glow: rgba(132, 184, 161, 0.22);
+  --navi-accent-soft: #e3f0e9;
+  --navi-accent: #6fa98d;
+  --navi-accent-strong: #3f6b57; /* 白背景上でWCAG AA(4.5:1)以上 */
+  --navi-card: rgba(255, 255, 255, 0.7);
+  --navi-card-border: rgba(63, 107, 87, 0.12);
+}
+
+[data-accent="blue"] {
+  --navi-bg-top: #ffffff;
+  --navi-bg-bottom: #eef4f8;
+  --navi-glow: rgba(125, 170, 198, 0.2);
+  --navi-accent-soft: #e1edf4;
+  --navi-accent: #6e95ad;
+  --navi-accent-strong: #395a70;
+  --navi-card: rgba(255, 255, 255, 0.7);
+  --navi-card-border: rgba(57, 90, 112, 0.12);
+}
+
+[data-accent="beige"] {
+  --navi-bg-top: #ffffff;
+  --navi-bg-bottom: #f8f3ec;
+  --navi-glow: rgba(199, 169, 125, 0.2);
+  --navi-accent-soft: #f1e7d8;
+  --navi-accent: #b79a72;
+  --navi-accent-strong: #6b5438;
+  --navi-card: rgba(255, 255, 255, 0.7);
+  --navi-card-border: rgba(107, 84, 56, 0.12);
+}
+
+[data-accent] {
+  --navi-foreground: #1e2023;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-accent="mint"] {
+    --navi-bg-top: #121613;
+    --navi-bg-bottom: #0b0f0d;
+    --navi-glow: rgba(111, 169, 141, 0.16);
+    --navi-accent-soft: rgba(111, 169, 141, 0.16);
+    --navi-accent: #8fb9a8;
+    --navi-accent-strong: #bedfcf; /* 暗背景上でWCAG AA(4.5:1)以上 */
+    --navi-card: rgba(22, 28, 25, 0.6);
+    --navi-card-border: rgba(143, 185, 168, 0.18);
+  }
+
+  [data-accent="blue"] {
+    --navi-bg-top: #10151a;
+    --navi-bg-bottom: #0a0e12;
+    --navi-glow: rgba(110, 149, 173, 0.16);
+    --navi-accent-soft: rgba(110, 149, 173, 0.16);
+    --navi-accent: #8fb4cc;
+    --navi-accent-strong: #c3dce9;
+    --navi-card: rgba(18, 24, 29, 0.6);
+    --navi-card-border: rgba(143, 180, 204, 0.18);
+  }
+
+  [data-accent="beige"] {
+    --navi-bg-top: #171310;
+    --navi-bg-bottom: #100d0a;
+    --navi-glow: rgba(183, 154, 114, 0.16);
+    --navi-accent-soft: rgba(183, 154, 114, 0.16);
+    --navi-accent: #c9ad85;
+    --navi-accent-strong: #e3d0b3;
+    --navi-card: rgba(26, 22, 17, 0.6);
+    --navi-card-border: rgba(201, 173, 133, 0.18);
+  }
+
+  [data-accent] {
+    --navi-foreground: #f1f3f2;
+  }
+}
+
+/* 画面背景レイヤー本体。白〜ごく薄いニュートラルカラーへの淡いグラデーションと、
+   画面端のぼかした光(円形グロー)2つのみで構成。柄・写真・イラストは使わない。 */
+.navi-bg {
+  background:
+    radial-gradient(circle at 88% -8%, var(--navi-glow), transparent 48%),
+    radial-gradient(circle at -8% 105%, var(--navi-glow), transparent 42%),
+    linear-gradient(to bottom, var(--navi-bg-top), var(--navi-bg-bottom));
+}
+
+.navi-card {
+  background: var(--navi-card);
+  border: 1px solid var(--navi-card-border);
+  color: var(--navi-foreground);
+}

@@ -20,7 +20,7 @@ const mochiyPopOne = Mochiy_Pop_One({
 });
 
 export const metadata: Metadata = {
-  title: "成分アドバイザー",
+  title: "肌ナビ",
   description: "写真と気温・肌質から不足成分とブランド商品を提案する自分専用アプリ",
 };
 
