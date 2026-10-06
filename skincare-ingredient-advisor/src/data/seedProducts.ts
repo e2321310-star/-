@@ -196,6 +196,17 @@ export const SEED_PRODUCTS: BrandProduct[] = [
   },
   { concern: "brightening", category: "rinseOffPack", ingredient: "整肌保湿成分", brand: "ちふれ", name: "ピール オフ パック", priceRange: "budget", price: "506円" },
   { concern: "brightening", category: "lipCare", ingredient: "グリチルリチン酸ジカリウム", brand: "近江兄弟社", name: "メンターム 薬用リップスティック美白ex", priceRange: "budget" },
+  {
+    concern: "brightening",
+    category: "cleansing",
+    ingredient: "ガラクトミセス発酵ろ液",
+    brand: "ma:nyo(魔女工場)",
+    name: "ピュア クレンジングオイル",
+    priceRange: "budget",
+    price: "2,530円",
+    region: "kr",
+    note: "発酵・自然由来成分にこだわるクリーンビューティーブランド。",
+  },
 
   // 色ムラ・美白・海外ブランド
   {
@@ -356,6 +367,28 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "一晩おいた翌朝のもちもち肌で有名な、Laneigeの代表的な集中保湿マスク。",
   },
+  {
+    concern: "dryness",
+    category: "cream",
+    ingredient: "セラミド",
+    brand: "AESTURA",
+    name: "アトバリア365 クリーム",
+    priceRange: "mid",
+    price: "3,300円",
+    region: "kr",
+    note: "敏感肌・乾燥肌向けの皮膚科学系ブランド。アモーレパシフィックグループ。",
+  },
+  {
+    concern: "dryness",
+    category: "serum",
+    ingredient: "低分子ヒアルロン酸",
+    brand: "Torriden",
+    name: "ダイブイン セラム",
+    priceRange: "budget",
+    price: "2,420円",
+    region: "kr",
+    note: "保湿特化のクリーンビューティーブランド。弱酸性・低刺激処方。",
+  },
 
   // テカリ・皮脂
   {
@@ -447,6 +480,17 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     period: "am",
     priceRange: "mid",
     region: "west",
+  },
+  {
+    concern: "oiliness",
+    category: "cream",
+    ingredient: "低分子ヒアルロン酸",
+    brand: "Torriden",
+    name: "ダイブイン クリーム",
+    priceRange: "budget",
+    price: "2,310円",
+    region: "kr",
+    note: "ベタつかないジェルタイプで、オイリー肌でも使いやすい保湿クリーム。",
   },
 
   // ハリ・エイジング
@@ -579,6 +623,37 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "SNSでも人気の寝る前用リップパック。翌朝ぷるぷるの唇に。",
   },
+  {
+    concern: "firmness",
+    category: "booster",
+    ingredient: "発酵エキス",
+    brand: "su:m37°",
+    name: "シークレット エッセンス",
+    priceRange: "premium",
+    price: "9,240円",
+    region: "kr",
+    note: "LG生活健康グループの発酵化粧品ブランドを代表する導入美容液。",
+  },
+  {
+    concern: "firmness",
+    category: "cream",
+    ingredient: "発酵保湿成分",
+    brand: "su:m37°",
+    name: "ウォーターフル タイムレス ウォータージェルクリーム",
+    priceRange: "premium",
+    price: "7,480円",
+    region: "kr",
+  },
+  {
+    concern: "firmness",
+    category: "serum",
+    ingredient: "ビフィズス菌発酵エキス",
+    brand: "ma:nyo(魔女工場)",
+    name: "ビフィダ バイオーム コンプレックス アンプル",
+    priceRange: "mid",
+    price: "3,480円",
+    region: "kr",
+  },
 
   // 肌荒れ・鎮静
   {
@@ -689,8 +764,40 @@ export const SEED_PRODUCTS: BrandProduct[] = [
   { concern: "soothing", category: "emulsion", ingredient: "ドクダミエキス", brand: "Pyunkang Yul", name: "モイスチャーエマルジョン", priceRange: "budget", region: "kr" },
   { concern: "soothing", category: "cream", ingredient: "ツボクサエキス(センテラ)", brand: "SKIN1004", name: "マダガスカル センテラ クリーム", priceRange: "budget", region: "kr" },
   { concern: "soothing", category: "pack", ingredient: "ツボクサエキス", brand: "Dr.Jart+", name: "シカペア タイガーグラスシートマスク", priceRange: "mid", region: "kr" },
+  {
+    concern: "soothing",
+    category: "mist",
+    ingredient: "セラミド",
+    brand: "AESTURA",
+    name: "アトバリア365 クリームミスト",
+    priceRange: "budget",
+    price: "2,500円",
+    region: "kr",
+  },
+  {
+    concern: "soothing",
+    category: "serum",
+    ingredient: "プロポリスエキス",
+    brand: "CNP Laboratory",
+    name: "プロポリス エネルギー アンプル",
+    priceRange: "mid",
+    price: "3,080円",
+    region: "kr",
+    note: "皮膚科学をベースにしたLG生活健康グループのブランド。",
+  },
 
   // 日焼け止め（朝の仕上げに。紫外線は色ムラ・乾燥・ハリ低下など多くの悩みを進行させるため悩みを問わず推奨）
+  {
+    concern: "pores",
+    category: "booster",
+    ingredient: "ピーリング成分(AHA/BHA)",
+    brand: "CNP Laboratory",
+    name: "インビジブル ピーリング ブースター",
+    priceRange: "mid",
+    price: "3,410円",
+    region: "kr",
+    note: "拭き取り不要の低刺激ピーリング導入液。LG生活健康グループの皮膚科学系ブランド。",
+  },
   { concern: "pores", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "ビオレUV アクアリッチ ウォータリーエッセンス", period: "am", priceRange: "budget" },
   {
     concern: "brightening",
