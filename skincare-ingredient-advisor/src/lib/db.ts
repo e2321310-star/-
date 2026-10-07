@@ -1,5 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
-import type { BrandProduct, DiagnoseRecord, Profile } from "./types";
+import type { BrandProduct, CurrentRoutineByPeriod, DiagnoseRecord, Profile } from "./types";
 import { SEED_PRODUCTS } from "@/data/seedProducts";
 
 const DB_NAME = "skincare-ingredient-advisor-db";
@@ -137,10 +137,32 @@ export async function deleteProduct(id: number): Promise<void> {
 
 // ---------- profile ----------
 
+// 以前は「今使っているスキンケア」がカテゴリごとに1件（朝晩共通）だった。
+// 旧形式（{brand, name}を直接持つ）のデータが残っていたら、朝晩両方の初期値として
+// 引き継ぐ（データは消さず、まずは朝晩同じ内容からスタートしてもらう）。
+function migrateCurrentRoutine(
+  raw: Profile["currentRoutine"]
+): Profile["currentRoutine"] {
+  if (!raw) return raw;
+  const migrated: NonNullable<Profile["currentRoutine"]> = {};
+  for (const [category, value] of Object.entries(raw)) {
+    if (!value) continue;
+    if ("brand" in value || "name" in value) {
+      // 旧形式: {brand, name} を朝晩両方へコピー
+      const legacy = value as unknown as { brand: string; name: string };
+      migrated[category as keyof typeof migrated] = { am: legacy, pm: { ...legacy } };
+    } else {
+      migrated[category as keyof typeof migrated] = value as CurrentRoutineByPeriod;
+    }
+  }
+  return migrated;
+}
+
 export async function getProfile(): Promise<Profile> {
   const db = await getDB();
   const profile = await db.get("profile", "default");
-  return profile ?? { id: "default" };
+  if (!profile) return { id: "default" };
+  return { ...profile, currentRoutine: migrateCurrentRoutine(profile.currentRoutine) };
 }
 
 export async function saveProfile(profile: Profile): Promise<void> {

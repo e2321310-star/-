@@ -4,6 +4,7 @@ import type {
   CareVerdict,
   ConcernContribution,
   ConcernKey,
+  CurrentRoutineByPeriod,
   CurrentRoutineItem,
   DiagnoseRecord,
   DiagnosisResult,
@@ -27,7 +28,7 @@ const BASE_SKIN_AGE = 20; // 肌点数100のときの肌年齢（参考値）
 const SKIN_AGE_SLOPE = 0.5; // 肌点数が1点下がるごとに肌年齢が何歳上がるか
 
 // 朝は日焼け止めで仕上げる軽めのラインナップ、夜はクレンジング・週1〜2回のスペシャルケアを含む集中ケア
-const AM_CATEGORIES: ProductCategory[] = [
+export const AM_CATEGORIES: ProductCategory[] = [
   "faceWash",
   "booster",
   "lotion",
@@ -39,7 +40,7 @@ const AM_CATEGORIES: ProductCategory[] = [
   "sunscreen",
   "lipCare",
 ];
-const PM_CATEGORIES: ProductCategory[] = [
+export const PM_CATEGORIES: ProductCategory[] = [
   "cleansing",
   "faceWash",
   "booster",
@@ -99,6 +100,8 @@ function genderWeights(gender?: Gender): Partial<Record<ConcernKey, number>> {
   return {};
 }
 
+const OPPOSITE_PERIOD: Record<"am" | "pm", "am" | "pm"> = { am: "pm", pm: "am" };
+
 function pickProducts(
   products: BrandProduct[],
   category: ProductCategory,
@@ -108,11 +111,13 @@ function pickProducts(
   const picked: BrandProduct[] = [];
   for (const concern of concerns) {
     const candidates = products.filter((p) => p.category === category && p.concern === concern);
-    // その時間帯専用の商品があれば優先し、なければ朝晩兼用（未指定含む）の商品を使う
+    // その時間帯専用の商品があれば優先し、なければ朝晩兼用（未指定含む）の商品を使う。
+    // レチノールなど逆の時間帯専用に指定された商品は、他に候補がなくても絶対に選ばない
+    // （例：夜専用のレチノール美容液が、朝のステップに紛れ込むのを防ぐ）。
     const found =
       candidates.find((p) => p.period === period) ??
       candidates.find((p) => !p.period || p.period === "both") ??
-      candidates[0];
+      candidates.find((p) => p.period !== OPPOSITE_PERIOD[period]);
     if (found && !picked.some((p) => p.id === found.id)) picked.push(found);
   }
   return picked;
@@ -189,11 +194,11 @@ function buildCareStep(
   period: "am" | "pm",
   topConcerns: ConcernKey[],
   products: BrandProduct[],
-  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>,
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineByPeriod>>,
   lifestyle?: Lifestyle
 ): CareStep {
   const matched = pickProducts(products, category, topConcerns, period);
-  const currentProduct = currentRoutine?.[category];
+  const currentProduct = currentRoutine?.[category]?.[period];
   const { verdict, reason: verdictReason } = judgeCurrentProduct(currentProduct, matched);
   const hasTimeSpecific = matched.some((p) => p.period === "am" || p.period === "pm");
   const sameEitherTime = matched.length > 0 && !hasTimeSpecific;
@@ -271,7 +276,7 @@ export function buildDiagnosis(
   record: Pick<DiagnoseRecord, "concerns" | "skinType" | "temperatureC">,
   products: BrandProduct[],
   photoSignals?: Partial<Record<ConcernKey, number>>,
-  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>,
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineByPeriod>>,
   goal?: { concern: ConcernKey; note?: string },
   personal?: { age?: number; gender?: Gender; lifestyle?: Lifestyle }
 ): DiagnosisResult {

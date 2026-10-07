@@ -169,18 +169,21 @@ export interface BrandProduct {
   region?: ProductRegion; // 産地タグ（未指定は国産として扱う）
 }
 
-// 今使っているスキンケア（カテゴリごとに1つ）
+// 今使っているスキンケア（カテゴリ×朝晩ごとに1つ。クレンジングのように片方しか
+// 使わないカテゴリでも、該当する方のキーにだけ値が入る）
 export interface CurrentRoutineItem {
   brand: string;
   name: string;
 }
+
+export type CurrentRoutineByPeriod = Partial<Record<"am" | "pm", CurrentRoutineItem>>;
 
 // プロフィール画面のデータ
 export interface Profile {
   id: "default";
   skinType?: SkinType;
   favoriteBrands?: string;
-  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineItem>>;
+  currentRoutine?: Partial<Record<ProductCategory, CurrentRoutineByPeriod>>;
   age?: number;
   gender?: Gender;
   lifestyle?: Lifestyle; // 忙しさ・メイクの有無など

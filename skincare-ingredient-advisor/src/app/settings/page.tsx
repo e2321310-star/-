@@ -14,15 +14,17 @@ import {
   SKIN_TYPE_LABELS,
   SKIN_TYPE_ORDER,
   type ConcernKey,
-  type CurrentRoutineItem,
+  type CurrentRoutineByPeriod,
   type Gender,
   type Lifestyle,
   type ProductCategory,
   type SkinType,
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS } from "@/lib/theme";
+import { AM_CATEGORIES, PM_CATEGORIES } from "@/lib/recommend";
 
-type RoutineState = Partial<Record<ProductCategory, CurrentRoutineItem>>;
+type RoutineState = Partial<Record<ProductCategory, CurrentRoutineByPeriod>>;
+type RoutinePeriod = "am" | "pm";
 
 export default function SettingsPage() {
   const [skinType, setSkinType] = useState<SkinType | undefined>(undefined);
@@ -50,11 +52,15 @@ export default function SettingsPage() {
     });
   }, []);
 
-  function updateRoutine(category: ProductCategory, field: "brand" | "name", value: string) {
-    setCurrentRoutine((prev) => ({
-      ...prev,
-      [category]: { brand: prev[category]?.brand ?? "", name: prev[category]?.name ?? "", [field]: value },
-    }));
+  function updateRoutine(category: ProductCategory, period: RoutinePeriod, field: "brand" | "name", value: string) {
+    setCurrentRoutine((prev) => {
+      const prevForCategory = prev[category] ?? {};
+      const prevItem = prevForCategory[period] ?? { brand: "", name: "" };
+      return {
+        ...prev,
+        [category]: { ...prevForCategory, [period]: { ...prevItem, [field]: value } },
+      };
+    });
   }
 
   async function handleSave() {
@@ -196,33 +202,47 @@ export default function SettingsPage() {
           <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="text-sm font-bold">今使っているスキンケア</h2>
             <p className="mt-1 text-xs text-neutral-400">
-              診断結果画面で「今のままでOK」か「見直しを検討」かの目安を表示します。
+              診断結果画面で「今のままでOK」か「見直しを検討」かの目安を、朝・夜それぞれ別々に表示します。
             </p>
             <div className="mt-3 flex flex-col gap-3">
-              {CATEGORY_ORDER.map((category) => (
-                <div key={category}>
-                  <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
-                    <span>{CATEGORY_ICON[category]}</span>
-                    {CATEGORY_LABELS[category]}
-                  </p>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <input
-                      type="text"
-                      value={currentRoutine[category]?.brand ?? ""}
-                      onChange={(e) => updateRoutine(category, "brand", e.target.value)}
-                      placeholder="ブランド名"
-                      className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
-                    />
-                    <input
-                      type="text"
-                      value={currentRoutine[category]?.name ?? ""}
-                      onChange={(e) => updateRoutine(category, "name", e.target.value)}
-                      placeholder="商品名"
-                      className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
-                    />
+              {CATEGORY_ORDER.map((category) => {
+                const isAM = AM_CATEGORIES.includes(category);
+                const isPM = PM_CATEGORIES.includes(category);
+                const periods: RoutinePeriod[] = isAM && isPM ? ["am", "pm"] : isAM ? ["am"] : ["pm"];
+                return (
+                  <div key={category}>
+                    <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+                      <span>{CATEGORY_ICON[category]}</span>
+                      {CATEGORY_LABELS[category]}
+                    </p>
+                    <div className="flex flex-col gap-1.5">
+                      {periods.map((period) => (
+                        <div key={period} className="flex items-center gap-1.5">
+                          {isAM && isPM && (
+                            <span className="w-7 shrink-0 text-center text-xs">
+                              {period === "am" ? "☀️" : "🌙"}
+                            </span>
+                          )}
+                          <input
+                            type="text"
+                            value={currentRoutine[category]?.[period]?.brand ?? ""}
+                            onChange={(e) => updateRoutine(category, period, "brand", e.target.value)}
+                            placeholder="ブランド名"
+                            className="min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
+                          />
+                          <input
+                            type="text"
+                            value={currentRoutine[category]?.[period]?.name ?? ""}
+                            onChange={(e) => updateRoutine(category, period, "name", e.target.value)}
+                            placeholder="商品名"
+                            className="min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
