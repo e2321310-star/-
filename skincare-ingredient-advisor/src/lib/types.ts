@@ -58,6 +58,76 @@ export const LIFESTYLE_LABELS: Record<Lifestyle, string> = {
 
 export const LIFESTYLE_ORDER: Lifestyle[] = ["time_saving", "makeup_heavy", "balanced"];
 
+// ---------- 初回オンボーディング ----------
+
+export type AgeBand = "teens" | "early20s" | "late20s" | "30s" | "40s";
+
+export const AGE_BAND_LABELS: Record<AgeBand, string> = {
+  teens: "10代",
+  early20s: "20代前半",
+  late20s: "20代後半",
+  "30s": "30代",
+  "40s": "40代",
+};
+
+export const AGE_BAND_ORDER: AgeBand[] = ["teens", "early20s", "late20s", "30s", "40s"];
+
+// オンボーディングの悩み選択（セルフチェックのConcernKeyとは別に、初心者にも分かりやすい言葉で用意）
+export type OnboardingConcern = "acne" | "pores" | "dryness" | "dullness" | "spots";
+
+export const ONBOARDING_CONCERN_LABELS: Record<OnboardingConcern, string> = {
+  acne: "ニキビ",
+  pores: "毛穴",
+  dryness: "乾燥",
+  dullness: "くすみ",
+  spots: "シミ",
+};
+
+export const ONBOARDING_CONCERN_ORDER: OnboardingConcern[] = ["acne", "pores", "dryness", "dullness", "spots"];
+
+export type SkincareExperience = "beginner" | "some" | "daily";
+
+export const EXPERIENCE_LABELS: Record<SkincareExperience, string> = {
+  beginner: "ほぼ初めて",
+  some: "少しやっている",
+  daily: "毎日やっている",
+};
+
+export const EXPERIENCE_ORDER: SkincareExperience[] = ["beginner", "some", "daily"];
+
+export type InterestScope = "skincare_only" | "skincare_and_aesthetic";
+
+export const INTEREST_SCOPE_LABELS: Record<InterestScope, string> = {
+  skincare_only: "スキンケアのみ",
+  skincare_and_aesthetic: "美容医療・整形にも興味あり",
+};
+
+export const INTEREST_SCOPE_ORDER: InterestScope[] = ["skincare_only", "skincare_and_aesthetic"];
+
+// 月の予算感（3段階）。商品データのpriceRangeや、美容医療カテゴリのコスト帯の絞り込みに使う
+export type Budget = "petit" | "standard" | "premium";
+
+export const BUDGET_LABELS: Record<Budget, string> = {
+  petit: "プチプラ（〜3,000円/月）",
+  standard: "スタンダード（3,000〜10,000円/月）",
+  premium: "こだわり（10,000円〜/月）",
+};
+
+export const BUDGET_SHORT_LABELS: Record<Budget, string> = {
+  petit: "プチプラ",
+  standard: "スタンダード",
+  premium: "こだわり",
+};
+
+export const BUDGET_ORDER: Budget[] = ["petit", "standard", "premium"];
+
+// 予算帯ごとに、どのPriceRangeまでを表示対象にするか（その予算帯以下はすべて含む）
+export const BUDGET_TO_PRICE_RANGES: Record<Budget, PriceRange[]> = {
+  petit: ["budget"],
+  standard: ["budget", "mid"],
+  premium: ["budget", "mid", "premium"],
+};
+
 export type ProductCategory =
   | "cleansing"
   | "faceWash"
@@ -189,6 +259,14 @@ export interface Profile {
   lifestyle?: Lifestyle; // 忙しさ・メイクの有無など
   goalConcern?: ConcernKey; // 将来なりたい肌の目標
   goalNote?: string; // 目標の自由入力メモ
+
+  // 初回オンボーディングで入力する項目（設定画面からも後で変更できる）
+  onboardingCompleted?: boolean;
+  ageBand?: AgeBand;
+  onboardingConcerns?: OnboardingConcern[];
+  skincareExperience?: SkincareExperience;
+  interestScope?: InterestScope;
+  budget?: Budget;
 }
 
 export type CareVerdict = "keep" | "change" | "no-data";

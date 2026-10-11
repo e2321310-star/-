@@ -3,49 +3,17 @@
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { getDiagnose } from "@/lib/db";
+import { getDiagnose, getProfile, saveProfile } from "@/lib/db";
 import { todayStr } from "@/lib/date";
 import AppBackground, { type AccentTheme } from "@/components/AppBackground";
+import { BUDGET_ORDER, BUDGET_SHORT_LABELS, type Budget } from "@/lib/types";
 
 const ACCENTS: AccentTheme[] = ["mint", "blue", "beige"];
 
-const LINKS = [
-  {
-    href: "/diagnose",
-    icon: "🔍",
-    title: "診断する",
-    desc: "気になる部位・今日の気温・肌質を入力して診断",
-  },
-  {
-    href: "/result",
-    icon: "💡",
-    title: "診断結果",
-    desc: "不足成分と、朝晩のブランド別おすすめ商品を確認",
-  },
-  {
-    href: "/history",
-    icon: "🗂️",
-    title: "記録",
-    desc: "過去の診断をアーカイブとして振り返る",
-  },
-  {
-    href: "/products",
-    icon: "🧴",
-    title: "商品データ",
-    desc: "成分×ブランド商品の対応表を確認・編集",
-  },
-  {
-    href: "/chat",
-    icon: "💬",
-    title: "スキンケアパートナー",
-    desc: "チャットでスキンケアの相談ができます",
-  },
-  {
-    href: "/settings",
-    icon: "⚙️",
-    title: "プロフィール",
-    desc: "肌質・年齢・お気に入りブランドなどの登録情報",
-  },
+const PRIMARY_LINKS = [
+  { href: "/diagnose", icon: "🔍", title: "診断する", desc: "気になる部位・今日の気温・肌質を入力" },
+  { href: "/result", icon: "💡", title: "診断結果", desc: "朝晩のおすすめ商品を確認" },
+  { href: "/history", icon: "🗂️", title: "記録をふりかえる", desc: "過去の診断をアーカイブで確認" },
 ] as const;
 
 export default function Home() {
@@ -64,12 +32,20 @@ function HomeInner() {
     : "mint";
 
   const [hasToday, setHasToday] = useState<boolean | null>(null);
+  const [budget, setBudget] = useState<Budget | undefined>(undefined);
 
   useEffect(() => {
     getDiagnose(todayStr()).then((rec) => {
       setHasToday(!!(rec && (rec.concerns.length > 0 || rec.skinType || rec.temperatureC != null || rec.photo)));
     });
+    getProfile().then((p) => setBudget(p.budget));
   }, []);
+
+  async function changeBudget(b: Budget) {
+    setBudget(b);
+    const existing = await getProfile();
+    await saveProfile({ ...existing, id: "default", budget: b });
+  }
 
   return (
     <>
@@ -80,12 +56,9 @@ function HomeInner() {
             SKIN NAVI
           </p>
           <h1 className="mt-1.5 text-[26px] font-bold">肌ナビ</h1>
-          <p className="mt-2 text-sm leading-relaxed opacity-70">
-            写真と気温・肌質から、今足りない成分とブランド商品を提案します。まずは今日の肌を記録してみましょう。
-          </p>
 
           <div
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold"
             style={{
               backgroundColor: "var(--navi-accent-soft)",
               color: "var(--navi-accent-strong)",
@@ -99,8 +72,30 @@ function HomeInner() {
           </div>
         </header>
 
+        <section>
+          <p className="mb-1.5 text-xs font-semibold opacity-60">💰 月の予算</p>
+          <div className="grid grid-cols-3 gap-1.5">
+            {BUDGET_ORDER.map((b) => (
+              <button
+                key={b}
+                type="button"
+                onClick={() => changeBudget(b)}
+                aria-pressed={budget === b}
+                className="navi-card rounded-xl py-2 text-center text-xs font-semibold transition-colors"
+                style={
+                  budget === b
+                    ? { backgroundColor: "var(--navi-accent)", color: "#fff", borderColor: "transparent" }
+                    : { opacity: 0.65 }
+                }
+              >
+                {BUDGET_SHORT_LABELS[b]}
+              </button>
+            ))}
+          </div>
+        </section>
+
         <nav className="flex flex-col gap-2.5">
-          {LINKS.map((link) => (
+          {PRIMARY_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -119,6 +114,14 @@ function HomeInner() {
             </Link>
           ))}
         </nav>
+
+        <Link
+          href="/chat"
+          className="flex items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold"
+          style={{ backgroundColor: "var(--navi-accent-soft)", color: "var(--navi-accent-strong)" }}
+        >
+          💬 スキンケアパートナーに相談する
+        </Link>
 
         <p className="pt-1 text-center text-[11px] opacity-50">
           データは端末内のIndexedDBにのみ保存され、外部には送信されません。

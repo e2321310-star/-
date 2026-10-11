@@ -5,9 +5,13 @@ import {
   addProduct,
   deleteProduct,
   getAllProducts,
+  getProfile,
   updateProduct,
 } from "@/lib/db";
 import {
+  BUDGET_LABELS,
+  BUDGET_ORDER,
+  BUDGET_TO_PRICE_RANGES,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   CONCERN_LABELS,
@@ -15,6 +19,7 @@ import {
   PERIOD_LABELS,
   PRICE_RANGE_LABELS,
   PRODUCT_REGION_LABELS,
+  type Budget,
   type BrandProduct,
   type CarePeriod,
   type ConcernKey,
@@ -54,6 +59,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<BrandProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<ConcernKey | "all">("all");
+  const [budgetFilter, setBudgetFilter] = useState<Budget | "all">("all");
   const [showHelp, setShowHelp] = useState(false);
   const [editingId, setEditingId] = useState<number | "new" | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -66,16 +72,25 @@ export default function ProductsPage() {
   }
 
   useEffect(load, []);
+  useEffect(() => {
+    getProfile().then((p) => {
+      if (p.budget) setBudgetFilter(p.budget);
+    });
+  }, []);
 
   const grouped = useMemo(() => {
     const map = new Map<ConcernKey, BrandProduct[]>();
     for (const key of CONCERN_ORDER) map.set(key, []);
     for (const p of products) {
       if (filter !== "all" && p.concern !== filter) continue;
+      // 価格帯が未設定の商品は、予算で絞り込んでも常に表示する（除外しすぎないようにする）
+      if (budgetFilter !== "all" && p.priceRange && !BUDGET_TO_PRICE_RANGES[budgetFilter].includes(p.priceRange)) {
+        continue;
+      }
       map.get(p.concern)?.push(p);
     }
     return map;
-  }, [products, filter]);
+  }, [products, filter, budgetFilter]);
 
   function startAdd() {
     setForm({ ...emptyForm, concern: filter === "all" ? CONCERN_ORDER[0] : filter });
@@ -174,6 +189,16 @@ export default function ProductsPage() {
             colorClass={CONCERN_BADGE_CLASS[key]}
           />
         ))}
+      </div>
+
+      <div>
+        <p className="mb-1 text-[11px] font-semibold text-neutral-400">💰 予算で絞り込む</p>
+        <div className="flex flex-wrap gap-1.5">
+          <FilterChip active={budgetFilter === "all"} onClick={() => setBudgetFilter("all")} label="すべて" />
+          {BUDGET_ORDER.map((b) => (
+            <FilterChip key={b} active={budgetFilter === b} onClick={() => setBudgetFilter(b)} label={BUDGET_LABELS[b]} />
+          ))}
+        </div>
       </div>
 
       <button

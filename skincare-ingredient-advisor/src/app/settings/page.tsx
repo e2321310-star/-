@@ -3,22 +3,37 @@
 import { useEffect, useState } from "react";
 import { getProfile, saveProfile } from "@/lib/db";
 import {
+  AGE_BAND_LABELS,
+  AGE_BAND_ORDER,
+  BUDGET_LABELS,
+  BUDGET_ORDER,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   CONCERN_LABELS,
   CONCERN_ORDER,
+  EXPERIENCE_LABELS,
+  EXPERIENCE_ORDER,
   GENDER_LABELS,
   GENDER_ORDER,
+  INTEREST_SCOPE_LABELS,
+  INTEREST_SCOPE_ORDER,
   LIFESTYLE_LABELS,
   LIFESTYLE_ORDER,
+  ONBOARDING_CONCERN_LABELS,
+  ONBOARDING_CONCERN_ORDER,
   SKIN_TYPE_LABELS,
   SKIN_TYPE_ORDER,
+  type AgeBand,
+  type Budget,
   type ConcernKey,
   type CurrentRoutineByPeriod,
   type Gender,
+  type InterestScope,
   type Lifestyle,
+  type OnboardingConcern,
   type ProductCategory,
   type SkinType,
+  type SkincareExperience,
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS } from "@/lib/theme";
 import { AM_CATEGORIES, PM_CATEGORIES } from "@/lib/recommend";
@@ -35,6 +50,11 @@ export default function SettingsPage() {
   const [lifestyle, setLifestyle] = useState<Lifestyle | undefined>(undefined);
   const [goalConcern, setGoalConcern] = useState<ConcernKey | undefined>(undefined);
   const [goalNote, setGoalNote] = useState("");
+  const [ageBand, setAgeBand] = useState<AgeBand | undefined>(undefined);
+  const [onboardingConcerns, setOnboardingConcerns] = useState<OnboardingConcern[]>([]);
+  const [skincareExperience, setSkincareExperience] = useState<SkincareExperience | undefined>(undefined);
+  const [interestScope, setInterestScope] = useState<InterestScope | undefined>(undefined);
+  const [budget, setBudget] = useState<Budget | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
 
@@ -48,9 +68,18 @@ export default function SettingsPage() {
       setLifestyle(p.lifestyle);
       setGoalConcern(p.goalConcern);
       setGoalNote(p.goalNote ?? "");
+      setAgeBand(p.ageBand);
+      setOnboardingConcerns(p.onboardingConcerns ?? []);
+      setSkincareExperience(p.skincareExperience);
+      setInterestScope(p.interestScope);
+      setBudget(p.budget);
       setLoading(false);
     });
   }, []);
+
+  function toggleOnboardingConcern(c: OnboardingConcern) {
+    setOnboardingConcerns((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
+  }
 
   function updateRoutine(category: ProductCategory, period: RoutinePeriod, field: "brand" | "name", value: string) {
     setCurrentRoutine((prev) => {
@@ -74,6 +103,12 @@ export default function SettingsPage() {
       lifestyle,
       goalConcern,
       goalNote: goalNote.trim(),
+      onboardingCompleted: true,
+      ageBand,
+      onboardingConcerns,
+      skincareExperience,
+      interestScope,
+      budget,
     });
     setSaved(true);
   }
@@ -81,9 +116,9 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-lg font-bold">プロフィール</h1>
+        <h1 className="text-lg font-bold">⚙️ マイページ</h1>
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          肌質やお気に入りブランドなど、診断に使う登録情報です。
+          初回診断の回答や、肌質・お気に入りブランドなど、診断・おすすめに使う登録情報です。
         </p>
       </header>
 
@@ -91,6 +126,109 @@ export default function SettingsPage() {
         <p className="text-sm text-neutral-400">読み込み中…</p>
       ) : (
         <>
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">💰 月の予算</h2>
+            <p className="mt-1 text-xs text-neutral-400">おすすめ商品・美容医療の表示を絞り込みます。ホーム画面からも切り替えられます。</p>
+            <div className="mt-2 grid grid-cols-1 gap-1.5">
+              {BUDGET_ORDER.map((b) => (
+                <button
+                  key={b}
+                  type="button"
+                  onClick={() => setBudget(b)}
+                  aria-pressed={budget === b}
+                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                    budget === b
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {BUDGET_LABELS[b]}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">📝 はじめに答えた内容</h2>
+            <p className="mt-1 text-xs text-neutral-400">年代・悩み・経験・興味の範囲は、ここからいつでも変更できます。</p>
+
+            <p className="mt-3 text-xs font-semibold text-neutral-500">年代</p>
+            <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+              {AGE_BAND_ORDER.map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => setAgeBand(a)}
+                  aria-pressed={ageBand === a}
+                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                    ageBand === a
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {AGE_BAND_LABELS[a]}
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-3 text-xs font-semibold text-neutral-500">気になる肌の悩み（複数選択可）</p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {ONBOARDING_CONCERN_ORDER.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => toggleOnboardingConcern(c)}
+                  aria-pressed={onboardingConcerns.includes(c)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    onboardingConcerns.includes(c)
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {ONBOARDING_CONCERN_LABELS[c]}
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-3 text-xs font-semibold text-neutral-500">スキンケアの経験</p>
+            <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+              {EXPERIENCE_ORDER.map((e) => (
+                <button
+                  key={e}
+                  type="button"
+                  onClick={() => setSkincareExperience(e)}
+                  aria-pressed={skincareExperience === e}
+                  className={`rounded-lg py-2 text-center text-[11px] font-semibold transition-colors ${
+                    skincareExperience === e
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {EXPERIENCE_LABELS[e]}
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-3 text-xs font-semibold text-neutral-500">興味のある範囲</p>
+            <div className="mt-1.5 grid grid-cols-1 gap-1.5">
+              {INTEREST_SCOPE_ORDER.map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setInterestScope(i)}
+                  aria-pressed={interestScope === i}
+                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                    interestScope === i
+                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
+                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  }`}
+                >
+                  {INTEREST_SCOPE_LABELS[i]}
+                </button>
+              ))}
+            </div>
+          </section>
+
           <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
             <h2 className="text-sm font-bold">年齢・性別</h2>
             <p className="mt-1 text-xs text-neutral-400">診断結果の肌年齢との比較に使われます</p>
