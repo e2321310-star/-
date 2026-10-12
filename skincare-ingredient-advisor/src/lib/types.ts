@@ -37,6 +37,35 @@ export const SKIN_TYPE_LABELS: Record<SkinType, string> = {
 
 export const SKIN_TYPE_ORDER: SkinType[] = ["dry", "oily", "combination", "normal", "sensitive"];
 
+// ---------- 肌タイプ診断（簡易チェック） ----------
+// 将来「肌タイプ別のおすすめ化粧品」を出す予定があるため、判定結果は文字列の自由入力ではなく
+// 定数で管理する。「敏感肌」は上記SkinTypeとは異なり、他の4タイプと排他ではない「傾向フラグ」として
+// 別に持つ（例: dry + sensitive=true → 画面表示は「乾燥肌（敏感肌の傾向あり）」）。
+export type FullSkinType = "normal" | "dry" | "oily" | "combination";
+
+export const FULL_SKIN_TYPE_LABELS: Record<FullSkinType, string> = {
+  normal: "普通肌",
+  dry: "乾燥肌",
+  oily: "脂性肌（オイリー肌）",
+  combination: "混合肌",
+};
+
+export const FULL_SKIN_TYPE_ORDER: FullSkinType[] = ["normal", "dry", "oily", "combination"];
+
+export interface SkinTypeQuizScores {
+  dryness: number;
+  oiliness: number;
+  sensitivity: number;
+  zoneDiff: number; // Tゾーンと頬の差（大きいほど混合肌寄り）
+}
+
+export interface SkinTypeDiagnosis {
+  skinType: FullSkinType;
+  sensitive: boolean; // 敏感肌の傾向があるか（別フラグ）
+  scores: SkinTypeQuizScores;
+  diagnosedAt: string; // ISO
+}
+
 export type Gender = "female" | "male" | "no_answer";
 
 export const GENDER_LABELS: Record<Gender, string> = {
@@ -131,59 +160,41 @@ export const BUDGET_TO_PRICE_RANGES: Record<Budget, PriceRange[]> = {
 export type ProductCategory =
   | "cleansing"
   | "faceWash"
-  | "booster"
   | "lotion"
-  | "mist"
   | "serum"
   | "needleShot"
-  | "eyeCream"
   | "emulsion"
   | "faceOil"
   | "cream"
-  | "scrubPeeling"
-  | "pack"
   | "rinseOffPack"
-  | "sunscreen"
-  | "lipCare";
+  | "sunscreen";
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   cleansing: "クレンジング",
   faceWash: "洗顔料",
-  booster: "ブースター・導入液",
   lotion: "化粧水",
-  mist: "ミスト",
   serum: "美容液",
   needleShot: "ニードルショット",
-  eyeCream: "アイクリーム",
   emulsion: "乳液",
   faceOil: "フェイスオイル",
   cream: "クリーム",
-  scrubPeeling: "スクラブ・ピーリング",
-  pack: "シートマスク",
   rinseOffPack: "洗い流すパック",
   sunscreen: "日焼け止め",
-  lipCare: "リップケア",
 };
 
 // スキンケアの一般的な使用順（軽いテクスチャ→重いテクスチャ、ニードルショットはピンポイントの集中補修、
-// スクラブ/パック類は週1〜2回の集中ケア、日焼け止めは朝の仕上げ）
+// 洗い流すパックは週1〜2回の集中ケア、日焼け止めは朝の仕上げ）
 export const CATEGORY_ORDER: ProductCategory[] = [
   "cleansing",
   "faceWash",
-  "booster",
   "lotion",
-  "mist",
   "serum",
   "needleShot",
-  "eyeCream",
   "emulsion",
   "faceOil",
   "cream",
-  "scrubPeeling",
-  "pack",
   "rinseOffPack",
   "sunscreen",
-  "lipCare",
 ];
 
 // 商品の産地（海外ブランドをひと目でわかるようにするための任意タグ）
@@ -267,6 +278,9 @@ export interface Profile {
   skincareExperience?: SkincareExperience;
   interestScope?: InterestScope;
   budget?: Budget;
+
+  // 肌タイプ診断（簡易チェック）の結果。再診断すると上書きされる
+  skinTypeDiagnosis?: SkinTypeDiagnosis;
 }
 
 export type CareVerdict = "keep" | "change" | "no-data";

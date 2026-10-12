@@ -33,12 +33,16 @@ function HomeInner() {
 
   const [hasToday, setHasToday] = useState<boolean | null>(null);
   const [budget, setBudget] = useState<Budget | undefined>(undefined);
+  const [hasSkinTypeDiagnosis, setHasSkinTypeDiagnosis] = useState<boolean | null>(null);
 
   useEffect(() => {
     getDiagnose(todayStr()).then((rec) => {
       setHasToday(!!(rec && (rec.concerns.length > 0 || rec.skinType || rec.temperatureC != null || rec.photo)));
     });
-    getProfile().then((p) => setBudget(p.budget));
+    getProfile().then((p) => {
+      setBudget(p.budget);
+      setHasSkinTypeDiagnosis(!!p.skinTypeDiagnosis);
+    });
   }, []);
 
   async function changeBudget(b: Budget) {
@@ -71,6 +75,37 @@ function HomeInner() {
             {hasToday === true ? "今日の診断は完了しています" : "今日はまだ診断していません"}
           </div>
         </header>
+
+        {hasSkinTypeDiagnosis === false && (
+          <div className="navi-card flex items-center gap-3 rounded-2xl p-3.5 shadow-sm backdrop-blur-xl">
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl"
+              style={{ backgroundColor: "var(--navi-accent-soft)" }}
+            >
+              🧐
+            </span>
+            <span className="min-w-0 flex-1">
+              <p className="font-semibold">自分の肌タイプ、知っていますか？</p>
+              <p className="mt-0.5 text-xs opacity-60">8〜9個の質問に答えるだけで、肌タイプが分かります</p>
+            </span>
+            <div className="flex shrink-0 flex-col items-end gap-1 text-right">
+              <Link
+                href="/skin-type"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-white"
+                style={{ backgroundColor: "var(--navi-accent)" }}
+              >
+                診断する
+              </Link>
+              <button
+                type="button"
+                onClick={() => setHasSkinTypeDiagnosis(true)}
+                className="text-[11px] opacity-50"
+              >
+                後で
+              </button>
+            </div>
+          </div>
+        )}
 
         <section>
           <p className="mb-1.5 text-xs font-semibold opacity-60">💰 月の予算</p>

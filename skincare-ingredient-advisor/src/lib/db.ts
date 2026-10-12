@@ -69,6 +69,14 @@ export async function saveDiagnose(record: DiagnoseRecord): Promise<void> {
 
 // ---------- products ----------
 
+// 過去バージョンで存在したが削除されたカテゴリ。IndexedDBに古い記録が残っていても、
+// エラーにせず・一覧や記録画面には表示しない（データ自体は削除しない）。
+const REMOVED_CATEGORIES = new Set(["booster", "eyeCream", "lipCare", "mist", "scrubPeeling", "pack"]);
+
+function isActiveCategory(category: string): boolean {
+  return !REMOVED_CATEGORIES.has(category);
+}
+
 // 悩み・カテゴリ・ブランドが一致するかで、同じ「枠」の商品かどうかを判定する
 // （アプリ更新で商品名・価格・朝晩の指定などが変わっても、同じ枠として追従させるため）。
 // 1つの悩み×カテゴリに複数ブランドの商品が並ぶことがあるため、ブランドまで一致させて
@@ -92,7 +100,7 @@ export async function getAllProducts(): Promise<BrandProduct[]> {
     }
     const seeded = await tx.store.getAll();
     await tx.done;
-    return seeded;
+    return seeded.filter((p) => isActiveCategory(p.category));
   }
 
   let changed = false;
@@ -117,7 +125,7 @@ export async function getAllProducts(): Promise<BrandProduct[]> {
   }
   const result = changed ? await tx.store.getAll() : existing;
   await tx.done;
-  return result;
+  return result.filter((p) => isActiveCategory(p.category));
 }
 
 export async function addProduct(entry: BrandProduct): Promise<number> {

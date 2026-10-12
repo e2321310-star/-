@@ -29,18 +29,12 @@ export const PRODUCT_REGION_BADGE_CLASS: Record<ProductRegion, string> = {
 export const CATEGORY_ICON: Record<ProductCategory, string> = {
   cleansing: "🧴",
   faceWash: "🧼",
-  booster: "💫",
   lotion: "💧",
-  mist: "💨",
   serum: "✨",
   needleShot: "💉",
-  eyeCream: "👁️",
   emulsion: "🥛",
   faceOil: "🫧",
   cream: "🫙",
-  scrubPeeling: "🌾",
-  pack: "🎭",
   rinseOffPack: "🪣",
   sunscreen: "🕶️",
-  lipCare: "💋",
 };

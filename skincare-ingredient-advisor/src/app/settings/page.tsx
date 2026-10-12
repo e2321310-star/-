@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getProfile, saveProfile } from "@/lib/db";
 import {
@@ -13,6 +14,7 @@ import {
   CONCERN_ORDER,
   EXPERIENCE_LABELS,
   EXPERIENCE_ORDER,
+  FULL_SKIN_TYPE_LABELS,
   GENDER_LABELS,
   GENDER_ORDER,
   INTEREST_SCOPE_LABELS,
@@ -33,10 +35,16 @@ import {
   type OnboardingConcern,
   type ProductCategory,
   type SkinType,
+  type SkinTypeDiagnosis,
   type SkincareExperience,
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS } from "@/lib/theme";
 import { AM_CATEGORIES, PM_CATEGORIES } from "@/lib/recommend";
+
+function formatDiagnosedDate(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+}
 
 type RoutineState = Partial<Record<ProductCategory, CurrentRoutineByPeriod>>;
 type RoutinePeriod = "am" | "pm";
@@ -55,6 +63,7 @@ export default function SettingsPage() {
   const [skincareExperience, setSkincareExperience] = useState<SkincareExperience | undefined>(undefined);
   const [interestScope, setInterestScope] = useState<InterestScope | undefined>(undefined);
   const [budget, setBudget] = useState<Budget | undefined>(undefined);
+  const [skinTypeDiagnosis, setSkinTypeDiagnosis] = useState<SkinTypeDiagnosis | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
 
@@ -73,6 +82,7 @@ export default function SettingsPage() {
       setSkincareExperience(p.skincareExperience);
       setInterestScope(p.interestScope);
       setBudget(p.budget);
+      setSkinTypeDiagnosis(p.skinTypeDiagnosis);
       setLoading(false);
     });
   }, []);
@@ -109,6 +119,7 @@ export default function SettingsPage() {
       skincareExperience,
       interestScope,
       budget,
+      skinTypeDiagnosis,
     });
     setSaved(true);
   }
@@ -259,7 +270,30 @@ export default function SettingsPage() {
           </section>
 
           <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">肌質</h2>
+            <h2 className="text-sm font-bold">🧐 肌タイプ診断</h2>
+            {skinTypeDiagnosis ? (
+              <>
+                <p className="mt-1 text-xs text-neutral-400">
+                  {formatDiagnosedDate(skinTypeDiagnosis.diagnosedAt)}に診断
+                </p>
+                <p className="mt-2 text-base font-bold">
+                  {FULL_SKIN_TYPE_LABELS[skinTypeDiagnosis.skinType]}
+                  {skinTypeDiagnosis.sensitive && "（敏感肌の傾向あり）"}
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-neutral-400">まだ診断していません。質問に答えるだけで肌タイプが分かります。</p>
+            )}
+            <Link
+              href="/skin-type"
+              className="mt-2.5 inline-block rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-600 dark:bg-white/10 dark:text-neutral-300"
+            >
+              {skinTypeDiagnosis ? "もう一度診断する" : "診断する"}
+            </Link>
+          </section>
+
+          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+            <h2 className="text-sm font-bold">肌質（手動で選ぶ場合）</h2>
             <p className="mt-1 text-xs text-neutral-400">
               診断画面での初期値として使われます（診断のたびに変更もできます）
             </p>

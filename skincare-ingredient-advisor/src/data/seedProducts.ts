@@ -5,7 +5,6 @@ import type { BrandProduct } from "@/lib/types";
 // ものは空欄のままにしている（価格・在庫は変動するため、購入前に必ずリンク先で確認してください）。
 // 一部、検索時点で確認できた実在の現行商品名に差し替えたものがある（例: パッケージ変更・改廃）。
 export const SEED_PRODUCTS: BrandProduct[] = [
-  // 毛穴
   {
     concern: "pores",
     category: "lotion", period: "am",
@@ -16,6 +15,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "1,760円",
     link: "https://www.ishizawa-lab.co.jp/keana_skincare/lotion.html",
   },
+
   {
     concern: "pores",
     category: "serum",
@@ -26,6 +26,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "budget",
     note: "刺激が少なく、日中の毛穴・皮脂対策に。",
   },
+
   {
     concern: "pores",
     category: "serum",
@@ -36,6 +37,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "budget",
     note: "角質・毛穴詰まりへの働きが期待できる反面、日中は紫外線刺激を受けやすくなるため夜のケア向き。",
   },
+
   {
     concern: "pores",
     category: "cream", period: "am",
@@ -46,17 +48,9 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "618円",
     link: "https://www.amazon.co.jp/dp/B0CJF6894N",
   },
+
   { concern: "pores", category: "emulsion", period: "am", ingredient: "セラミド機能成分", brand: "キュレル", name: "皮脂トラブルケア乳液", priceRange: "mid" },
-  {
-    concern: "pores",
-    category: "pack",
-    ingredient: "クレイ(カオリン等)",
-    brand: "クリアターン",
-    name: "毛穴小町マスク",
-    priceRange: "budget",
-    price: "660円",
-    link: "https://maison.kose.co.jp/site/clearturn/c/c11/",
-  },
+
   {
     concern: "pores",
     category: "cleansing",
@@ -67,21 +61,11 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,470円",
     link: "https://www.dhc.co.jp/goods/300.html",
   },
+
   { concern: "pores", category: "faceWash", period: "am", ingredient: "海泥(マリンシルト)", brand: "ロゼット", name: "洗顔パスタ 海泥スムース", priceRange: "budget" },
-  { concern: "pores", category: "booster", period: "am", ingredient: "アルピニアカツマダイ種子エキス", brand: "無印良品", name: "導入化粧液", priceRange: "budget" },
-  { concern: "pores", category: "mist", period: "am", ingredient: "コラーゲン", brand: "ビフェスタ", name: "ミスト うるおい化粧水", priceRange: "budget" },
-  { concern: "pores", category: "eyeCream", ingredient: "米ぬかエキス", brand: "無印良品", name: "エイジングケア 目もと用美容液", priceRange: "budget" },
+
   { concern: "pores", category: "faceOil", ingredient: "スクワラン", brand: "無印良品", name: "スクワランオイル", priceRange: "budget" },
-  {
-    concern: "pores",
-    category: "scrubPeeling",
-    ingredient: "サリチル酸(BHA)",
-    brand: "COSRX",
-    name: "AHA/BHA クラリファイング トリートメント トナー",
-    priceRange: "budget",
-    price: "1,980円",
-    note: "拭き取り・パック代わりにも使える角質ケア用トナー。週数回を目安に。",
-  },
+
   {
     concern: "pores",
     category: "rinseOffPack",
@@ -91,18 +75,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "budget",
     price: "1,375円",
   },
-  {
-    concern: "pores",
-    category: "lipCare",
-    ingredient: "オリーブオイル",
-    brand: "DHC",
-    name: "薬用リップクリーム",
-    priceRange: "budget",
-    price: "770円",
-    link: "https://www.dhc.co.jp/goods/13.html",
-  },
 
-  // 毛穴・海外ブランド
   {
     concern: "pores",
     category: "needleShot",
@@ -113,18 +86,21 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "韓国発の針美容液。毛穴・テクスチャー対策として毎日使えるタイプ。",
   },
+
   { concern: "pores", category: "cleansing", ingredient: "ホットケーキフラワーコンプレックス", brand: "Banila Co", name: "クリーン イット ゼロ クレンジングバーム オリジナル", priceRange: "mid", region: "kr" },
+
   { concern: "pores", category: "faceWash", period: "pm", ingredient: "サリチル酸(BHA)", brand: "COSRX", name: "サリチル酸デイリージェントルクレンザー", priceRange: "budget", region: "kr" },
+
   { concern: "pores", category: "lotion", period: "pm", ingredient: "ドクダミエキス", brand: "Round Lab", name: "1025 独島(ドクド)トナー", priceRange: "budget", region: "kr" },
+
   { concern: "pores", category: "serum", ingredient: "サリチル酸(BHA)", brand: "COSRX", name: "BHA ブラックヘッド パワー リキッド", priceRange: "budget", region: "kr" },
-  { concern: "pores", category: "booster", period: "pm", ingredient: "酵母発酵エキス", brand: "Missha", name: "タイムレボリューション ファーストトリートメントエッセンス", priceRange: "mid", region: "kr" },
-  { concern: "pores", category: "mist", period: "pm", ingredient: "アロエベラ", brand: "Mario Badescu", name: "フェイシャルスプレー ウィズ アロエ・ハーブ・ローズウォーター", priceRange: "budget", region: "west" },
-  { concern: "pores", category: "eyeCream", ingredient: "カフェイン", brand: "THE ORDINARY", name: "カフェイン ソリューション 5% + EGCG", priceRange: "budget", region: "west" },
+
   { concern: "pores", category: "emulsion", period: "pm", ingredient: "ヒアルロン酸", brand: "Laneige", name: "ウォーターバンク ブルー ヒアルロニック エマルジョン", priceRange: "mid", region: "kr" },
+
   { concern: "pores", category: "cream", period: "pm", ingredient: "サーモスポンジン", brand: "La Roche-Posay", name: "エファクラ マット", priceRange: "mid", region: "west" },
+
   { concern: "pores", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "Beauty of Joseon", name: "リリーフサン：ライス+プロバイオティクス", period: "am", priceRange: "budget", region: "kr", note: "SNSで話題になった韓国の人気日焼け止め。皮脂崩れしにくい軽いテクスチャー。" },
 
-  // 色ムラ・美白
   {
     concern: "brightening",
     category: "lotion", period: "am",
@@ -135,6 +111,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "990円",
     link: "https://jp.rohto.com/melanocc/lotion/",
   },
+
   {
     concern: "brightening",
     category: "serum",
@@ -146,18 +123,11 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     link: "https://jp.rohto.com/melanocc/premium-essence/",
     note: "ビタミンC誘導体は日中の紫外線ダメージ対策としても使いやすい。",
   },
+
   { concern: "brightening", category: "cream", period: "am", ingredient: "トラネキサム酸", brand: "常盤薬品", name: "なめらか本舗 豆乳イソフラボン 美白クリーム", priceRange: "budget" },
+
   { concern: "brightening", category: "emulsion", period: "am", ingredient: "アルブチン", brand: "常盤薬品", name: "なめらか本舗 豆乳イソフラボン 美白乳液", priceRange: "budget" },
-  {
-    concern: "brightening",
-    category: "pack",
-    ingredient: "ビタミンC誘導体",
-    brand: "BCL",
-    name: "サボリーノ 目ざまシート 明るい肌へ",
-    priceRange: "budget",
-    price: "1,540円",
-    link: "https://www.bcl-brand.jp/product/product-64153/",
-  },
+
   {
     concern: "brightening",
     category: "cleansing",
@@ -168,34 +138,13 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,200円",
     link: "https://www.attenir.co.jp/special/cleanse/index.html",
   },
+
   { concern: "brightening", category: "faceWash", period: "am", ingredient: "トラネキサム酸", brand: "肌ラボ", name: "白潤 薬用泡洗顔料", priceRange: "budget" },
-  { concern: "brightening", category: "booster", period: "am", ingredient: "ハトムギ発酵液", brand: "コーセー", name: "雪肌精 シュープレム ホワイトニング ハーバルオイル", priceRange: "premium" },
-  { concern: "brightening", category: "mist", period: "am", ingredient: "ピテラ", brand: "SK-II", name: "フェイシャルトリートメントエッセンス ミストインローション", priceRange: "premium" },
-  {
-    concern: "brightening",
-    category: "eyeCream",
-    ingredient: "トラネキサム酸/ナイアシンアミド",
-    brand: "ちふれ",
-    name: "薬用 美白クリーム TA&NA",
-    period: "am",
-    priceRange: "budget",
-    price: "2,090円",
-    link: "https://onlineshop.chifure-group.jp/shop/g/g8109/",
-    note: "目もと・ほお用のチューブタイプ美白クリーム。",
-  },
+
   { concern: "brightening", category: "faceOil", ingredient: "スクワラン", brand: "ちふれ", name: "美容オイル", priceRange: "budget" },
-  {
-    concern: "brightening",
-    category: "scrubPeeling",
-    ingredient: "タンパク分解酵素",
-    brand: "カネボウ",
-    name: "suisai ビューティクリア パウダーウォッシュ N",
-    priceRange: "budget",
-    price: "1,980円",
-    note: "酵素洗顔パウダー。毎日ではなく数日に1回の使用が目安。",
-  },
+
   { concern: "brightening", category: "rinseOffPack", ingredient: "整肌保湿成分", brand: "ちふれ", name: "ピール オフ パック", priceRange: "budget", price: "506円" },
-  { concern: "brightening", category: "lipCare", ingredient: "グリチルリチン酸ジカリウム", brand: "近江兄弟社", name: "メンターム 薬用リップスティック美白ex", priceRange: "budget" },
+
   {
     concern: "brightening",
     category: "cleansing",
@@ -208,7 +157,6 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     note: "発酵・自然由来成分にこだわるクリーンビューティーブランド。",
   },
 
-  // 色ムラ・美白・海外ブランド
   {
     concern: "brightening",
     category: "needleShot",
@@ -221,17 +169,19 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "リードルショットシリーズの中で最も刺激が少なく、毎日使いやすいタイプ。",
   },
+
   { concern: "brightening", category: "cleansing", ingredient: "ツバキ油", brand: "Then I Met You", name: "リビング クレンジングバーム", priceRange: "premium", region: "kr" },
+
   { concern: "brightening", category: "faceWash", period: "pm", ingredient: "ドクダミエキス", brand: "Round Lab", name: "1025 独島(ドクド)クレンザー", priceRange: "budget", region: "kr" },
+
   { concern: "brightening", category: "lotion", period: "pm", ingredient: "米ぬかエキス/ナイアシンアミド", brand: "Beauty of Joseon", name: "レディアンス フェイシャルトナー", priceRange: "budget", region: "kr" },
+
   { concern: "brightening", category: "serum", ingredient: "アルブチン/ナイアシンアミド", brand: "Beauty of Joseon", name: "グロウ ディープセラム：ライス+アルブチン", period: "pm", priceRange: "budget", region: "kr", note: "SNSで火付け役となった韓国の人気美容液。夜のスペシャルケアとして。" },
-  { concern: "brightening", category: "booster", period: "pm", ingredient: "ビフィズス菌発酵液", brand: "Estée Lauder", name: "アドバンス ナイト リペア", priceRange: "premium", region: "west" },
-  { concern: "brightening", category: "mist", period: "pm", ingredient: "ローズマリー", brand: "Caudalie", name: "ビューティーエリクシル", priceRange: "mid", region: "west" },
-  { concern: "brightening", category: "eyeCream", ingredient: "ヒアルロン酸", brand: "Laneige", name: "アイ スリーピングマスク", period: "pm", priceRange: "mid", region: "kr", note: "寝ている間に集中ケアするアイマスクタイプ。" },
+
   { concern: "brightening", category: "emulsion", period: "pm", ingredient: "コラーゲン", brand: "Etude House", name: "モイストフル コラーゲン エマルジョン", priceRange: "budget", region: "kr" },
+
   { concern: "brightening", category: "cream", period: "pm", ingredient: "ビタミンC誘導体", brand: "CLINIQUE", name: "イーブンベター クリニカル ダークスポットコレクター", priceRange: "premium", region: "west" },
 
-  // 乾燥
   {
     concern: "dryness",
     category: "lotion",
@@ -242,6 +192,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "902円",
     link: "https://www.shop.rohto.co.jp/category/skincare/hadalabo/gokujyun/155712.html",
   },
+
   {
     concern: "dryness",
     category: "serum",
@@ -253,6 +204,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "880円",
     link: "https://www.amazon.co.jp/dp/B0B5G4P14K",
   },
+
   {
     concern: "dryness",
     category: "cream", period: "am",
@@ -263,6 +215,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,970円",
     link: "https://www.kao-kirei.com/ja/item/kbb/curel/4901301236210/",
   },
+
   {
     concern: "dryness",
     category: "emulsion", period: "am",
@@ -273,30 +226,11 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "825円",
     link: "https://www.imju.jp/shop/g/g4903335696855/",
   },
-  { concern: "dryness", category: "pack", ingredient: "ヒアルロン酸", brand: "Mediheal", name: "N.M.F アクアリングマスク", priceRange: "budget", link: "https://mediheal.co.jp/shop/product_categories/NMF" },
+
   { concern: "dryness", category: "cleansing", ingredient: "オリーブスクワラン", brand: "無印良品", name: "クレンジングオイル", priceRange: "budget" },
+
   { concern: "dryness", category: "faceWash", period: "am", ingredient: "セラミド機能成分", brand: "キュレル", name: "潤浸保湿 泡洗顔料", priceRange: "mid" },
-  {
-    concern: "dryness",
-    category: "booster", period: "am",
-    ingredient: "AG(保湿ヴェール形成成分)",
-    brand: "POLA",
-    name: "B.A ローション イマース",
-    priceRange: "premium",
-    price: "13,200円",
-    link: "https://www.pola.co.jp/ec/products/g-0926/",
-    note: "重ねづけで保湿ヴェールを形成する化粧水。導入液としても使いやすい。",
-  },
-  {
-    concern: "dryness",
-    category: "mist", period: "am",
-    ingredient: "ミネラル(カルシウムイオン)",
-    brand: "エビアン",
-    name: "ミネラルウォーター フェイシャルスプレー",
-    priceRange: "budget",
-    price: "1,510円",
-  },
-  { concern: "dryness", category: "eyeCream", ingredient: "ヒアルロン酸", brand: "ニュートロジーナ", name: "ハイドロブースト アイジェルクリーム", period: "am", priceRange: "mid" },
+
   {
     concern: "dryness",
     category: "faceOil",
@@ -307,7 +241,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "7,150円",
     link: "https://www.kiehls.jp/skincare/face-product/face-serums/kiehls-midnight-recovery-concentrate/819.html",
   },
-  { concern: "dryness", category: "scrubPeeling", ingredient: "サリチル酸", brand: "クリニーク", name: "クラリファイング ローション", priceRange: "mid", note: "拭き取りタイプの角質ケア化粧水。乾燥が気になる場合は頻度を控えめに。" },
+
   {
     concern: "dryness",
     category: "rinseOffPack",
@@ -317,18 +251,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "budget",
     price: "1,320円",
   },
-  {
-    concern: "dryness",
-    category: "lipCare",
-    ingredient: "シアバター",
-    brand: "ロクシタン",
-    name: "シア リップバーム",
-    priceRange: "mid",
-    price: "1,870円",
-    link: "https://jp.loccitane.com/items/01BL012K23.html",
-  },
 
-  // 乾燥・海外ブランド
   {
     concern: "dryness",
     category: "needleShot",
@@ -339,6 +262,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "セラミドNPなど保湿成分を追加配合。週1回程度の集中ケア向け。",
   },
+
   {
     concern: "dryness",
     category: "cleansing",
@@ -350,13 +274,15 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     link: "https://www.clinique.jp/product/1673/6424/take-the-day-off",
     region: "west",
   },
+
   { concern: "dryness", category: "faceWash", period: "pm", ingredient: "セラミド/ヒアルロン酸", brand: "CeraVe", name: "ハイドレイティング フェイシャル クレンザー", priceRange: "budget", region: "west" },
+
   { concern: "dryness", category: "lotion", ingredient: "ヒアルロン酸", brand: "Laneige", name: "ウォーターバンク ブルー ヒアルロニック トナー", priceRange: "mid", region: "kr" },
+
   { concern: "dryness", category: "serum", ingredient: "ヒアルロン酸", brand: "THE ORDINARY", name: "ハイアルロニック アシッド 2% + B5", period: "am", priceRange: "budget", region: "west" },
-  { concern: "dryness", category: "booster", period: "pm", ingredient: "ナイアシンアミド", brand: "Klairs", name: "サプル プリパレーション フェイシャルトナー", priceRange: "budget", region: "kr" },
-  { concern: "dryness", category: "mist", period: "pm", ingredient: "ハスエキス", brand: "Tatcha", name: "ルミナス デューイスキン ミスト", priceRange: "premium", region: "west" },
-  { concern: "dryness", category: "eyeCream", ingredient: "セラミド", brand: "CeraVe", name: "アイ リペア クリーム", period: "pm", priceRange: "budget", region: "west" },
+
   { concern: "dryness", category: "emulsion", period: "pm", ingredient: "セラミド", brand: "Illiyoon", name: "セラマイド アト ローション", priceRange: "budget", region: "kr" },
+
   {
     concern: "dryness",
     category: "rinseOffPack",
@@ -367,6 +293,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "一晩おいた翌朝のもちもち肌で有名な、Laneigeの代表的な集中保湿マスク。",
   },
+
   {
     concern: "dryness",
     category: "cream", period: "pm",
@@ -378,6 +305,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "敏感肌・乾燥肌向けの皮膚科学系ブランド。アモーレパシフィックグループ。",
   },
+
   {
     concern: "dryness",
     category: "serum",
@@ -390,7 +318,6 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     note: "保湿特化のクリーンビューティーブランド。弱酸性・低刺激処方。",
   },
 
-  // テカリ・皮脂
   {
     concern: "oiliness",
     category: "lotion", period: "am",
@@ -401,19 +328,13 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "748円",
     link: "https://www.imju.jp/shop/g/g4903335693601/",
   },
+
   { concern: "oiliness", category: "serum", ingredient: "ナイアシンアミド", brand: "オルビス", name: "クリア 薬用美容液", period: "am", priceRange: "mid" },
+
   { concern: "oiliness", category: "cream", period: "am", ingredient: "皮脂吸着パウダー", brand: "オルビス", name: "クリア ジェルクリーム", priceRange: "mid" },
+
   { concern: "oiliness", category: "emulsion", period: "am", ingredient: "皮脂吸着成分", brand: "無印良品", name: "皮脂テカリ防止乳液", priceRange: "budget" },
-  {
-    concern: "oiliness",
-    category: "pack",
-    ingredient: "クレイ(カオリン等)",
-    brand: "クリアターン",
-    name: "美肌職人 米ぬかマスク",
-    priceRange: "budget",
-    price: "440円",
-    link: "https://maison.kose.co.jp/site/clearturn/g/gWCQE/",
-  },
+
   {
     concern: "oiliness",
     category: "cleansing",
@@ -424,6 +345,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,450円",
     link: "https://anuashop.jp/products/sior0005",
   },
+
   {
     concern: "oiliness",
     category: "faceWash", period: "am",
@@ -434,11 +356,9 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "1,430円",
     link: "https://www.orbis.co.jp/small/11011101/",
   },
-  { concern: "oiliness", category: "booster", period: "am", ingredient: "カタツムリ分泌液ろ過液", brand: "COSRX", name: "アドバンスド スネイル 96 ムーシン パワー エッセンス", priceRange: "budget" },
-  { concern: "oiliness", category: "mist", ingredient: "グリチルリチン酸ジカリウム", brand: "無印良品", name: "化粧水・さっぱりタイプ(携帯用ミスト)", priceRange: "budget" },
-  { concern: "oiliness", category: "eyeCream", ingredient: "セラミド", brand: "ノブ", name: "III アイクリーム", period: "pm", priceRange: "mid" },
+
   { concern: "oiliness", category: "faceOil", ingredient: "ホホバオイル", brand: "生活の木", name: "ホホバオイル(浸透型)", priceRange: "budget", note: "オイルでも軽いテクスチャーのものを薄く使うと、乾燥によるベタつき悪化を防げる。" },
-  { concern: "oiliness", category: "scrubPeeling", ingredient: "海藻エキス", brand: "ロゼット", name: "ゴマージュ 素肌美人", priceRange: "budget" },
+
   {
     concern: "oiliness",
     category: "rinseOffPack",
@@ -448,9 +368,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "budget",
     price: "1,760円",
   },
-  { concern: "oiliness", category: "lipCare", ingredient: "ワセリン", brand: "ロート製薬", name: "メンソレータム 薬用リップ リペアワン", priceRange: "budget", price: "605円" },
 
-  // テカリ・皮脂・海外ブランド
   {
     concern: "oiliness",
     category: "needleShot",
@@ -463,14 +381,19 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "ニードルタイプではないが、気になる吹き出物にピンポイントで貼る定番の集中ケアパッチ。",
   },
+
   { concern: "oiliness", category: "cleansing", ingredient: "グリーンティーエキス", brand: "innisfree", name: "グリーンティー クレンジングオイル", priceRange: "budget", region: "kr" },
+
   { concern: "oiliness", category: "faceWash", period: "pm", ingredient: "ナイアシンアミド", brand: "CeraVe", name: "フォーミング フェイシャル クレンザー", priceRange: "budget", region: "west" },
+
   { concern: "oiliness", category: "lotion", period: "pm", ingredient: "緑茶エキス", brand: "Isntree", name: "グリーンティー フレッシュトナー", priceRange: "budget", region: "kr" },
+
   { concern: "oiliness", category: "serum", ingredient: "ナイアシンアミド", brand: "THE ORDINARY", name: "ナイアシンアミド 10% + ジンク 1%", period: "pm", priceRange: "budget", region: "west" },
-  { concern: "oiliness", category: "booster", period: "pm", ingredient: "緑茶エキス", brand: "innisfree", name: "グリーンティー シードセラム", priceRange: "budget", region: "kr" },
-  { concern: "oiliness", category: "eyeCream", ingredient: "ウォーターメロンエキス", brand: "Glow Recipe", name: "ウォーターメロン デュードリーム アイジェルクリーム", period: "am", priceRange: "mid", region: "west" },
+
   { concern: "oiliness", category: "emulsion", period: "pm", ingredient: "ナイアシンアミド", brand: "CeraVe", name: "PM フェイシャル モイスチャライジングローション", priceRange: "budget", region: "west" },
+
   { concern: "oiliness", category: "cream", period: "pm", ingredient: "ハーブエキス", brand: "belif", name: "アクアボム", priceRange: "mid", region: "kr" },
+
   {
     concern: "oiliness",
     category: "sunscreen",
@@ -481,6 +404,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "mid",
     region: "west",
   },
+
   {
     concern: "oiliness",
     category: "cream",
@@ -493,7 +417,6 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     note: "ベタつかないジェルタイプで、オイリー肌でも使いやすい保湿クリーム。",
   },
 
-  // ハリ・エイジング
   {
     concern: "firmness",
     category: "lotion", period: "am",
@@ -503,6 +426,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "mid",
     link: "https://www.kao-kirei.com/ja/official/sofina-ip/products/treatmentlotion/",
   },
+
   {
     concern: "firmness",
     category: "serum",
@@ -515,6 +439,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     link: "https://www.kao-kirei.com/ja/official/sofina-ip/products/",
     note: "レチノールは光に不安定で紫外線刺激も受けやすいため、基本的に夜のケアで使う成分。",
   },
+
   {
     concern: "firmness",
     category: "serum",
@@ -526,6 +451,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     link: "https://h-jp.fujifilm.com/products/astalift/jelly/100202000001.html",
     note: "日中でも使いやすいエイジングケア美容液。",
   },
+
   {
     concern: "firmness",
     category: "cream", period: "am",
@@ -536,6 +462,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "38,500円",
     link: "https://www.pola.co.jp/ec/products/g-1239/",
   },
+
   {
     concern: "firmness",
     category: "emulsion",
@@ -546,16 +473,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "3,410円",
     link: "https://www.shiseido.co.jp/sw/onlinestore/products/H75102.html",
   },
-  {
-    concern: "firmness",
-    category: "pack",
-    ingredient: "ピテラ",
-    brand: "SK-II",
-    name: "フェイシャルトリートメントマスク",
-    priceRange: "premium",
-    price: "20,790円",
-    link: "https://iyec.itoyokado.co.jp/shop/sk2/g/g4979006090956/",
-  },
+
   {
     concern: "firmness",
     category: "cleansing",
@@ -565,25 +483,13 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "premium",
     price: "6,540円",
   },
-  { concern: "firmness", category: "faceWash", period: "am", ingredient: "酵素", brand: "POLA", name: "B.A ウォッシュ 7", priceRange: "premium", price: "12,100円" },
-  { concern: "firmness", category: "booster", period: "am", ingredient: "ビタミンB6誘導体", brand: "アルビオン", name: "薬用スキンコンディショナー エッセンシャル", priceRange: "premium" },
-  { concern: "firmness", category: "mist", period: "am", ingredient: "ナノアスタキサンチン", brand: "富士フイルム", name: "アスタリフト モイストミスト", priceRange: "mid" },
-  {
-    concern: "firmness",
-    category: "eyeCream",
-    ingredient: "ペプチド",
-    brand: "POLA",
-    name: "B.A アイゾーンクリーム",
-    priceRange: "premium",
-    price: "19,800円",
-    link: "https://www.pola.co.jp/ec/products/g-0963/",
-  },
-  { concern: "firmness", category: "faceOil", ingredient: "オリーブバージンオイル", brand: "DHC", name: "オリーブバージンオイル", priceRange: "mid" },
-  { concern: "firmness", category: "scrubPeeling", ingredient: "AHA(グリコール酸)", brand: "サンソリット", name: "スキンピールバー デコルテ2", priceRange: "mid", note: "洗顔石けんタイプのピーリング。使用頻度は肌の様子を見ながら調整を。" },
-  { concern: "firmness", category: "rinseOffPack", ingredient: "デッドシーミネラル", brand: "SABON", name: "ニューリッシング バイオ クレイ マスク", priceRange: "mid" },
-  { concern: "firmness", category: "lipCare", ingredient: "保湿オイル複合成分", brand: "クレ・ド・ポー ボーテ", name: "レムクレム", priceRange: "premium" },
 
-  // ハリ・エイジング・海外ブランド
+  { concern: "firmness", category: "faceWash", period: "am", ingredient: "酵素", brand: "POLA", name: "B.A ウォッシュ 7", priceRange: "premium", price: "12,100円" },
+
+  { concern: "firmness", category: "faceOil", ingredient: "オリーブバージンオイル", brand: "DHC", name: "オリーブバージンオイル", priceRange: "mid" },
+
+  { concern: "firmness", category: "rinseOffPack", ingredient: "デッドシーミネラル", brand: "SABON", name: "ニューリッシング バイオ クレイ マスク", priceRange: "mid" },
+
   {
     concern: "firmness",
     category: "needleShot",
@@ -594,46 +500,21 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "高麗人参根エキスや水溶性プロテオグリカンを追加配合した上位ライン。週1回目安。",
   },
+
   { concern: "firmness", category: "cleansing", ingredient: "米ぬかエキス", brand: "Tatcha", name: "ザ ライスウォッシュ", priceRange: "premium", region: "west" },
+
   { concern: "firmness", category: "faceWash", period: "pm", ingredient: "マルラオイル", brand: "Drunk Elephant", name: "ベステ No.9 ジェリークレンザー", priceRange: "premium", region: "west" },
+
   { concern: "firmness", category: "lotion", period: "pm", ingredient: "アダノシン", brand: "Laneige", name: "パーフェクト リニュー トナー", priceRange: "mid", region: "kr" },
+
   { concern: "firmness", category: "serum", ingredient: "ジャソエキス", brand: "雪花秀(Sulwhasoo)", name: "ファーストケア アクティベイティング セラム", priceRange: "premium", region: "kr", note: "韓国の高級ブランドを代表する導入美容液。" },
-  { concern: "firmness", category: "booster", period: "pm", ingredient: "紅参エキス", brand: "後(Whoo)", name: "ビチュップ ジャセンウォン エッセンス", priceRange: "premium", region: "kr" },
-  { concern: "firmness", category: "mist", period: "pm", ingredient: "ローズヒップオイル", brand: "Charlotte Tilbury", name: "マジック セラム クリスタル エリクサー", priceRange: "premium", region: "west" },
-  {
-    concern: "firmness",
-    category: "eyeCream",
-    ingredient: "高麗人参エキス",
-    brand: "雪花秀(Sulwhasoo)",
-    name: "コンセントレイテッド ジンセン リニューイング アイクリーム",
-    priceRange: "premium",
-    region: "kr",
-  },
+
   { concern: "firmness", category: "faceOil", ingredient: "マルラオイル", brand: "Drunk Elephant", name: "マルラ ラグジュアリー フェイシャルオイル", priceRange: "premium", region: "west" },
+
   { concern: "firmness", category: "cream", period: "pm", ingredient: "高麗人参エキス", brand: "Beauty of Joseon", name: "ダイナスティクリーム", priceRange: "mid", region: "kr" },
-  { concern: "firmness", category: "scrubPeeling", ingredient: "グリコール酸", brand: "Drunk Elephant", name: "T.L.C. フランボス グリコールナイトセラム", priceRange: "premium", region: "west", note: "角質ケア効果の高いAHA美容液。はじめは週1〜2回から。" },
+
   { concern: "firmness", category: "rinseOffPack", ingredient: "ゴールド", brand: "Peter Thomas Roth", name: "24K ゴールド マスク", priceRange: "premium", region: "west" },
-  {
-    concern: "firmness",
-    category: "lipCare",
-    ingredient: "ビルベリーエキス",
-    brand: "Laneige",
-    name: "リップ スリーピングマスク",
-    priceRange: "mid",
-    region: "kr",
-    note: "SNSでも人気の寝る前用リップパック。翌朝ぷるぷるの唇に。",
-  },
-  {
-    concern: "firmness",
-    category: "booster",
-    ingredient: "発酵エキス",
-    brand: "su:m37°",
-    name: "シークレット エッセンス",
-    priceRange: "premium",
-    price: "9,240円",
-    region: "kr",
-    note: "LG生活健康グループの発酵化粧品ブランドを代表する導入美容液。",
-  },
+
   {
     concern: "firmness",
     category: "cream",
@@ -644,6 +525,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "7,480円",
     region: "kr",
   },
+
   {
     concern: "firmness",
     category: "serum",
@@ -655,7 +537,6 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
   },
 
-  // 肌荒れ・鎮静
   {
     concern: "soothing",
     category: "lotion", period: "am",
@@ -666,6 +547,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,090円",
     link: "https://www.kao-kirei.com/ja/item/kbb/curel/4901301236197/",
   },
+
   {
     concern: "soothing",
     category: "serum",
@@ -677,6 +559,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "1,490円",
     link: "https://www.muji.com/jp/ja/store/cmdty/detail/4550583924461",
   },
+
   {
     concern: "soothing",
     category: "cream", period: "am",
@@ -687,9 +570,11 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "1,650円",
     link: "https://www.avene.co.jp/products/bpc/08/",
   },
+
   { concern: "soothing", category: "emulsion", period: "am", ingredient: "ユーカリエキス", brand: "キュレル", name: "皮脂トラブルケア乳液(敏感肌用)", priceRange: "mid" },
-  { concern: "soothing", category: "pack", ingredient: "パンテノール", brand: "ドクターメディオン", name: "パンテノール配合シートマスク", priceRange: "mid" },
+
   { concern: "soothing", category: "cleansing", ingredient: "セラミド機能成分", brand: "キュレル", name: "潤浸保湿 メイク落としジェル", priceRange: "mid" },
+
   {
     concern: "soothing",
     category: "faceWash", period: "am",
@@ -700,38 +585,9 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "3,300円",
     link: "https://www.cetaphil.jp/gentleskincleanser/3499320012644A.html",
   },
-  {
-    concern: "soothing",
-    category: "booster", period: "am",
-    ingredient: "ピテラ",
-    brand: "SK-II",
-    name: "フェイシャル トリートメント エッセンス",
-    priceRange: "premium",
-    price: "7,150円",
-    link: "https://item.rakuten.co.jp/sk-ii/fte_230-sgl/",
-  },
-  {
-    concern: "soothing",
-    category: "mist", period: "am",
-    ingredient: "セレニウム含有温泉水",
-    brand: "ラロッシュポゼ",
-    name: "ターマルウォーター",
-    priceRange: "mid",
-    price: "3,960円",
-  },
-  {
-    concern: "soothing",
-    category: "eyeCream",
-    ingredient: "セラミド機能成分",
-    brand: "キュレル",
-    name: "潤浸保湿 モイストリペア アイクリーム",
-    period: "pm",
-    priceRange: "mid",
-    price: "3,080円",
-    link: "https://www.kao-kirei.com/ja/item/kbb/curel/4901301382528/",
-  },
+
   { concern: "soothing", category: "faceOil", ingredient: "カレンデュラ油", brand: "NALs(ナルス)", name: "カレンデュラオイル", priceRange: "mid" },
-  { concern: "soothing", category: "scrubPeeling", ingredient: "酵素", brand: "ファンケル", name: "洗顔パウダー", priceRange: "mid", note: "低刺激な酵素洗顔パウダー。敏感肌でも使いやすいがパッチテストは推奨。" },
+
   {
     concern: "soothing",
     category: "rinseOffPack",
@@ -741,9 +597,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     priceRange: "mid",
     price: "3,850円",
   },
-  { concern: "soothing", category: "lipCare", ingredient: "ワセリン", brand: "ヴァセリン", name: "オリジナル", priceRange: "budget" },
 
-  // 肌荒れ・鎮静・海外ブランド
   {
     concern: "soothing",
     category: "needleShot",
@@ -754,26 +608,19 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     region: "kr",
     note: "CICAエクソソームやEGF、ペプチドコンプレックスを配合した最上位ライン。刺激も強めなので様子を見ながら。",
   },
+
   { concern: "soothing", category: "cleansing", ingredient: "グリセリン", brand: "La Roche-Posay", name: "トレリアン ダーモクレンザー", priceRange: "mid", region: "west" },
+
   { concern: "soothing", category: "faceWash", period: "pm", ingredient: "アラントイン", brand: "Pyunkang Yul", name: "ロウpH ピュアクレンジングフォーム", priceRange: "budget", region: "kr" },
+
   { concern: "soothing", category: "lotion", period: "pm", ingredient: "ドクダミエキス", brand: "Pyunkang Yul", name: "エッセンストナー", priceRange: "budget", region: "kr", note: "成分数を絞ったミニマル処方で敏感肌にも人気の定番トナー。" },
+
   { concern: "soothing", category: "serum", ingredient: "ツボクサエキス(CICA)", brand: "Dr.Jart+", name: "シカペア タイガーグラスセラム", period: "pm", priceRange: "mid", region: "kr" },
-  { concern: "soothing", category: "booster", period: "pm", ingredient: "ツボクサエキス", brand: "iUNIK", name: "センテラ カーミングセラム", priceRange: "budget", region: "kr" },
-  { concern: "soothing", category: "mist", period: "pm", ingredient: "ヴィシー温泉水", brand: "Vichy", name: "ミネラライジング サーマルウォーター", priceRange: "mid", region: "west" },
-  { concern: "soothing", category: "eyeCream", ingredient: "ナイアシンアミド", brand: "La Roche-Posay", name: "トレリアン ウルトラ アイコントアクリーム", period: "am", priceRange: "mid", region: "west" },
+
   { concern: "soothing", category: "emulsion", period: "pm", ingredient: "ドクダミエキス", brand: "Pyunkang Yul", name: "モイスチャーエマルジョン", priceRange: "budget", region: "kr" },
+
   { concern: "soothing", category: "cream", period: "pm", ingredient: "ツボクサエキス(センテラ)", brand: "SKIN1004", name: "マダガスカル センテラ クリーム", priceRange: "budget", region: "kr" },
-  { concern: "soothing", category: "pack", ingredient: "ツボクサエキス", brand: "Dr.Jart+", name: "シカペア タイガーグラスシートマスク", priceRange: "mid", region: "kr" },
-  {
-    concern: "soothing",
-    category: "mist",
-    ingredient: "セラミド",
-    brand: "AESTURA",
-    name: "アトバリア365 クリームミスト",
-    priceRange: "budget",
-    price: "2,500円",
-    region: "kr",
-  },
+
   {
     concern: "soothing",
     category: "serum",
@@ -786,19 +633,8 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     note: "皮膚科学をベースにしたLG生活健康グループのブランド。",
   },
 
-  // 日焼け止め（朝の仕上げに。紫外線は色ムラ・乾燥・ハリ低下など多くの悩みを進行させるため悩みを問わず推奨）
-  {
-    concern: "pores",
-    category: "booster",
-    ingredient: "ピーリング成分(AHA/BHA)",
-    brand: "CNP Laboratory",
-    name: "インビジブル ピーリング ブースター",
-    priceRange: "mid",
-    price: "3,410円",
-    region: "kr",
-    note: "拭き取り不要の低刺激ピーリング導入液。LG生活健康グループの皮膚科学系ブランド。",
-  },
   { concern: "pores", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "ビオレUV アクアリッチ ウォータリーエッセンス", period: "am", priceRange: "budget" },
+
   {
     concern: "brightening",
     category: "sunscreen",
@@ -810,6 +646,7 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "3,058円",
     link: "https://www.shiseido.co.jp/sw/onlinestore/products/H16501.html",
   },
+
   {
     concern: "dryness",
     category: "sunscreen",
@@ -821,8 +658,11 @@ export const SEED_PRODUCTS: BrandProduct[] = [
     price: "2,400円",
     link: "https://www.kao-kirei.com/ja/item/kbb/curel/4901301413505/",
   },
+
   { concern: "oiliness", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "花王", name: "ビオレUV あせラクさらさら游 UVジェル", period: "am", priceRange: "budget" },
+
   { concern: "firmness", category: "sunscreen", ingredient: "紫外線吸収剤/散乱剤", brand: "資生堂", name: "エリクシール UVクリアミルク", period: "am", priceRange: "mid" },
+
   {
     concern: "soothing",
     category: "sunscreen",

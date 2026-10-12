@@ -28,34 +28,17 @@ const BASE_SKIN_AGE = 20; // 肌点数100のときの肌年齢（参考値）
 const SKIN_AGE_SLOPE = 0.5; // 肌点数が1点下がるごとに肌年齢が何歳上がるか
 
 // 朝は日焼け止めで仕上げる軽めのラインナップ、夜はクレンジング・週1〜2回のスペシャルケアを含む集中ケア
-export const AM_CATEGORIES: ProductCategory[] = [
-  "faceWash",
-  "booster",
-  "lotion",
-  "mist",
-  "serum",
-  "eyeCream",
-  "emulsion",
-  "cream",
-  "sunscreen",
-  "lipCare",
-];
+export const AM_CATEGORIES: ProductCategory[] = ["faceWash", "lotion", "serum", "emulsion", "cream", "sunscreen"];
 export const PM_CATEGORIES: ProductCategory[] = [
   "cleansing",
   "faceWash",
-  "booster",
   "lotion",
-  "mist",
   "serum",
   "needleShot",
-  "eyeCream",
   "emulsion",
   "faceOil",
   "cream",
-  "scrubPeeling",
-  "pack",
   "rinseOffPack",
-  "lipCare",
 ];
 
 // 時短派の場合に残す必要最低限のカテゴリ（朝晩それぞれの基本ステップのみ）
@@ -167,17 +150,8 @@ function stepReason(category: ProductCategory, topConcerns: ConcernKey[], period
   if (category === "cleansing") {
     return `その日のメイクや皮脂・紫外線ダメージをオフ。「${labels}」対策は、汚れをきちんと落とすところから始まります。`;
   }
-  if (category === "booster") {
-    return `化粧水の前に使うことで、そのあとのお手入れの浸透をサポート。「${labels}」対策の土台づくりに。`;
-  }
-  if (category === "scrubPeeling") {
-    return `「${labels}」向けの角質ケア。週1〜2回を目安に、やりすぎない範囲で取り入れましょう。`;
-  }
-  if (category === "pack" || category === "rinseOffPack") {
+  if (category === "rinseOffPack") {
     return `「${labels}」向けの集中ケア。週1〜2回のスペシャルケアとしてどうぞ。`;
-  }
-  if (category === "lipCare") {
-    return `唇は皮膚が薄く乾燥しやすいパーツ。「${labels}」ケアのついでに唇の乾燥もケアしておきましょう。`;
   }
   if (category === "needleShot") {
     return `気になる部分にピンポイントで貼る集中ケアパッチ。「${labels}」の中でも特に気になる1〜2箇所に絞って使いましょう。`;
@@ -203,16 +177,7 @@ function buildCareStep(
   const hasTimeSpecific = matched.some((p) => p.period === "am" || p.period === "pm");
   const sameEitherTime = matched.length > 0 && !hasTimeSpecific;
   // 専用の文言を持つカテゴリには「朝晩問わず使えます」を付け足さない（文脈が合わないため）
-  const CUSTOM_REASON_CATEGORIES: ProductCategory[] = [
-    "sunscreen",
-    "cleansing",
-    "booster",
-    "scrubPeeling",
-    "pack",
-    "rinseOffPack",
-    "lipCare",
-    "needleShot",
-  ];
+  const CUSTOM_REASON_CATEGORIES: ProductCategory[] = ["sunscreen", "cleansing", "rinseOffPack", "needleShot"];
   const makeupNote =
     category === "cleansing" && lifestyle === "makeup_heavy"
       ? " 毎日メイクをしている方は、ここでしっかりオフしてから次のステップに進みましょう。"
