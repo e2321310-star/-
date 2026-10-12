@@ -12,6 +12,7 @@ import {
   type SkinQuizResult,
 } from "@/lib/skinTypeQuiz";
 import { FULL_SKIN_TYPE_LABELS, type SkinType } from "@/lib/types";
+import { Icon } from "@/components/icons";
 
 const TOTAL = SKIN_QUIZ_QUESTIONS.length;
 
@@ -78,25 +79,25 @@ export default function SkinTypeQuizPage() {
     return (
       <div className="flex flex-col gap-5 pt-4">
         <header className="text-center">
-          <p className="text-xs font-semibold text-neutral-400">診断結果</p>
+          <p className="text-xs font-semibold text-[var(--foreground-muted)]">診断結果</p>
           <h1 className="mt-1.5 text-2xl font-bold">{label}</h1>
         </header>
 
-        <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+        <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+          <p className="text-sm leading-relaxed text-[var(--foreground)]">
             {FULL_SKIN_TYPE_DESCRIPTIONS[result.skinType]}
           </p>
           {result.sensitive && (
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{SENSITIVE_TIP}</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--foreground)]">{SENSITIVE_TIP}</p>
           )}
         </section>
 
-        <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-          <h2 className="text-sm font-bold">💡 今日からできるケアのポイント</h2>
+        <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+          <h2 className="text-sm font-bold">今日からできるケアのポイント</h2>
           <ul className="mt-2.5 flex flex-col gap-2">
             {tips.map((tip) => (
-              <li key={tip} className="flex gap-2 text-sm text-neutral-600 dark:text-neutral-300">
-                <span className="shrink-0">✓</span>
+              <li key={tip} className="flex gap-2 text-sm text-[var(--foreground)]">
+                <Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" />
                 <span>{tip}</span>
               </li>
             ))}
@@ -107,19 +108,19 @@ export default function SkinTypeQuizPage() {
           <button
             onClick={startRecording}
             disabled={saving}
-            className="w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 disabled:opacity-60"
+            className="w-full rounded-xl bg-[var(--accent)] py-3 text-sm font-semibold text-[var(--accent-contrast)] disabled:opacity-60"
           >
             この肌タイプで記録を始める
           </button>
           <button
             onClick={retake}
-            className="w-full rounded-full border border-neutral-300 py-2.5 text-sm font-medium dark:border-neutral-700"
+            className="w-full rounded-xl border border-[var(--card-border)] bg-[var(--background)] py-2.5 text-sm font-medium text-[var(--foreground)]"
           >
             もう一度診断する
           </button>
         </div>
 
-        <p className="pt-1 text-center text-[11px] leading-relaxed text-neutral-400">
+        <p className="pt-1 text-center text-[11px] leading-relaxed text-[var(--foreground-muted)]">
           この診断は目安です。肌トラブルが続く場合は皮膚科などの専門医にご相談ください。
         </p>
       </div>
@@ -135,13 +136,12 @@ export default function SkinTypeQuizPage() {
           {SKIN_QUIZ_QUESTIONS.map((q, i) => (
             <span
               key={q.id}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500" : "bg-neutral-200 dark:bg-white/10"
-              }`}
+              className="h-1.5 flex-1 rounded-full transition-colors"
+              style={{ backgroundColor: i <= step ? "var(--accent)" : "var(--card-border)" }}
             />
           ))}
         </div>
-        <p className="text-xs font-semibold text-neutral-400">
+        <p className="text-xs font-semibold text-[var(--foreground-muted)]">
           {step + 1} / {TOTAL}
         </p>
       </header>
@@ -154,7 +154,7 @@ export default function SkinTypeQuizPage() {
               key={opt.label}
               type="button"
               onClick={() => choose(i)}
-              className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] px-4 py-3.5 text-left text-sm font-semibold text-neutral-600 shadow-sm transition-all active:scale-[0.98] dark:text-neutral-300"
+              className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-4 py-3.5 text-left text-sm font-semibold text-[var(--foreground)] transition-all active:scale-[0.98]"
             >
               {opt.label}
             </button>
@@ -163,7 +163,7 @@ export default function SkinTypeQuizPage() {
       </div>
 
       {step > 0 && (
-        <button onClick={back} className="self-start text-xs font-semibold text-neutral-400">
+        <button onClick={back} className="self-start text-xs font-semibold text-[var(--foreground-muted)]">
           ← 戻る
         </button>
       )}

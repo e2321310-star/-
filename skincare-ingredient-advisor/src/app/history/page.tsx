@@ -35,21 +35,21 @@ export default function HistoryPage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">記録</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-[var(--foreground-muted)]">
           過去の診断をアーカイブとして振り返れます。
         </p>
       </header>
 
-      {loading && <p className="text-sm text-neutral-400">読み込み中…</p>}
+      {loading && <p className="text-sm text-[var(--foreground-muted)]">読み込み中…</p>}
 
       {!loading && records.length === 0 && (
-        <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4 text-sm text-[var(--foreground-muted)]">
           まだ記録がありません。診断画面から入力すると、ここに積み重なっていきます。
         </div>
       )}
 
       {!loading && records.length > 0 && concernTally.length > 0 && (
-        <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+        <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
           <h2 className="mb-2 text-sm font-bold">最近よく気になっている部位</h2>
           <div className="flex flex-wrap gap-1.5">
             {concernTally.map(({ concern, count }) => (
@@ -71,9 +71,9 @@ export default function HistoryPage() {
             <li key={rec.date}>
               <Link
                 href={`/result?date=${rec.date}`}
-                className="flex gap-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3 shadow-sm transition-transform active:scale-[0.98]"
+                className="flex gap-3 rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-3 transition-transform active:scale-[0.98]"
               >
-                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-neutral-200 dark:bg-white/10">
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--card-border)]">
                   {urls[rec.date] && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={urls[rec.date]} alt={rec.date} className="h-full w-full object-cover" />
@@ -81,7 +81,7 @@ export default function HistoryPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">{formatDateJa(rec.date)}</p>
-                  <div className="mt-1 flex flex-wrap items-center gap-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                  <div className="mt-1 flex flex-wrap items-center gap-1 text-[11px] text-[var(--foreground-muted)]">
                     {rec.skinType && <span>{SKIN_TYPE_LABELS[rec.skinType]}</span>}
                     {rec.temperatureC != null && <span>・{rec.temperatureC}℃</span>}
                   </div>
@@ -97,9 +97,9 @@ export default function HistoryPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1.5 text-[11px] text-neutral-400">気になる部位の入力なし</p>
+                    <p className="mt-1.5 text-[11px] text-[var(--foreground-muted)]">気になる部位の入力なし</p>
                   )}
-                  <p className="mt-1.5 text-[11px] font-semibold text-pink-600 dark:text-pink-400">
+                  <p className="mt-1.5 text-[11px] font-semibold text-[var(--accent)]">
                     診断結果を見る →
                   </p>
                 </div>

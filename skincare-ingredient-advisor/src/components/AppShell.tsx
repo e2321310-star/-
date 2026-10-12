@@ -4,14 +4,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getProfile } from "@/lib/db";
+import { Icon, type IconName } from "@/components/icons";
 
-const TAB_ITEMS = [
-  { href: "/", label: "記録", icon: "🗂️" },
-  { href: "/products", label: "おすすめ商品", icon: "🧴" },
-  { href: "/aesthetic", label: "整形・美容医療", icon: "✨" },
-  { href: "/clinics", label: "クリニック", icon: "🏥" },
-  { href: "/settings", label: "マイページ", icon: "⚙️" },
-] as const;
+const TAB_ITEMS: { href: string; label: string; icon: IconName }[] = [
+  { href: "/", label: "記録", icon: "record" },
+  { href: "/products", label: "おすすめ商品", icon: "bottle" },
+  { href: "/aesthetic", label: "整形・美容医療", icon: "sparkle" },
+  { href: "/clinics", label: "クリニック", icon: "clinic" },
+  { href: "/settings", label: "マイページ", icon: "gear" },
+];
 
 // 画面上部に固定するタブバー。初回起動時はプロフィール未設定（onboardingCompleted未完了）なら
 // /onboarding へ誘導し、タブ自体も表示しない（ウィザードに専念させるため）。
@@ -44,7 +45,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <nav
-        className="sticky top-0 z-40 border-b border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl"
+        className="sticky top-0 z-40 border-b border-[var(--card-border)] bg-[var(--background)]"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
         <ul className="mx-auto flex max-w-md items-stretch justify-between px-1 py-1.5">
@@ -54,13 +55,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <li key={item.href} className="flex-1">
                 <Link
                   href={item.href}
-                  className={`mx-0.5 flex flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-center text-[9px] font-semibold leading-tight transition-all duration-200 ${
-                    active
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-md shadow-pink-900/25"
-                      : "text-neutral-400 active:scale-95 dark:text-neutral-500"
-                  }`}
+                  className="mx-0.5 flex flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-center text-[9px] font-semibold leading-tight transition-colors"
+                  style={{
+                    backgroundColor: active ? "var(--accent)" : "transparent",
+                    color: active ? "var(--accent-contrast)" : "var(--foreground-muted)",
+                  }}
                 >
-                  <span className="text-base leading-none">{item.icon}</span>
+                  <Icon name={item.icon} className="h-5 w-5" />
                   <span>{item.label}</span>
                 </Link>
               </li>

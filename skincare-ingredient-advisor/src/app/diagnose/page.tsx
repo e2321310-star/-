@@ -15,6 +15,7 @@ import { CONCERN_BADGE_CLASS } from "@/lib/theme";
 import { todayStr } from "@/lib/date";
 import { analyzePhotoBlob, type PhotoAnalysis } from "@/lib/photoAnalysis";
 import PhotoAnalysisPanel from "@/components/PhotoAnalysisPanel";
+import { Icon } from "@/components/icons";
 
 export default function DiagnosePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -163,12 +164,12 @@ export default function DiagnosePage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">診断</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-[var(--foreground-muted)]">
           写真を撮る + 今日の気温・気になる部位・肌質を入力して診断します。
         </p>
       </header>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
         <h2 className="text-sm font-bold">写真</h2>
         <div className="relative mt-2 aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
           {!photoUrl && (
@@ -194,7 +195,7 @@ export default function DiagnosePage() {
         {!photoUrl && !cameraError && (
           <button
             onClick={handleCapture}
-            className="mt-2 w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2.5 text-sm font-semibold text-white active:opacity-90"
+            className="mt-2 w-full rounded-xl bg-[var(--accent)] py-2.5 text-sm font-semibold text-[var(--accent-contrast)] active:opacity-90"
           >
             撮影する
           </button>
@@ -202,7 +203,7 @@ export default function DiagnosePage() {
         {photoUrl && (
           <button
             onClick={handleRetake}
-            className="mt-2 w-full rounded-full border border-neutral-300 py-2.5 text-sm font-semibold dark:border-neutral-700"
+            className="mt-2 w-full rounded-xl border border-[var(--card-border)] bg-[var(--background)] py-2.5 text-sm font-semibold text-[var(--foreground)]"
           >
             撮り直す
           </button>
@@ -210,9 +211,12 @@ export default function DiagnosePage() {
       </section>
 
       {photoUrl && (
-        <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-          <h2 className="text-sm font-bold">📷 写真のどこを見て判断しているか</h2>
-          {analyzing && <p className="mt-2 text-xs text-neutral-400">写真を解析中…</p>}
+        <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+          <h2 className="flex items-center gap-1.5 text-sm font-bold">
+            <Icon name="camera" className="h-4 w-4 text-[var(--foreground-muted)]" />
+            写真のどこを見て判断しているか
+          </h2>
+          {analyzing && <p className="mt-2 text-xs text-[var(--foreground-muted)]">写真を解析中…</p>}
           {!analyzing && photoAnalysis && (
             <div className="mt-2">
               <PhotoAnalysisPanel photoUrl={photoUrl} analysis={photoAnalysis} />
@@ -221,7 +225,7 @@ export default function DiagnosePage() {
         </section>
       )}
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
         <h2 className="text-sm font-bold">気になる部位（セルフチェック）</h2>
         <div className="mt-2 flex flex-wrap gap-2">
           {CONCERN_ORDER.map((key) => (
@@ -231,19 +235,17 @@ export default function DiagnosePage() {
               onClick={() => toggleConcern(key)}
               aria-pressed={concerns.includes(key)}
               className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                concerns.includes(key)
-                  ? CONCERN_BADGE_CLASS[key]
-                  : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                concerns.includes(key) ? CONCERN_BADGE_CLASS[key] : "bg-[var(--card)] text-[var(--foreground-muted)]"
               }`}
             >
               {CONCERN_LABELS[key]}
             </button>
           ))}
         </div>
-        <p className="mt-2 text-xs text-neutral-400">気になるものをタップして選択してください（複数選択可）</p>
+        <p className="mt-2 text-xs text-[var(--foreground-muted)]">気になるものをタップして選択してください（複数選択可）</p>
       </section>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
         <h2 className="text-sm font-bold">今日の気温</h2>
         <input
           type="number"
@@ -251,11 +253,11 @@ export default function DiagnosePage() {
           value={temperature}
           onChange={(e) => setTemperature(e.target.value)}
           placeholder="例：28（℃）"
-          className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+          className="mt-2 w-full rounded-xl border border-[var(--card-border)] bg-[var(--background)] px-3 py-2 text-sm"
         />
       </section>
 
-      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+      <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
         <h2 className="text-sm font-bold">肌質</h2>
         <div className="mt-2 grid grid-cols-3 gap-1.5">
           {SKIN_TYPE_ORDER.map((type) => (
@@ -264,10 +266,10 @@ export default function DiagnosePage() {
               type="button"
               onClick={() => setSkinType(type)}
               aria-pressed={skinType === type}
-              className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+              className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                 skinType === type
-                  ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                  : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                  ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                  : "bg-[var(--card)] text-[var(--foreground-muted)]"
               }`}
             >
               {SKIN_TYPE_LABELS[type]}
@@ -279,13 +281,13 @@ export default function DiagnosePage() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 transition-opacity disabled:opacity-40"
+        className="w-full rounded-xl bg-[var(--accent)] py-3 text-sm font-semibold text-[var(--accent-contrast)] transition-opacity disabled:opacity-40"
       >
         {saving ? "保存中…" : "診断する"}
       </button>
 
       {saved && (
-        <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-300">
+        <div className="rounded-xl bg-[var(--accent-soft)] p-3 text-sm text-[var(--foreground)]">
           保存しました。続けて
           <Link href="/result" className="mx-1 font-semibold underline">
             診断結果

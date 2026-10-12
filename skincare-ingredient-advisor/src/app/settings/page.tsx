@@ -40,6 +40,7 @@ import {
 } from "@/lib/types";
 import { CATEGORY_ICON, CONCERN_BADGE_CLASS } from "@/lib/theme";
 import { AM_CATEGORIES, PM_CATEGORIES } from "@/lib/recommend";
+import { Icon } from "@/components/icons";
 
 function formatDiagnosedDate(iso: string): string {
   const d = new Date(iso);
@@ -127,19 +128,19 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-lg font-bold">⚙️ マイページ</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <h1 className="text-lg font-bold">マイページ</h1>
+        <p className="text-sm text-[var(--foreground-muted)]">
           初回診断の回答や、肌質・お気に入りブランドなど、診断・おすすめに使う登録情報です。
         </p>
       </header>
 
       {loading ? (
-        <p className="text-sm text-neutral-400">読み込み中…</p>
+        <p className="text-sm text-[var(--foreground-muted)]">読み込み中…</p>
       ) : (
         <>
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">💰 月の予算</h2>
-            <p className="mt-1 text-xs text-neutral-400">おすすめ商品・美容医療の表示を絞り込みます。ホーム画面からも切り替えられます。</p>
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+            <h2 className="text-sm font-bold">月の予算</h2>
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">おすすめ商品・美容医療の表示を絞り込みます。ホーム画面からも切り替えられます。</p>
             <div className="mt-2 grid grid-cols-1 gap-1.5">
               {BUDGET_ORDER.map((b) => (
                 <button
@@ -147,10 +148,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setBudget(b)}
                   aria-pressed={budget === b}
-                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                     budget === b
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {BUDGET_LABELS[b]}
@@ -159,11 +160,11 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">📝 はじめに答えた内容</h2>
-            <p className="mt-1 text-xs text-neutral-400">年代・悩み・経験・興味の範囲は、ここからいつでも変更できます。</p>
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+            <h2 className="text-sm font-bold">はじめに答えた内容</h2>
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">年代・悩み・経験・興味の範囲は、ここからいつでも変更できます。</p>
 
-            <p className="mt-3 text-xs font-semibold text-neutral-500">年代</p>
+            <p className="mt-3 text-xs font-semibold text-[var(--foreground-muted)]">年代</p>
             <div className="mt-1.5 grid grid-cols-3 gap-1.5">
               {AGE_BAND_ORDER.map((a) => (
                 <button
@@ -171,10 +172,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setAgeBand(a)}
                   aria-pressed={ageBand === a}
-                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                     ageBand === a
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {AGE_BAND_LABELS[a]}
@@ -182,7 +183,7 @@ export default function SettingsPage() {
               ))}
             </div>
 
-            <p className="mt-3 text-xs font-semibold text-neutral-500">気になる肌の悩み（複数選択可）</p>
+            <p className="mt-3 text-xs font-semibold text-[var(--foreground-muted)]">気になる肌の悩み（複数選択可）</p>
             <div className="mt-1.5 flex flex-wrap gap-1.5">
               {ONBOARDING_CONCERN_ORDER.map((c) => (
                 <button
@@ -192,8 +193,8 @@ export default function SettingsPage() {
                   aria-pressed={onboardingConcerns.includes(c)}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                     onboardingConcerns.includes(c)
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {ONBOARDING_CONCERN_LABELS[c]}
@@ -201,7 +202,7 @@ export default function SettingsPage() {
               ))}
             </div>
 
-            <p className="mt-3 text-xs font-semibold text-neutral-500">スキンケアの経験</p>
+            <p className="mt-3 text-xs font-semibold text-[var(--foreground-muted)]">スキンケアの経験</p>
             <div className="mt-1.5 grid grid-cols-3 gap-1.5">
               {EXPERIENCE_ORDER.map((e) => (
                 <button
@@ -209,10 +210,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setSkincareExperience(e)}
                   aria-pressed={skincareExperience === e}
-                  className={`rounded-lg py-2 text-center text-[11px] font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-[11px] font-semibold transition-colors ${
                     skincareExperience === e
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {EXPERIENCE_LABELS[e]}
@@ -220,7 +221,7 @@ export default function SettingsPage() {
               ))}
             </div>
 
-            <p className="mt-3 text-xs font-semibold text-neutral-500">興味のある範囲</p>
+            <p className="mt-3 text-xs font-semibold text-[var(--foreground-muted)]">興味のある範囲</p>
             <div className="mt-1.5 grid grid-cols-1 gap-1.5">
               {INTEREST_SCOPE_ORDER.map((i) => (
                 <button
@@ -228,10 +229,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setInterestScope(i)}
                   aria-pressed={interestScope === i}
-                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                     interestScope === i
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {INTEREST_SCOPE_LABELS[i]}
@@ -240,9 +241,9 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
             <h2 className="text-sm font-bold">年齢・性別</h2>
-            <p className="mt-1 text-xs text-neutral-400">診断結果の肌年齢との比較に使われます</p>
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">診断結果の肌年齢との比較に使われます</p>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <input
                 type="number"
@@ -250,13 +251,13 @@ export default function SettingsPage() {
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 placeholder="例：28（歳）"
-                className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+                className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-3 py-2 text-sm"
               />
               <div className="grid grid-cols-1 gap-1.5">
                 <select
                   value={gender ?? ""}
                   onChange={(e) => setGender((e.target.value || undefined) as Gender | undefined)}
-                  className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-2 text-sm dark:bg-white/5"
+                  className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2.5 py-2 text-sm"
                 >
                   <option value="">性別を選択</option>
                   {GENDER_ORDER.map((g) => (
@@ -269,11 +270,11 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">🧐 肌タイプ診断</h2>
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+            <h2 className="text-sm font-bold">肌タイプ診断</h2>
             {skinTypeDiagnosis ? (
               <>
-                <p className="mt-1 text-xs text-neutral-400">
+                <p className="mt-1 text-xs text-[var(--foreground-muted)]">
                   {formatDiagnosedDate(skinTypeDiagnosis.diagnosedAt)}に診断
                 </p>
                 <p className="mt-2 text-base font-bold">
@@ -282,19 +283,19 @@ export default function SettingsPage() {
                 </p>
               </>
             ) : (
-              <p className="mt-1 text-xs text-neutral-400">まだ診断していません。質問に答えるだけで肌タイプが分かります。</p>
+              <p className="mt-1 text-xs text-[var(--foreground-muted)]">まだ診断していません。質問に答えるだけで肌タイプが分かります。</p>
             )}
             <Link
               href="/skin-type"
-              className="mt-2.5 inline-block rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-600 dark:bg-white/10 dark:text-neutral-300"
+              className="mt-2.5 inline-block rounded-full bg-[var(--card)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)]"
             >
               {skinTypeDiagnosis ? "もう一度診断する" : "診断する"}
             </Link>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
             <h2 className="text-sm font-bold">肌質（手動で選ぶ場合）</h2>
-            <p className="mt-1 text-xs text-neutral-400">
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">
               診断画面での初期値として使われます（診断のたびに変更もできます）
             </p>
             <div className="mt-2 grid grid-cols-3 gap-1.5">
@@ -304,10 +305,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setSkinType(type)}
                   aria-pressed={skinType === type}
-                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                     skinType === type
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {SKIN_TYPE_LABELS[type]}
@@ -316,9 +317,9 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">⏱️ ライフスタイル</h2>
-            <p className="mt-1 text-xs text-neutral-400">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+            <h2 className="text-sm font-bold">ライフスタイル</h2>
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">
               忙しさやメイクの有無に合わせて、朝晩のおすすめステップ数や文言を調整します。
             </p>
             <div className="mt-2 grid grid-cols-3 gap-1.5">
@@ -328,10 +329,10 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setLifestyle(lifestyle === l ? undefined : l)}
                   aria-pressed={lifestyle === l}
-                  className={`rounded-lg py-2 text-center text-xs font-semibold transition-colors ${
+                  className={`rounded-xl py-2 text-center text-xs font-semibold transition-colors ${
                     lifestyle === l
-                      ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-sm shadow-pink-900/20"
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {LIFESTYLE_LABELS[l]}
@@ -340,9 +341,9 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold">🎯 将来なりたい肌</h2>
-            <p className="mt-1 text-xs text-neutral-400">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
+            <h2 className="text-sm font-bold">将来なりたい肌</h2>
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">
               長期的な目標を1つ設定すると、その日の悩みに出ていなくても、目標に向けたケアを診断結果に含めます。
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -355,7 +356,7 @@ export default function SettingsPage() {
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                     goalConcern === c
                       ? CONCERN_BADGE_CLASS[c]
-                      : "bg-neutral-100 text-neutral-500 dark:bg-white/5 dark:text-neutral-400"
+                      : "bg-[var(--card)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {CONCERN_LABELS[c]}レス
@@ -367,13 +368,13 @@ export default function SettingsPage() {
               value={goalNote}
               onChange={(e) => setGoalNote(e.target.value)}
               placeholder="目標のメモ（任意）例：毛穴レスな陶器肌になりたい"
-              className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+              className="mt-2 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-3 py-2 text-sm"
             />
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
             <h2 className="text-sm font-bold">今使っているスキンケア</h2>
-            <p className="mt-1 text-xs text-neutral-400">
+            <p className="mt-1 text-xs text-[var(--foreground-muted)]">
               診断結果画面で「今のままでOK」か「見直しを検討」かの目安を、朝・夜それぞれ別々に表示します。
             </p>
             <div className="mt-3 flex flex-col gap-3">
@@ -383,16 +384,16 @@ export default function SettingsPage() {
                 const periods: RoutinePeriod[] = isAM && isPM ? ["am", "pm"] : isAM ? ["am"] : ["pm"];
                 return (
                   <div key={category}>
-                    <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
-                      <span>{CATEGORY_ICON[category]}</span>
+                    <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-[var(--foreground)]">
+                      <Icon name={CATEGORY_ICON[category]} className="h-3.5 w-3.5 text-[var(--foreground-muted)]" />
                       {CATEGORY_LABELS[category]}
                     </p>
                     <div className="flex flex-col gap-1.5">
                       {periods.map((period) => (
                         <div key={period} className="flex items-center gap-1.5">
                           {isAM && isPM && (
-                            <span className="w-7 shrink-0 text-center text-xs">
-                              {period === "am" ? "☀️" : "🌙"}
+                            <span className="flex w-7 shrink-0 items-center justify-center text-[var(--foreground-muted)]">
+                              <Icon name={period === "am" ? "sun" : "moon"} className="h-3.5 w-3.5" />
                             </span>
                           )}
                           <input
@@ -400,14 +401,14 @@ export default function SettingsPage() {
                             value={currentRoutine[category]?.[period]?.brand ?? ""}
                             onChange={(e) => updateRoutine(category, period, "brand", e.target.value)}
                             placeholder="ブランド名"
-                            className="min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
+                            className="min-w-0 flex-1 rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2.5 py-1.5 text-xs"
                           />
                           <input
                             type="text"
                             value={currentRoutine[category]?.[period]?.name ?? ""}
                             onChange={(e) => updateRoutine(category, period, "name", e.target.value)}
                             placeholder="商品名"
-                            className="min-w-0 flex-1 rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2.5 py-1.5 text-xs dark:bg-white/5"
+                            className="min-w-0 flex-1 rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2.5 py-1.5 text-xs"
                           />
                         </div>
                       ))}
@@ -418,33 +419,33 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm">
+          <section className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4">
             <h2 className="text-sm font-bold">お気に入りブランド（任意）</h2>
             <input
               type="text"
               value={favoriteBrands}
               onChange={(e) => setFavoriteBrands(e.target.value)}
               placeholder="例：無印良品、キュレル"
-              className="mt-2 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+              className="mt-2 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-3 py-2 text-sm"
             />
           </section>
 
           <button
             onClick={handleSave}
-            className="w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-900/20"
+            className="w-full rounded-xl bg-[var(--accent)] py-3 text-sm font-semibold text-[var(--accent-contrast)]"
           >
             保存する
           </button>
 
           {saved && (
-            <div className="rounded-xl bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-300">
+            <div className="rounded-xl bg-[var(--accent-soft)] p-3 text-sm text-[var(--foreground)]">
               保存しました。
             </div>
           )}
         </>
       )}
 
-      <p className="text-center text-[11px] text-neutral-400">
+      <p className="text-center text-[11px] text-[var(--foreground-muted)]">
         入力内容はすべて端末内に保存され、外部には送信されません。
       </p>
     </div>

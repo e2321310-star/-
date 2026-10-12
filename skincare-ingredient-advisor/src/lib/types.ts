@@ -201,9 +201,9 @@ export const CATEGORY_ORDER: ProductCategory[] = [
 export type ProductRegion = "jp" | "kr" | "west";
 
 export const PRODUCT_REGION_LABELS: Record<ProductRegion, string> = {
-  jp: "🇯🇵 国産",
-  kr: "🇰🇷 韓国",
-  west: "🌍 欧米",
+  jp: "国産",
+  kr: "韓国",
+  west: "欧米",
 };
 
 // 診断記録：撮影・セルフチェック・気温・肌質を1日1件で保存
@@ -220,8 +220,8 @@ export interface DiagnoseRecord {
 export type CarePeriod = "am" | "pm" | "both";
 
 export const PERIOD_LABELS: Record<CarePeriod, string> = {
-  am: "☀️ 朝向け",
-  pm: "🌙 夜向け",
+  am: "朝向け",
+  pm: "夜向け",
   both: "朝晩どちらでも",
 };
 
@@ -229,9 +229,9 @@ export const PERIOD_LABELS: Record<CarePeriod, string> = {
 export type PriceRange = "budget" | "mid" | "premium";
 
 export const PRICE_RANGE_LABELS: Record<PriceRange, string> = {
-  budget: "💴 プチプラ",
-  mid: "💴💴 ミドル",
-  premium: "💴💴💴 デパコス",
+  budget: "プチプラ",
+  mid: "ミドル",
+  premium: "デパコス",
 };
 
 // 成分×ブランド商品データ

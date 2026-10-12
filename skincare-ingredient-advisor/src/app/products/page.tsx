@@ -27,6 +27,7 @@ import {
   type ProductCategory,
 } from "@/lib/types";
 import { CONCERN_BADGE_CLASS, CONCERN_DOT_CLASS, PRODUCT_REGION_BADGE_CLASS } from "@/lib/theme";
+import { Icon } from "@/components/icons";
 
 const PERIOD_ORDER: CarePeriod[] = ["both", "am", "pm"];
 const PRICE_RANGE_ORDER: PriceRange[] = ["budget", "mid", "premium"];
@@ -151,26 +152,29 @@ export default function ProductsPage() {
     <div className="flex flex-col gap-4">
       <header>
         <h1 className="text-lg font-bold">商品データ</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-[var(--foreground-muted)]">
           悩み別の成分と、対応するブランド商品の一覧です。自由に追加・編集・削除できます。
         </p>
       </header>
 
       <button
         onClick={() => setShowHelp((v) => !v)}
-        className="flex items-center justify-between rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl px-4 py-2.5 text-left text-xs font-semibold text-neutral-600 shadow-sm dark:text-neutral-300"
+        className="flex items-center justify-between rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-4 py-2.5 text-left text-xs font-semibold text-[var(--foreground)]"
       >
-        <span>ℹ️ この画面の使い方</span>
-        <span className="text-neutral-400">{showHelp ? "閉じる ▲" : "開く ▼"}</span>
+        <span className="flex items-center gap-1.5">
+          <Icon name="info" className="h-4 w-4 text-[var(--foreground-muted)]" />
+          この画面の使い方
+        </span>
+        <Icon name="chevronDown" className={`h-4 w-4 text-[var(--foreground-muted)] transition-transform ${showHelp ? "rotate-180" : ""}`} />
       </button>
       {showHelp && (
-        <div className="-mt-2 rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 text-xs leading-relaxed text-neutral-600 shadow-sm dark:text-neutral-300">
+        <div className="-mt-2 rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4 text-xs leading-relaxed text-[var(--foreground)]">
           <ul className="list-disc space-y-1 pl-4">
             <li>ここは「どの悩みに、どの成分・ブランド商品が対応するか」の対応表です。</li>
             <li>上のチップで悩み別に絞り込んで見られます（すべて/毛穴/色ムラ など）。</li>
             <li>「＋商品を追加」から、自分が知っている商品や気になる商品を自由に追加できます。</li>
             <li>価格帯・実売価格・購入リンクも入力しておくと、診断結果画面から直接確認できます。</li>
-            <li>各商品カードの✏️「編集」🗑️「削除」から内容を修正・削除できます。</li>
+            <li>各商品カードの「編集」「削除」から内容を修正・削除できます。</li>
             <li>
               ここに登録された商品の中から、あなたの診断結果（不足傾向の成分）に合うものが自動的に選ばれて「診断結果」画面に表示されます。商品を増やすほど、提案の幅が広がります。
             </li>
@@ -192,7 +196,7 @@ export default function ProductsPage() {
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold text-neutral-400">💰 予算で絞り込む</p>
+        <p className="mb-1 text-[11px] font-semibold text-[var(--foreground-muted)]">予算で絞り込む</p>
         <div className="flex flex-wrap gap-1.5">
           <FilterChip active={budgetFilter === "all"} onClick={() => setBudgetFilter("all")} label="すべて" />
           {BUDGET_ORDER.map((b) => (
@@ -203,7 +207,7 @@ export default function ProductsPage() {
 
       <button
         onClick={startAdd}
-        className="w-full rounded-full border border-dashed border-pink-300 py-2.5 text-sm font-semibold text-pink-700 dark:border-pink-800 dark:text-pink-300"
+        className="w-full rounded-xl border border-dashed border-[var(--accent)] py-2.5 text-sm font-semibold text-[var(--accent)]"
       >
         ＋ 商品を追加
       </button>
@@ -211,18 +215,18 @@ export default function ProductsPage() {
       {editingId !== null && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-3 rounded-2xl border border-pink-300 bg-pink-50/60 p-4 shadow-sm dark:border-pink-800 dark:bg-pink-500/10"
+          className="flex flex-col gap-3 rounded-xl border border-[var(--card-border)] bg-[var(--accent-soft)] p-4"
         >
-          <p className="text-xs font-bold text-pink-700 dark:text-pink-300">
+          <p className="text-xs font-bold text-[var(--foreground)]">
             {editingId === "new" ? "商品を追加" : "商品を編集"}
           </p>
           <div className="grid grid-cols-2 gap-2">
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-[var(--foreground-muted)]">
               悩みカテゴリ
               <select
                 value={form.concern}
                 onChange={(e) => setForm((f) => ({ ...f, concern: e.target.value as ConcernKey }))}
-                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+                className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               >
                 {CONCERN_ORDER.map((key) => (
                   <option key={key} value={key}>
@@ -231,12 +235,12 @@ export default function ProductsPage() {
                 ))}
               </select>
             </label>
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-[var(--foreground-muted)]">
               商品カテゴリ
               <select
                 value={form.category}
                 onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as ProductCategory }))}
-                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+                className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               >
                 {CATEGORY_ORDER.map((key) => (
                   <option key={key} value={key}>
@@ -246,41 +250,41 @@ export default function ProductsPage() {
               </select>
             </label>
           </div>
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-[var(--foreground-muted)]">
             ブランド名
             <input
               value={form.brand}
               onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
               placeholder="例：肌ラボ"
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               required
             />
           </label>
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-[var(--foreground-muted)]">
             商品名
             <input
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="例：極潤ヒアルロン液"
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               required
             />
           </label>
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-[var(--foreground-muted)]">
             成分名（任意）
             <input
               value={form.ingredient}
               onChange={(e) => setForm((f) => ({ ...f, ingredient: e.target.value }))}
               placeholder="例：ヒアルロン酸"
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
             />
           </label>
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-[var(--foreground-muted)]">
             朝晩どちらで使う成分か
             <select
               value={form.period}
               onChange={(e) => setForm((f) => ({ ...f, period: e.target.value as CarePeriod }))}
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
             >
               {PERIOD_ORDER.map((p) => (
                 <option key={p} value={p}>
@@ -290,16 +294,16 @@ export default function ProductsPage() {
             </select>
           </label>
 
-          <div className="my-1 border-t border-pink-200 dark:border-pink-900" />
-          <p className="text-[11px] font-semibold text-neutral-500">価格・購入リンク（任意）</p>
+          <div className="my-1 border-t border-[var(--card-border)]" />
+          <p className="text-[11px] font-semibold text-[var(--foreground-muted)]">価格・購入リンク（任意）</p>
 
           <div className="grid grid-cols-2 gap-2">
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-[var(--foreground-muted)]">
               価格帯の目安
               <select
                 value={form.priceRange}
                 onChange={(e) => setForm((f) => ({ ...f, priceRange: e.target.value as PriceRange | "" }))}
-                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+                className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               >
                 <option value="">未設定</option>
                 {PRICE_RANGE_ORDER.map((p) => (
@@ -309,38 +313,38 @@ export default function ProductsPage() {
                 ))}
               </select>
             </label>
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-[var(--foreground-muted)]">
               実売価格
               <input
                 value={form.price}
                 onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
                 placeholder="例：1,320円"
-                className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+                className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
               />
             </label>
           </div>
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-[var(--foreground-muted)]">
             購入リンク
             <input
               type="url"
               value={form.link}
               onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
               placeholder="https://..."
-              className="mt-1 w-full rounded-lg border border-[var(--card-border)] bg-neutral-50 px-2 py-1.5 text-sm dark:bg-white/5"
+              className="mt-1 w-full rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2 py-1.5 text-sm"
             />
           </label>
 
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
-              className="flex-1 rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2 text-sm font-semibold text-white"
+              className="flex-1 rounded-xl bg-[var(--accent)] py-2 text-sm font-semibold text-[var(--accent-contrast)]"
             >
               {editingId === "new" ? "追加する" : "更新する"}
             </button>
             <button
               type="button"
               onClick={cancelEdit}
-              className="flex-1 rounded-full border border-neutral-300 py-2 text-sm font-medium dark:border-neutral-700"
+              className="flex-1 rounded-xl border border-[var(--card-border)] bg-[var(--background)] py-2 text-sm font-medium text-[var(--foreground)]"
             >
               キャンセル
             </button>
@@ -348,7 +352,7 @@ export default function ProductsPage() {
         </form>
       )}
 
-      {loading && <p className="text-sm text-neutral-400">読み込み中…</p>}
+      {loading && <p className="text-sm text-[var(--foreground-muted)]">読み込み中…</p>}
 
       {!loading &&
         Array.from(grouped.entries())
@@ -363,14 +367,14 @@ export default function ProductsPage() {
                 {list.map((p) => (
                   <li
                     key={p.id}
-                    className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3.5 shadow-sm"
+                    className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-3.5"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="text-sm font-semibold">
                           {p.brand} <span className="font-normal">{p.name}</span>
                         </p>
-                        <p className="mt-0.5 text-xs text-neutral-400">
+                        <p className="mt-0.5 text-xs text-[var(--foreground-muted)]">
                           {CATEGORY_LABELS[p.category]}
                           {p.ingredient ? ` ・ ${p.ingredient}` : ""}
                         </p>
@@ -383,7 +387,7 @@ export default function ProductsPage() {
                           )}
                           {p.priceRange && <Tag>{PRICE_RANGE_LABELS[p.priceRange]}</Tag>}
                           {p.price && (
-                            <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+                            <span className="text-xs font-semibold text-[var(--foreground)]">
                               {p.price}
                             </span>
                           )}
@@ -392,15 +396,17 @@ export default function ProductsPage() {
                       <div className="flex shrink-0 flex-col items-end gap-1.5">
                         <button
                           onClick={() => startEdit(p)}
-                          className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold text-neutral-600 dark:bg-white/10 dark:text-neutral-300"
+                          className="flex items-center gap-1 rounded-full border border-[var(--card-border)] px-2.5 py-1 text-[11px] font-semibold text-[var(--foreground)]"
                         >
-                          ✏️ 編集
+                          <Icon name="edit" className="h-3 w-3" />
+                          編集
                         </button>
                         <button
                           onClick={() => handleDelete(p.id)}
-                          className="rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600 dark:bg-red-500/10 dark:text-red-400"
+                          className="flex items-center gap-1 rounded-full border border-[var(--card-border)] px-2.5 py-1 text-[11px] font-semibold text-[var(--foreground-muted)]"
                         >
-                          🗑️ 削除
+                          <Icon name="trash" className="h-3 w-3" />
+                          削除
                         </button>
                       </div>
                     </div>
@@ -409,9 +415,10 @@ export default function ProductsPage() {
                         href={p.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-2 text-xs font-semibold text-white"
+                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[var(--accent)] py-2 text-xs font-semibold text-[var(--accent-contrast)]"
                       >
-                        🔗 商品を見る
+                        <Icon name="link" className="h-3.5 w-3.5" />
+                        商品を見る
                       </a>
                     )}
                   </li>
@@ -427,7 +434,7 @@ function Tag({ children, className }: { children: React.ReactNode; className?: s
   return (
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-        className ?? "bg-neutral-100 text-neutral-500 dark:bg-white/10 dark:text-neutral-400"
+        className ?? "bg-[var(--card)] text-[var(--foreground-muted)]"
       }`}
     >
       {children}
@@ -451,8 +458,8 @@ function FilterChip({
       onClick={onClick}
       className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
         active
-          ? colorClass ?? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-          : "bg-neutral-100 text-neutral-600 dark:bg-white/5 dark:text-neutral-300"
+          ? colorClass ?? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+          : "bg-[var(--card)] text-[var(--foreground)]"
       }`}
     >
       {label}

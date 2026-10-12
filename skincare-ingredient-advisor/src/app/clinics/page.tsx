@@ -6,6 +6,7 @@ import { getProfile } from "@/lib/db";
 import { AESTHETIC_CATEGORY_ICON, AESTHETIC_CATEGORY_LABELS } from "@/data/aestheticTreatments";
 import { CLINICS, CLINIC_AREAS } from "@/data/clinics";
 import { BUDGET_LABELS, BUDGET_ORDER, type Budget } from "@/lib/types";
+import { Icon } from "@/components/icons";
 
 export default function ClinicsPage() {
   const [area, setArea] = useState<string | "all">("all");
@@ -24,21 +25,22 @@ export default function ClinicsPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-lg font-bold">🏥 クリニック</h1>
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+        <h1 className="text-lg font-bold">クリニック</h1>
+        <p className="mt-1 text-sm text-[var(--foreground-muted)]">
           エリア・予算でクリニックを絞り込めます。
         </p>
       </header>
 
-      <div className="rounded-xl bg-amber-50 p-2.5 text-[11px] leading-relaxed text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
-        ⚠️ 現在表示されているクリニックはすべてサンプル（仮データ）です。実在のクリニックとの提携はまだありません。
+      <div className="flex items-start gap-1.5 rounded-xl bg-[var(--card)] p-2.5 text-[11px] leading-relaxed text-[var(--foreground-muted)]">
+        <Icon name="warning" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        現在表示されているクリニックはすべてサンプル（仮データ）です。実在のクリニックとの提携はまだありません。
       </div>
 
       <div className="flex flex-col gap-2">
         <select
           value={area}
           onChange={(e) => setArea(e.target.value)}
-          className="rounded-lg border border-[var(--card-border)] bg-neutral-50 px-3 py-2 text-sm dark:bg-white/5"
+          className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-3 py-2 text-sm"
         >
           <option value="all">エリア：すべて</option>
           {CLINIC_AREAS.map((a) => (
@@ -56,7 +58,7 @@ export default function ClinicsPage() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-4 text-center text-sm text-neutral-400">
+        <p className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4 text-center text-sm text-[var(--foreground-muted)]">
           条件に合うクリニックが見つかりませんでした。
         </p>
       )}
@@ -66,21 +68,25 @@ export default function ClinicsPage() {
           <li key={c.id}>
             <Link
               href={`/clinics/${c.id}`}
-              className="block rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-4 shadow-sm transition-transform active:scale-[0.98]"
+              className="block rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-4 transition-transform active:scale-[0.98]"
             >
               <p className="text-sm font-bold">{c.name}</p>
-              <p className="mt-0.5 text-xs text-neutral-400">📍 {c.area}</p>
+              <p className="mt-0.5 flex items-center gap-1 text-xs text-[var(--foreground-muted)]">
+                <Icon name="pin" className="h-3.5 w-3.5" />
+                {c.area}
+              </p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {c.specialties.map((s) => (
                   <span
                     key={s}
-                    className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold text-neutral-500 dark:bg-white/10 dark:text-neutral-400"
+                    className="inline-flex items-center gap-1 rounded-full bg-[var(--background)] px-2 py-0.5 text-[10px] font-semibold text-[var(--foreground-muted)]"
                   >
-                    {AESTHETIC_CATEGORY_ICON[s]} {AESTHETIC_CATEGORY_LABELS[s]}
+                    <Icon name={AESTHETIC_CATEGORY_ICON[s]} className="h-3 w-3" />
+                    {AESTHETIC_CATEGORY_LABELS[s]}
                   </span>
                 ))}
               </div>
-              <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-300">{c.priceRangeText}</p>
+              <p className="mt-2 text-xs text-[var(--foreground)]">{c.priceRangeText}</p>
             </Link>
           </li>
         ))}
@@ -94,7 +100,7 @@ function FilterChip({ active, onClick, label }: { active: boolean; onClick: () =
     <button
       onClick={onClick}
       className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-        active ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900" : "bg-neutral-100 text-neutral-600 dark:bg-white/5 dark:text-neutral-300"
+        active ? "bg-[var(--accent)] text-[var(--accent-contrast)]" : "bg-[var(--card)] text-[var(--foreground)]"
       }`}
     >
       {label}

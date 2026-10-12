@@ -23,15 +23,16 @@ import {
   type OnboardingConcern,
   type SkincareExperience,
 } from "@/lib/types";
+import { Icon, type IconName } from "@/components/icons";
 
 const TOTAL_STEPS = 6;
 
-const CONCERN_ICON: Record<OnboardingConcern, string> = {
-  acne: "🔴",
-  pores: "🕳️",
-  dryness: "🌵",
-  dullness: "☁️",
-  spots: "🟤",
+const CONCERN_ICON: Record<OnboardingConcern, IconName> = {
+  acne: "dot",
+  pores: "grid",
+  dryness: "droplet",
+  dullness: "cloud",
+  spots: "dot",
 };
 
 export default function OnboardingPage() {
@@ -87,7 +88,7 @@ export default function OnboardingPage() {
   }
 
   if (!loaded) {
-    return <p className="pt-10 text-center text-sm text-neutral-400">読み込み中…</p>;
+    return <p className="pt-10 text-center text-sm text-[var(--foreground-muted)]">読み込み中…</p>;
   }
 
   return (
@@ -97,13 +98,12 @@ export default function OnboardingPage() {
           {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
             <span
               key={i}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500" : "bg-neutral-200 dark:bg-white/10"
-              }`}
+              className="h-1.5 flex-1 rounded-full transition-colors"
+              style={{ backgroundColor: i <= step ? "var(--accent)" : "var(--card-border)" }}
             />
           ))}
         </div>
-        <p className="text-xs font-semibold text-neutral-400">
+        <p className="text-xs font-semibold text-[var(--foreground-muted)]">
           {step + 1} / {TOTAL_STEPS}
         </p>
       </header>
@@ -152,15 +152,17 @@ export default function OnboardingPage() {
             <OptionGrid cols={2}>
               {ONBOARDING_CONCERN_ORDER.map((c) => (
                 <OptionButton key={c} selected={concerns.includes(c)} onClick={() => toggleConcern(c)}>
-                  <span className="mr-1">{CONCERN_ICON[c]}</span>
-                  {ONBOARDING_CONCERN_LABELS[c]}
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon name={CONCERN_ICON[c]} className="h-4 w-4" />
+                    {ONBOARDING_CONCERN_LABELS[c]}
+                  </span>
                 </OptionButton>
               ))}
             </OptionGrid>
             <button
               onClick={next}
               disabled={concerns.length === 0}
-              className="mt-5 w-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 py-3 text-sm font-semibold text-white disabled:opacity-40"
+              className="mt-5 w-full rounded-xl bg-[var(--accent)] py-3 text-sm font-semibold text-[var(--accent-contrast)] disabled:opacity-40"
             >
               次へ
             </button>
@@ -226,7 +228,7 @@ export default function OnboardingPage() {
       </div>
 
       {step > 0 && (
-        <button onClick={back} className="self-start text-xs font-semibold text-neutral-400">
+        <button onClick={back} className="self-start text-xs font-semibold text-[var(--foreground-muted)]">
           ← 戻る
         </button>
       )}
@@ -246,7 +248,7 @@ function Question({
   return (
     <div>
       <h1 className="text-xl font-bold">{title}</h1>
-      {subtitle && <p className="mt-1.5 text-xs text-neutral-400">{subtitle}</p>}
+      {subtitle && <p className="mt-1.5 text-xs text-[var(--foreground-muted)]">{subtitle}</p>}
       <div className="mt-5">{children}</div>
     </div>
   );
@@ -270,10 +272,10 @@ function OptionButton({
       type="button"
       onClick={onClick}
       aria-pressed={selected}
-      className={`rounded-2xl border px-4 py-3.5 text-left text-sm font-semibold transition-all active:scale-[0.98] ${
+      className={`rounded-xl border px-4 py-3.5 text-left text-sm font-semibold transition-all active:scale-[0.98] ${
         selected
-          ? "border-transparent bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 text-white shadow-md shadow-pink-900/20"
-          : "border-[var(--card-border)] bg-[var(--card)] text-neutral-600 dark:text-neutral-300"
+          ? "border-transparent bg-[var(--accent)] text-[var(--accent-contrast)]"
+          : "border-[var(--card-border)] bg-[var(--card)] text-[var(--foreground)]"
       }`}
     >
       {children}

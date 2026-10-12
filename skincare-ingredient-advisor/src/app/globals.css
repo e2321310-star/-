@@ -1,17 +1,20 @@
 @import "tailwindcss";
 
+/* ============================================================
+   肌ナビ デザイントークン（共通テーマ）
+   白ベース・1アクセントカラーのシンプルな配色。ここの値を変えるだけで
+   アプリ全体の見た目が変わる。ライト固定（ダークモードの配色分岐は持たない）。
+   ============================================================ */
 :root {
-  --background: #fdf1fb;
-  --bg-a: #ffd9ef;
-  --bg-b: #cdf3ff;
-  --bg-c: #ead8ff;
-  --foreground: #241a2e;
-  --card: rgba(255, 255, 255, 0.82);
-  --card-border: rgba(168, 85, 247, 0.16);
-  --accent: #ec4899;
-  --accent-soft: rgba(236, 72, 153, 0.14);
-  --accent2: #06b6d4;
-  --accent2-soft: rgba(6, 182, 212, 0.14);
+  --background: #ffffff;
+  --foreground: #222222; /* 本文の文字色（真っ黒は避ける） */
+  --foreground-muted: #767676; /* 補足の文字色（白背景でコントラスト比4.5:1以上を確保） */
+  --card: #f7f7f7; /* カード・区切りの背景 */
+  --card-border: #eaeaea; /* 枠線 */
+  --accent: #4c7a63; /* セージグリーン（アクセントカラーはこの1色のみ） */
+  --accent-contrast: #ffffff; /* アクセント背景の上に乗る文字色 */
+  --accent-soft: #eaf1ed; /* 選択中のチップなど、淡いアクセント背景 */
+  --radius: 12px;
 }
 
 @theme inline {
@@ -19,164 +22,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-display);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #150c1a;
-    --bg-a: #2b1230;
-    --bg-b: #0b2030;
-    --bg-c: #1d1030;
-    --foreground: #f5eaf6;
-    --card: rgba(35, 24, 40, 0.75);
-    --card-border: rgba(244, 114, 182, 0.22);
-    --accent: #f472b6;
-    --accent-soft: rgba(244, 114, 182, 0.18);
-    --accent2: #22d3ee;
-    --accent2-soft: rgba(34, 211, 238, 0.16);
-  }
 }
 
 body {
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  background:
-    radial-gradient(circle at 8% -5%, var(--bg-a), transparent 42%),
-    radial-gradient(circle at 100% 10%, var(--bg-b), transparent 48%),
-    radial-gradient(circle at 30% 100%, var(--bg-c), transparent 45%),
-    var(--background);
-  background-attachment: fixed;
+  background: var(--background);
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-  letter-spacing: 0.02em;
-}
-
-.gradient-text {
-  background: linear-gradient(90deg, #ec4899, #d946ef, #06b6d4);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-@keyframes shine-sweep {
-  from {
-    transform: translateX(-120%) rotate(8deg);
-  }
-  to {
-    transform: translateX(160%) rotate(8deg);
-  }
-}
-
-.shine::after {
-  content: "";
-  position: absolute;
-  top: -40%;
-  left: 0;
-  width: 35%;
-  height: 180%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-  animation: shine-sweep 3.2s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* ============================================================
-   肌ナビ 背景デザイントークン
-   既存の配色（--background 等）とは独立させ、<AppBackground> から
-   のみ参照する。data-accent="mint" | "blue" | "beige" で切り替え。
-   他社アプリ・既存コスメブランドのUIは参照・模倣していない。
-   ============================================================ */
-[data-accent="mint"] {
-  --navi-bg-top: #ffffff;
-  --navi-bg-bottom: #eff6f2;
-  --navi-glow: rgba(132, 184, 161, 0.22);
-  --navi-accent-soft: #e3f0e9;
-  --navi-accent: #6fa98d;
-  --navi-accent-strong: #3f6b57; /* 白背景上でWCAG AA(4.5:1)以上 */
-  --navi-card: rgba(255, 255, 255, 0.7);
-  --navi-card-border: rgba(63, 107, 87, 0.12);
-}
-
-[data-accent="blue"] {
-  --navi-bg-top: #ffffff;
-  --navi-bg-bottom: #eef4f8;
-  --navi-glow: rgba(125, 170, 198, 0.2);
-  --navi-accent-soft: #e1edf4;
-  --navi-accent: #6e95ad;
-  --navi-accent-strong: #395a70;
-  --navi-card: rgba(255, 255, 255, 0.7);
-  --navi-card-border: rgba(57, 90, 112, 0.12);
-}
-
-[data-accent="beige"] {
-  --navi-bg-top: #ffffff;
-  --navi-bg-bottom: #f8f3ec;
-  --navi-glow: rgba(199, 169, 125, 0.2);
-  --navi-accent-soft: #f1e7d8;
-  --navi-accent: #b79a72;
-  --navi-accent-strong: #6b5438;
-  --navi-card: rgba(255, 255, 255, 0.7);
-  --navi-card-border: rgba(107, 84, 56, 0.12);
-}
-
-[data-accent] {
-  --navi-foreground: #1e2023;
-}
-
-@media (prefers-color-scheme: dark) {
-  [data-accent="mint"] {
-    --navi-bg-top: #121613;
-    --navi-bg-bottom: #0b0f0d;
-    --navi-glow: rgba(111, 169, 141, 0.16);
-    --navi-accent-soft: rgba(111, 169, 141, 0.16);
-    --navi-accent: #8fb9a8;
-    --navi-accent-strong: #bedfcf; /* 暗背景上でWCAG AA(4.5:1)以上 */
-    --navi-card: rgba(22, 28, 25, 0.6);
-    --navi-card-border: rgba(143, 185, 168, 0.18);
-  }
-
-  [data-accent="blue"] {
-    --navi-bg-top: #10151a;
-    --navi-bg-bottom: #0a0e12;
-    --navi-glow: rgba(110, 149, 173, 0.16);
-    --navi-accent-soft: rgba(110, 149, 173, 0.16);
-    --navi-accent: #8fb4cc;
-    --navi-accent-strong: #c3dce9;
-    --navi-card: rgba(18, 24, 29, 0.6);
-    --navi-card-border: rgba(143, 180, 204, 0.18);
-  }
-
-  [data-accent="beige"] {
-    --navi-bg-top: #171310;
-    --navi-bg-bottom: #100d0a;
-    --navi-glow: rgba(183, 154, 114, 0.16);
-    --navi-accent-soft: rgba(183, 154, 114, 0.16);
-    --navi-accent: #c9ad85;
-    --navi-accent-strong: #e3d0b3;
-    --navi-card: rgba(26, 22, 17, 0.6);
-    --navi-card-border: rgba(201, 173, 133, 0.18);
-  }
-
-  [data-accent] {
-    --navi-foreground: #f1f3f2;
-  }
-}
-
-/* 画面背景レイヤー本体。白〜ごく薄いニュートラルカラーへの淡いグラデーションと、
-   画面端のぼかした光(円形グロー)2つのみで構成。柄・写真・イラストは使わない。 */
-.navi-bg {
-  background:
-    radial-gradient(circle at 88% -8%, var(--navi-glow), transparent 48%),
-    radial-gradient(circle at -8% 105%, var(--navi-glow), transparent 42%),
-    linear-gradient(to bottom, var(--navi-bg-top), var(--navi-bg-bottom));
-}
-
-.navi-card {
-  background: var(--navi-card);
-  border: 1px solid var(--navi-card-border);
-  color: var(--navi-foreground);
+  letter-spacing: 0.01em;
 }

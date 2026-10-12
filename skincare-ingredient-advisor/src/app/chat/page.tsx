@@ -8,8 +8,7 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 
 const WELCOME: ChatMessage = {
   role: "assistant",
-  content:
-    "こんにちは、スキンケアパートナーです🌿 スキンケアのお悩みや、日々のケアについて何でも聞いてくださいね。",
+  content: "こんにちは、スキンケアパートナーです。スキンケアのお悩みや、日々のケアについて何でも聞いてくださいね。",
 };
 
 export default function ChatPage() {
@@ -86,24 +85,24 @@ export default function ChatPage() {
     <div className="flex h-[calc(100vh-7.5rem)] flex-col gap-3">
       <header>
         <h1 className="text-lg font-bold">スキンケアパートナー</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-[var(--foreground-muted)]">
           スキンケアの悩みや日々のケアについて、チャットで相談できます。
         </p>
       </header>
 
-      <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3 text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+      <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-3 text-[11px] leading-relaxed text-[var(--foreground-muted)]">
         一般的な知識に基づくアドバイスで、診断や治療の代わりにはなりません。赤み・かゆみ・痛みなどがある場合や症状が長引く場合は、皮膚科を受診してください。
       </div>
 
-      <div className="flex-1 overflow-y-auto rounded-2xl border border-[var(--card-border)] bg-[var(--card)] backdrop-blur-xl p-3">
+      <div className="flex-1 overflow-y-auto rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-3">
         <div className="flex flex-col gap-3">
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
+                className={`max-w-[85%] whitespace-pre-wrap rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "bg-gradient-to-br from-pink-500 via-fuchsia-500 to-violet-500 text-white"
-                    : "bg-neutral-100 text-neutral-700 dark:bg-white/10 dark:text-neutral-200"
+                    ? "bg-[var(--accent)] text-[var(--accent-contrast)]"
+                    : "bg-[var(--card)] text-[var(--foreground)]"
                 }`}
               >
                 {m.content || (sending && i === messages.length - 1 ? "…" : "")}
@@ -115,7 +114,7 @@ export default function ChatPage() {
       </div>
 
       {error && (
-        <p className="rounded-xl bg-red-50 p-2.5 text-xs text-red-600 dark:bg-red-950/40 dark:text-red-300">
+        <p className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-2.5 text-xs text-[var(--foreground)]">
           {error}
         </p>
       )}
@@ -138,12 +137,12 @@ export default function ChatPage() {
           }}
           placeholder="スキンケアについて聞いてみる…"
           rows={1}
-          className="min-h-[44px] flex-1 resize-none rounded-2xl border border-[var(--card-border)] bg-neutral-50 px-3.5 py-2.5 text-sm dark:bg-white/5"
+          className="min-h-[44px] flex-1 resize-none rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-3.5 py-2.5 text-sm"
         />
         <button
           type="submit"
           disabled={sending || !input.trim()}
-          className="shrink-0 rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-900/20 transition-opacity disabled:opacity-40"
+          className="shrink-0 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] transition-opacity disabled:opacity-40"
         >
           {sending ? "…" : "送信"}
         </button>

@@ -1,4 +1,5 @@
 import type { Budget } from "@/lib/types";
+import type { IconName } from "@/components/icons";
 
 // 施術のカテゴリ（固定5種）
 export type AestheticCategory = "doubleEyelid" | "nose" | "skinTreatment" | "hairRemoval" | "botox";
@@ -11,12 +12,12 @@ export const AESTHETIC_CATEGORY_LABELS: Record<AestheticCategory, string> = {
   botox: "ボトックス",
 };
 
-export const AESTHETIC_CATEGORY_ICON: Record<AestheticCategory, string> = {
-  doubleEyelid: "👁️",
-  nose: "👃",
-  skinTreatment: "🩹",
-  hairRemoval: "✨",
-  botox: "💉",
+export const AESTHETIC_CATEGORY_ICON: Record<AestheticCategory, IconName> = {
+  doubleEyelid: "eye",
+  nose: "nose",
+  skinTreatment: "bandage",
+  hairRemoval: "sparkle",
+  botox: "syringe",
 };
 
 export const AESTHETIC_CATEGORY_ORDER: AestheticCategory[] = [

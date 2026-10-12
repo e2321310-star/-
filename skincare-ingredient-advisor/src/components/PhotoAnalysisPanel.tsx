@@ -37,18 +37,18 @@ export default function PhotoAnalysisPanel({
           analysis.notes.map((note, i) => (
             <p
               key={i}
-              className="rounded-lg bg-neutral-50 px-2.5 py-1.5 text-xs text-neutral-600 dark:bg-white/5 dark:text-neutral-300"
+              className="rounded-xl bg-[var(--card)] px-2.5 py-1.5 text-xs text-[var(--foreground)]"
             >
-              💡 {note}
+              {note}
             </p>
           ))
         ) : (
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-[var(--foreground-muted)]">
             今回は写真から目立った特徴はなし。セルフチェックの内容で判断しています。
           </p>
         )}
       </div>
-      <p className="mt-2 text-[11px] text-neutral-400">
+      <p className="mt-2 text-[11px] text-[var(--foreground-muted)]">
         額・頬・鼻・あごの明るさや赤み・光沢をざっくり比較しただけの目安です。照明や角度でブレます。
       </p>
     </div>
